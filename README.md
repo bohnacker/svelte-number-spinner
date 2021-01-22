@@ -1,35 +1,43 @@
-*Psst — looking for an app template? Go here --> [sveltejs/template](https://github.com/sveltejs/template)*
+# svelte-number-spinner
 
----
+A number spinner component for Svelte. It's a simple input field with a number that can be controlled using the mouse or keyboard. Pressing *Alt* or *Shift* makes steps smaller or bigger.
 
-# component-template
 
-A base for building shareable Svelte components. Clone it with [degit](https://github.com/Rich-Harris/degit):
+## Installation
 
 ```bash
-npx degit sveltejs/component-template my-new-component
-cd my-new-component
-npm install # or yarn
+npm install --save svelte-number-spinner
+```
+or 
+```bash
+yarn add svelte-number-spinner
 ```
 
-Your component's source code lives in `src/Component.svelte`.
+## Usage
 
-You can create a package that exports multiple components by adding them to the `src` directory and editing `src/index.js` to reexport them as named exports.
+```html
+<script>
+  import NumberSpinner from "svelte-number-spinner";
 
-TODO
+  let value = 50;
+</script>
 
-* [ ] some firm opinions about the best way to test components
-* [ ] update `degit` so that it automates some of the setup work
+<NumberSpinner bind:value min=0 max=100 ></NumberSpinner>
+```
 
+<br />
 
-## Setting up
+## Props
 
-* Run `npm init` (or `yarn init`)
-* Replace this README with your own
+| Prop           | Type    | Default     | Description              |
+| -------------- | ------- | ----------- | ------------------------ |
+| value          | Number  | 0           | Input value              |
+| min            | Number  | -MAX_VALUE  | Minimum value            |
+| max            | Number  | +MAX_VALUE  | Maximum value            |
+| step           | Number  | 1           | Step                     |
+| decimals       | Number  | 0           | Number of decimals       | 
+| width          | Number  | 60          | Width of the component   |
+| customClass    | String  | undefined   | Custom component class   |
 
+<br />
 
-## Consuming components
-
-Your package.json has a `"svelte"` field pointing to `src/index.js`, which allows Svelte apps to import the source code directly, if they are using a bundler plugin like [rollup-plugin-svelte](https://github.com/sveltejs/rollup-plugin-svelte) or [svelte-loader](https://github.com/sveltejs/svelte-loader) (where [`resolve.mainFields`](https://webpack.js.org/configuration/resolve/#resolve-mainfields) in your webpack config includes `"svelte"`). **This is recommended.**
-
-For everyone else, `npm run build` will bundle your component's source code into a plain JavaScript module (`dist/index.mjs`) and a UMD script (`dist/index.js`). This will happen automatically when you publish your component to npm, courtesy of the `prepublishOnly` hook in package.json.
