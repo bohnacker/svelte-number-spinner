@@ -5,13 +5,19 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rollup -c",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "dev": "rollup -c -w",
+    "start": "sirv example/public"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^9.0.0",
-    "rollup": "^2.0.0",
+    "rollup": "^2.3.4",
     "rollup-plugin-svelte": "^6.0.0",
-    "svelte": "^3.0.0"
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-terser": "^7.0.0",
+    "svelte": "^3.0.0",
+    "sirv-cli": "^1.0.0"
   },
   "keywords": [
     "svelte"
@@ -20,7 +26,6 @@
     "src",
     "dist"
   ],
-  "description": "*Psst — looking for an app template? Go here --> [sveltejs/template](https://github.com/sveltejs/template)*",
   "version": "0.1.0",
   "repository": {
     "type": "git",
