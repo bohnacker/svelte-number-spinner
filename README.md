@@ -8,10 +8,6 @@ A number spinner component for Svelte. It's a simple input field with a number t
 ```bash
 npm install --save svelte-number-spinner
 ```
-or 
-```bash
-yarn add svelte-number-spinner
-```
 
 ## Usage
 
@@ -37,7 +33,34 @@ yarn add svelte-number-spinner
 | step           | Number  | 1           | Step                     |
 | decimals       | Number  | 0           | Number of decimals       | 
 | width          | Number  | 60          | Width of the component   |
+| height         | Number  | 25          | Height of the component  |
 | customClass    | String  | undefined   | Custom component class   |
 
 <br />
+
+## Events
+
+| Event Name     | Callback           | Description                                          |
+| -------------- | ------------------ | ---------------------------------------------------- |
+| input          | (ev) => ev.detail  | Fires when value changes                             |
+| change         | (ev) => ev.detail  | Fires when value changes, won't fire while typing    |
+
+```html
+<script>
+  import NumberSpinner from "svelte-number-spinner";
+
+  function handleInput(ev) {
+    console.log("Value send by input event:", ev.detail);    
+  }
+
+  function handleChange(ev) {
+    console.log("Value send by change event:", ev.detail);    
+  }
+</script>
+
+<NumberSpinner on:input="handleInput" on:change="handleChange" ></NumberSpinner>
+```
+
+<br />
+
 

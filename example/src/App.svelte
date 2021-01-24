@@ -5,8 +5,13 @@
   let value2 = 500;
   let value3 = 3.28;
   let value4 = 0.5;
+  let value5 = 50;
+  let value5input = value5;
+  let value5change = value5;
 
 </script>
+
+<h2>Svelte Number Spinner Example</h2>
 
 <p>
   Change the values of the number spinners through mousedrag and arrow keys.<br>
@@ -35,6 +40,13 @@
   Custom class given for individual styling:
   <NumberSpinner bind:value={value4} min=0 max=1 step=0.001 decimals=3 customClass='number-spinner-custom'></NumberSpinner><br>
   Current value is {value4}.
+</p>
+
+<p>
+  Retreiving the value using the input and change events:
+  <NumberSpinner value={value5} min=0 max=100 on:change={(ev) => {value5change = ev.detail}} on:input={(ev) => {value5input = ev.detail}}></NumberSpinner><br>
+  Current input value is {value5input}.<br> 
+  Current change value is {value5change}.
 </p>
 
 

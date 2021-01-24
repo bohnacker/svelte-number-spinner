@@ -1,5 +1,5 @@
 <script>
-  import { tick, afterUpdate } from 'svelte';
+  import { tick, afterUpdate, createEventDispatcher } from 'svelte';
 
   export let value = 0;
   export let min = -Number.MAX_VALUE;
@@ -7,7 +7,10 @@
   export let step = 1;
   export let decimals = 0;
   export let width = 60;
+  export let height = 25;
   export let customClass = undefined;
+
+  const dispatch = createEventDispatcher();
 
   let inputElement;
   let focussed = false;
@@ -88,8 +91,23 @@
     stopEditing();
   }
   
+  function inputHandler(e) {
+    // console.log(e);
+    let checkValue = parseFloat(inputElement.value);
+
+    if (!isNaN(checkValue)) {
+      preciseValue = checkValue;
+      preciseValue = Math.min(preciseValue, max);
+      preciseValue = Math.max(preciseValue, min);
+
+      visibleValue = preciseValue.toFixed(decimals);
+      dispatch('input', visibleValue);
+    }
+  }
+
   function changeHandler(e) {
-    //console.log(e)
+    // console.log(e);
+    // dispatch('input', value);
   }
 
 
@@ -163,6 +181,8 @@
 
     visibleValue = preciseValue.toFixed(decimals);
     value = preciseValue.toFixed(decimals);
+    dispatch('input', value);
+    dispatch('change', value);
   }
 
   function stepValue(numSteps) {
@@ -173,17 +193,19 @@
 
     visibleValue = preciseValue.toFixed(decimals);
     value = preciseValue.toFixed(decimals);
+    dispatch('input', value);
+    dispatch('change', value);
   }
 
   function startEditing() {
     preciseValue = parseFloat(visibleValue);
     editing = true;
-    inputElement.setSelectionRange(0, 30);        
+    inputElement?.setSelectionRange(0, 30);        
   }
 
   function stopEditing() {
     editing = false;
-    inputElement.setSelectionRange(0, 0);
+    inputElement?.setSelectionRange(0, 0);
     preciseValue = parseFloat(visibleValue);
     setValue(preciseValue);     
   }
@@ -214,7 +236,9 @@
     on:dblclick={dblclickHandler}
     on:focus={focusHandler}
     on:blur={blurHandler}
-    style='width:{width}px'
+    on:input={inputHandler}
+    on:change={changeHandler}
+    style='width:{width}px; height:{height}px;'
     class={customClass}
     class:default={!customClass ? true : false}
     class:fast={stepFactor > 1 ? 'fast' : ''}
@@ -234,22 +258,21 @@
 <style>
 
   .default {
-    margin: 0px;
     display: inline-block;
     box-sizing: border-box;
     font-variant-numeric: tabular-nums;
-    border: 1px solid #0004;
-    padding: 5px;
-    border-radius: 5px;
     background-color: white;
     color: black;
+    margin: 0px;
+    padding: 5px;
+    border: 1px solid #0004;
+    border-radius: 5px;
     text-align: right;
     cursor: initial;
   }
 
   .default:focus {
     border: 1px solid #06f;
-    padding: 5px;
     outline-width: 0;
     outline:none;
   }
