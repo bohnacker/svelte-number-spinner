@@ -2,6 +2,10 @@
 
 A number spinner component for Svelte. It's a simple input field with a number that can be controlled using the mouse or keyboard. Pressing *Alt* or *Shift* makes steps smaller or bigger.
 
+## Demo
+
+[Number spinner demo on svelte.dev/repl](https://svelte.dev/repl/a73eaa408b804beb9f7a3457926f9829?version=3.31.2)
+
 
 ## Installation
 
