@@ -353,6 +353,12 @@ var app = (function () {
          module.exports = factory() ;
     }(commonjsGlobal, (function () {
         function noop() { }
+        function assign(tar, src) {
+            // @ts-ignore
+            for (const k in src)
+                tar[k] = src[k];
+            return tar;
+        }
         function run(fn) {
             return fn();
         }
@@ -370,6 +376,13 @@ var app = (function () {
         }
         function is_empty(obj) {
             return Object.keys(obj).length === 0;
+        }
+        function exclude_internal_props(props) {
+            const result = {};
+            for (const k in props)
+                if (k[0] !== '$')
+                    result[k] = props[k];
+            return result;
         }
         function null_to_empty(value) {
             return value == null ? '' : value;
@@ -653,40 +666,40 @@ var app = (function () {
         			attr(input, "type", "text");
         			set_style(input, "width", /*width*/ ctx[0] + "px");
         			set_style(input, "height", /*height*/ ctx[1] + "px");
-        			attr(input, "class", input_class_value = "" + (null_to_empty(/*customClass*/ ctx[2]) + " svelte-1n0knvs"));
-        			attr(input, "contenteditable", input_contenteditable_value = /*editing*/ ctx[4] ? "true" : "false");
+        			attr(input, "class", input_class_value = "" + (null_to_empty(/*$$props*/ ctx[18].class) + " svelte-1n0knvs"));
+        			attr(input, "contenteditable", input_contenteditable_value = /*editing*/ ctx[3] ? "true" : "false");
         			attr(input, "tabindex", "0");
-        			toggle_class(input, "default", !/*customClass*/ ctx[2] ? true : false);
-        			toggle_class(input, "fast", /*stepFactor*/ ctx[5] > 1 ? "fast" : "");
-        			toggle_class(input, "slow", /*stepFactor*/ ctx[5] < 1 ? "slow" : "");
-        			toggle_class(input, "editing", /*editing*/ ctx[4]);
-        			toggle_class(input, "hide-selection", /*editing*/ ctx[4] ? "" : "hide-selection  ");
+        			toggle_class(input, "default", !/*$$props*/ ctx[18].class ? true : false);
+        			toggle_class(input, "fast", /*stepFactor*/ ctx[4] > 1 ? "fast" : "");
+        			toggle_class(input, "slow", /*stepFactor*/ ctx[4] < 1 ? "slow" : "");
+        			toggle_class(input, "editing", /*editing*/ ctx[3]);
+        			toggle_class(input, "hide-selection", /*editing*/ ctx[3] ? "" : "hide-selection  ");
         		},
         		m(target, anchor) {
         			insert(target, input, anchor);
-        			set_input_value(input, /*visibleValue*/ ctx[7]);
+        			set_input_value(input, /*visibleValue*/ ctx[6]);
         			/*input_binding*/ ctx[28](input);
 
         			if (!mounted) {
         				dispose = [
         					listen(window, "mousemove", function () {
-        						if (is_function(/*dragging*/ ctx[6] ? /*mousemoveHandler*/ ctx[10] : "")) (/*dragging*/ ctx[6] ? /*mousemoveHandler*/ ctx[10] : "").apply(this, arguments);
+        						if (is_function(/*dragging*/ ctx[5] ? /*mousemoveHandler*/ ctx[9] : "")) (/*dragging*/ ctx[5] ? /*mousemoveHandler*/ ctx[9] : "").apply(this, arguments);
         					}),
         					listen(window, "mouseup", function () {
-        						if (is_function(/*dragging*/ ctx[6] ? /*mouseupHandler*/ ctx[11] : "")) (/*dragging*/ ctx[6] ? /*mouseupHandler*/ ctx[11] : "").apply(this, arguments);
+        						if (is_function(/*dragging*/ ctx[5] ? /*mouseupHandler*/ ctx[10] : "")) (/*dragging*/ ctx[5] ? /*mouseupHandler*/ ctx[10] : "").apply(this, arguments);
         					}),
         					listen(window, "mousedown", function () {
-        						if (is_function(/*editing*/ ctx[4] ? /*windowdownHandler*/ ctx[13] : "")) (/*editing*/ ctx[4] ? /*windowdownHandler*/ ctx[13] : "").apply(this, arguments);
+        						if (is_function(/*editing*/ ctx[3] ? /*windowdownHandler*/ ctx[12] : "")) (/*editing*/ ctx[3] ? /*windowdownHandler*/ ctx[12] : "").apply(this, arguments);
         					}),
-        					listen(window, "keydown", /*keydownHandler*/ ctx[17]),
-        					listen(window, "keyup", /*keyupHandler*/ ctx[18]),
-        					listen(input, "mouseenter", /*mouseenterHandler*/ ctx[8]),
+        					listen(window, "keydown", /*keydownHandler*/ ctx[16]),
+        					listen(window, "keyup", /*keyupHandler*/ ctx[17]),
+        					listen(input, "mouseenter", /*mouseenterHandler*/ ctx[7]),
         					listen(input, "mouseleave", mouseleaveHandler),
-        					listen(input, "mousedown", /*mousedownHandler*/ ctx[9]),
-        					listen(input, "dblclick", /*dblclickHandler*/ ctx[12]),
-        					listen(input, "focus", /*focusHandler*/ ctx[14]),
-        					listen(input, "blur", /*blurHandler*/ ctx[15]),
-        					listen(input, "input", /*inputHandler*/ ctx[16]),
+        					listen(input, "mousedown", /*mousedownHandler*/ ctx[8]),
+        					listen(input, "dblclick", /*dblclickHandler*/ ctx[11]),
+        					listen(input, "focus", /*focusHandler*/ ctx[13]),
+        					listen(input, "blur", /*blurHandler*/ ctx[14]),
+        					listen(input, "input", /*inputHandler*/ ctx[15]),
         					listen(input, "change", changeHandler),
         					listen(input, "input", /*input_input_handler*/ ctx[27])
         				];
@@ -705,36 +718,36 @@ var app = (function () {
         				set_style(input, "height", /*height*/ ctx[1] + "px");
         			}
 
-        			if (dirty[0] & /*customClass*/ 4 && input_class_value !== (input_class_value = "" + (null_to_empty(/*customClass*/ ctx[2]) + " svelte-1n0knvs"))) {
+        			if (dirty[0] & /*$$props*/ 262144 && input_class_value !== (input_class_value = "" + (null_to_empty(/*$$props*/ ctx[18].class) + " svelte-1n0knvs"))) {
         				attr(input, "class", input_class_value);
         			}
 
-        			if (dirty[0] & /*editing*/ 16 && input_contenteditable_value !== (input_contenteditable_value = /*editing*/ ctx[4] ? "true" : "false")) {
+        			if (dirty[0] & /*editing*/ 8 && input_contenteditable_value !== (input_contenteditable_value = /*editing*/ ctx[3] ? "true" : "false")) {
         				attr(input, "contenteditable", input_contenteditable_value);
         			}
 
-        			if (dirty[0] & /*visibleValue*/ 128 && input.value !== /*visibleValue*/ ctx[7]) {
-        				set_input_value(input, /*visibleValue*/ ctx[7]);
+        			if (dirty[0] & /*visibleValue*/ 64 && input.value !== /*visibleValue*/ ctx[6]) {
+        				set_input_value(input, /*visibleValue*/ ctx[6]);
         			}
 
-        			if (dirty[0] & /*customClass, customClass*/ 4) {
-        				toggle_class(input, "default", !/*customClass*/ ctx[2] ? true : false);
+        			if (dirty[0] & /*$$props, $$props*/ 262144) {
+        				toggle_class(input, "default", !/*$$props*/ ctx[18].class ? true : false);
         			}
 
-        			if (dirty[0] & /*customClass, stepFactor*/ 36) {
-        				toggle_class(input, "fast", /*stepFactor*/ ctx[5] > 1 ? "fast" : "");
+        			if (dirty[0] & /*$$props, stepFactor*/ 262160) {
+        				toggle_class(input, "fast", /*stepFactor*/ ctx[4] > 1 ? "fast" : "");
         			}
 
-        			if (dirty[0] & /*customClass, stepFactor*/ 36) {
-        				toggle_class(input, "slow", /*stepFactor*/ ctx[5] < 1 ? "slow" : "");
+        			if (dirty[0] & /*$$props, stepFactor*/ 262160) {
+        				toggle_class(input, "slow", /*stepFactor*/ ctx[4] < 1 ? "slow" : "");
         			}
 
-        			if (dirty[0] & /*customClass, editing*/ 20) {
-        				toggle_class(input, "editing", /*editing*/ ctx[4]);
+        			if (dirty[0] & /*$$props, editing*/ 262152) {
+        				toggle_class(input, "editing", /*editing*/ ctx[3]);
         			}
 
-        			if (dirty[0] & /*customClass, editing*/ 20) {
-        				toggle_class(input, "hide-selection", /*editing*/ ctx[4] ? "" : "hide-selection  ");
+        			if (dirty[0] & /*$$props, editing*/ 262152) {
+        				toggle_class(input, "hide-selection", /*editing*/ ctx[3] ? "" : "hide-selection  ");
         			}
         		},
         		i: noop,
@@ -765,7 +778,6 @@ var app = (function () {
         	let { decimals = 0 } = $$props;
         	let { width = 60 } = $$props;
         	let { height = 25 } = $$props;
-        	let { customClass = undefined } = $$props;
         	const dispatch = createEventDispatcher();
         	let inputElement;
         	let focussed = false;
@@ -792,7 +804,7 @@ var app = (function () {
         		} else {
         			clickX = e.clientX;
         			clickY = e.clientY;
-        			$$invalidate(6, dragging = true);
+        			$$invalidate(5, dragging = true);
         			preciseValue = setValue(value);
         		} //console.log(e.clientX, e.clientY);
         	}
@@ -810,9 +822,9 @@ var app = (function () {
 
         	function mouseupHandler(e) {
         		// console.log('up');
-        		$$invalidate(6, dragging = false);
+        		$$invalidate(5, dragging = false);
 
-        		$$invalidate(5, stepFactor = 1);
+        		$$invalidate(4, stepFactor = 1);
         	}
 
         	async function dblclickHandler(e) {
@@ -846,7 +858,7 @@ var app = (function () {
         			preciseValue = checkValue;
         			preciseValue = Math.min(preciseValue, max);
         			preciseValue = Math.max(preciseValue, min);
-        			$$invalidate(7, visibleValue = preciseValue.toFixed(decimals));
+        			$$invalidate(6, visibleValue = preciseValue.toFixed(decimals));
         			dispatch("input", visibleValue);
         		}
         	}
@@ -903,7 +915,7 @@ var app = (function () {
         		preciseValue = parseFloat(val);
         		preciseValue = Math.min(preciseValue, max);
         		preciseValue = Math.max(preciseValue, min);
-        		$$invalidate(7, visibleValue = preciseValue.toFixed(decimals));
+        		$$invalidate(6, visibleValue = preciseValue.toFixed(decimals));
         		$$invalidate(19, value = preciseValue.toFixed(decimals));
         		dispatch("input", value);
         		dispatch("change", value);
@@ -914,7 +926,7 @@ var app = (function () {
         		preciseValue += numSteps * step * stepFactor;
         		preciseValue = Math.min(preciseValue, max);
         		preciseValue = Math.max(preciseValue, min);
-        		$$invalidate(7, visibleValue = preciseValue.toFixed(decimals));
+        		$$invalidate(6, visibleValue = preciseValue.toFixed(decimals));
         		$$invalidate(19, value = preciseValue.toFixed(decimals));
         		dispatch("input", value);
         		dispatch("change", value);
@@ -922,12 +934,12 @@ var app = (function () {
 
         	function startEditing() {
         		preciseValue = parseFloat(visibleValue);
-        		$$invalidate(4, editing = true);
+        		$$invalidate(3, editing = true);
         		inputElement?.setSelectionRange(0, 30);
         	}
 
         	function stopEditing() {
-        		$$invalidate(4, editing = false);
+        		$$invalidate(3, editing = false);
         		inputElement?.setSelectionRange(0, 0);
         		preciseValue = parseFloat(visibleValue);
         		setValue(preciseValue);
@@ -935,54 +947,55 @@ var app = (function () {
 
         	function input_input_handler() {
         		visibleValue = this.value;
-        		$$invalidate(7, visibleValue);
+        		$$invalidate(6, visibleValue);
         	}
 
         	function input_binding($$value) {
         		binding_callbacks[$$value ? "unshift" : "push"](() => {
         			inputElement = $$value;
-        			($$invalidate(3, inputElement), $$invalidate(4, editing));
+        			($$invalidate(2, inputElement), $$invalidate(3, editing));
         		});
         	}
 
-        	$$self.$$set = $$props => {
-        		if ("value" in $$props) $$invalidate(19, value = $$props.value);
-        		if ("min" in $$props) $$invalidate(20, min = $$props.min);
-        		if ("max" in $$props) $$invalidate(21, max = $$props.max);
-        		if ("step" in $$props) $$invalidate(22, step = $$props.step);
-        		if ("decimals" in $$props) $$invalidate(23, decimals = $$props.decimals);
-        		if ("width" in $$props) $$invalidate(0, width = $$props.width);
-        		if ("height" in $$props) $$invalidate(1, height = $$props.height);
-        		if ("customClass" in $$props) $$invalidate(2, customClass = $$props.customClass);
+        	$$self.$$set = $$new_props => {
+        		$$invalidate(18, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
+        		if ("value" in $$new_props) $$invalidate(19, value = $$new_props.value);
+        		if ("min" in $$new_props) $$invalidate(20, min = $$new_props.min);
+        		if ("max" in $$new_props) $$invalidate(21, max = $$new_props.max);
+        		if ("step" in $$new_props) $$invalidate(22, step = $$new_props.step);
+        		if ("decimals" in $$new_props) $$invalidate(23, decimals = $$new_props.decimals);
+        		if ("width" in $$new_props) $$invalidate(0, width = $$new_props.width);
+        		if ("height" in $$new_props) $$invalidate(1, height = $$new_props.height);
         	};
 
         	$$self.$$.update = () => {
-        		if ($$self.$$.dirty[0] & /*inputElement, editing*/ 24) {
+        		if ($$self.$$.dirty[0] & /*inputElement, editing*/ 12) {
         			// updaters --------------------------------
         			 if (inputElement) {
-        				$$invalidate(3, inputElement.readOnly = !editing, inputElement);
+        				$$invalidate(2, inputElement.readOnly = !editing, inputElement);
         			}
         		}
 
         		if ($$self.$$.dirty[0] & /*focussed, shiftPressed, altPressed*/ 117440512) {
         			 {
-        				$$invalidate(5, stepFactor = 1);
+        				$$invalidate(4, stepFactor = 1);
 
         				if (focussed) {
         					if (shiftPressed) {
-        						$$invalidate(5, stepFactor = 10);
+        						$$invalidate(4, stepFactor = 10);
         					} else if (altPressed) {
-        						$$invalidate(5, stepFactor = 0.1);
+        						$$invalidate(4, stepFactor = 0.1);
         					}
         				}
         			}
         		}
         	};
 
+        	$$props = exclude_internal_props($$props);
+
         	return [
         		width,
         		height,
-        		customClass,
         		inputElement,
         		editing,
         		stepFactor,
@@ -999,6 +1012,7 @@ var app = (function () {
         		inputHandler,
         		keydownHandler,
         		keyupHandler,
+        		$$props,
         		value,
         		min,
         		max,
@@ -1030,8 +1044,7 @@ var app = (function () {
         				step: 22,
         				decimals: 23,
         				width: 0,
-        				height: 1,
-        				customClass: 2
+        				height: 1
         			},
         			[-1, -1]
         		);
@@ -1168,7 +1181,7 @@ var app = (function () {
     		max: "1",
     		step: "0.001",
     		decimals: "3",
-    		customClass: "number-spinner-custom"
+    		class: "number-spinner-custom"
     	};
 
     	if (/*value4*/ ctx[3] !== void 0) {
@@ -1256,11 +1269,11 @@ var app = (function () {
     			add_location(p2, file, 26, 0, 588);
     			add_location(br3, file, 34, 86, 881);
     			add_location(p3, file, 32, 0, 725);
-    			add_location(br4, file, 40, 123, 1093);
+    			add_location(br4, file, 40, 117, 1087);
     			add_location(p4, file, 38, 0, 921);
-    			add_location(br5, file, 46, 154, 1349);
-    			add_location(br6, file, 47, 39, 1393);
-    			add_location(p5, file, 44, 0, 1133);
+    			add_location(br5, file, 46, 154, 1343);
+    			add_location(br6, file, 47, 39, 1387);
+    			add_location(p5, file, 44, 0, 1127);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");

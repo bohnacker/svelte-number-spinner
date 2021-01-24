@@ -8,7 +8,6 @@
   export let decimals = 0;
   export let width = 60;
   export let height = 25;
-  export let customClass = undefined;
 
   const dispatch = createEventDispatcher();
 
@@ -239,8 +238,8 @@
     on:input={inputHandler}
     on:change={changeHandler}
     style='width:{width}px; height:{height}px;'
-    class={customClass}
-    class:default={!customClass ? true : false}
+    class={$$props.class}
+    class:default={!$$props.class ? true : false}
     class:fast={stepFactor > 1 ? 'fast' : ''}
     class:slow={stepFactor < 1 ? 'slow' : ''}
     class:editing
@@ -251,7 +250,8 @@
     bind:this={inputElement}
     />
 
-
+<!--     
+ -->
 
 <!-- CSS --------------------------------------------------------------->
 

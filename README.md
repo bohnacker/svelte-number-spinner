@@ -25,16 +25,16 @@ npm install --save svelte-number-spinner
 
 ## Props
 
-| Prop           | Type    | Default     | Description              |
-| -------------- | ------- | ----------- | ------------------------ |
-| value          | Number  | 0           | Input value              |
-| min            | Number  | -MAX_VALUE  | Minimum value            |
-| max            | Number  | +MAX_VALUE  | Maximum value            |
-| step           | Number  | 1           | Step                     |
-| decimals       | Number  | 0           | Number of decimals       | 
-| width          | Number  | 60          | Width of the component   |
-| height         | Number  | 25          | Height of the component  |
-| customClass    | String  | undefined   | Custom component class   |
+| Prop           | Type    | Default     | Description                  |
+| -------------- | ------- | ----------- | ---------------------------- |
+| value          | Number  | 0           | Input value                  |
+| min            | Number  | -MAX_VALUE  | Minimum value                |
+| max            | Number  | +MAX_VALUE  | Maximum value                |
+| step           | Number  | 1           | Step                         |
+| decimals       | Number  | 0           | Number of decimals           | 
+| width          | Number  | 60          | Width of the component       |
+| height         | Number  | 25          | Height of the component      |
+| class          | String  | undefined   | Custom component class name  |
 
 <br />
 
@@ -44,6 +44,8 @@ npm install --save svelte-number-spinner
 | -------------- | ------------------ | ---------------------------------------------------- |
 | input          | (ev) => ev.detail  | Fires when value changes                             |
 | change         | (ev) => ev.detail  | Fires when value changes, won't fire while typing    |
+
+In most cases you will probably use ```bind:value``` to react to changes of the value. This is more or less the same as listening to the change event. Use the input event if you need to get the changes while the user is typing.
 
 ```html
 <script>

@@ -38,7 +38,7 @@
 
 <p>
   Custom class given for individual styling:
-  <NumberSpinner bind:value={value4} min=0 max=1 step=0.001 decimals=3 customClass='number-spinner-custom'></NumberSpinner><br>
+  <NumberSpinner bind:value={value4} min=0 max=1 step=0.001 decimals=3 class='number-spinner-custom'></NumberSpinner><br>
   Current value is {value4}.
 </p>
 
@@ -85,13 +85,11 @@
   }
 
   :global(.number-spinner-custom).fast {
-    border-top: 2px solid #fa0;
-    padding-top: 1px;
+    background-color: #0ccb;
   }
 
   :global(.number-spinner-custom).slow {
-    border-bottom: 2px solid #fa0;
-    padding-bottom: 1px;
+    background-color: #66fb;
   }
 
 
