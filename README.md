@@ -25,16 +25,18 @@ npm install --save svelte-number-spinner
 
 ## Props
 
-| Prop           | Type    | Default     | Description                  |
-| -------------- | ------- | ----------- | ---------------------------- |
-| value          | Number  | 0           | Input value                  |
-| min            | Number  | -MAX_VALUE  | Minimum value                |
-| max            | Number  | +MAX_VALUE  | Maximum value                |
-| step           | Number  | 1           | Step                         |
-| decimals       | Number  | 0           | Number of decimals           | 
-| width          | Number  | 60          | Width of the component       |
-| height         | Number  | 25          | Height of the component      |
-| class          | String  | undefined   | Custom component class name  |
+| Prop           | Type    | Default     | Description                             |
+| -------------- | ------- | ----------- | --------------------------------------- |
+| value          | Number  | 0           | Input value                             |
+| min            | Number  | -MAX_VALUE  | Minimum value                           |
+| max            | Number  | +MAX_VALUE  | Maximum value                           |
+| step           | Number  | 1           | Step                                    |
+| decimals       | Number  | 0           | Number of decimals                      | 
+| width          | Number  | 60          | Width of the component                  |
+| height         | Number  | 25          | Height of the component                 |
+| horizontal     | Boolean | true        | Change value by dragging horizontally   |
+| vertical       | Boolean | true        | Change value by dragging vertically     |
+| class          | String  | undefined   | Custom component class name             |
 
 <br />
 

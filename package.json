@@ -20,7 +20,7 @@
     "sirv-cli": "^1.0.0"
   },
   "keywords": [
-    "svelte"
+    "svelte", "component", "input", "ui"
   ],
   "files": [
     "src",

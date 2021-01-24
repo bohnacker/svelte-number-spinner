@@ -8,6 +8,8 @@
   export let decimals = 0;
   export let width = 60;
   export let height = 25;
+  export let horizontal = true;
+  export let vertical = true;
 
   const dispatch = createEventDispatcher();
 
@@ -52,8 +54,8 @@
     let actX = e.clientX;
     let actY = e.clientY;
 
-    let distX = actX - clickX;
-    let distY = -( actY - clickY);
+    let distX = horizontal ? actX - clickX : 0;
+    let distY = vertical ? -( actY - clickY) : 0;
 
     let stepNum = Math.abs(distX) > Math.abs(distY) ? distX : distY; 
 
@@ -132,10 +134,10 @@
 
     if (focussed) {
       if (!editing) {
-        if (e.key == 'ArrowUp' || e.key == 'ArrowRight') {
+        if (vertical && e.key == 'ArrowUp' || horizontal && e.key == 'ArrowRight') {
           stepValue(10);
         }     
-        if (e.key == 'ArrowDown' || e.key == 'ArrowLeft') {
+        if (vertical && e.key == 'ArrowDown' || horizontal && e.key == 'ArrowLeft') {
           stepValue(-10);
         } 
       }
