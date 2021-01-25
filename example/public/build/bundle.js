@@ -429,9 +429,6 @@ var app = (function () {
         function set_input_value(input, value) {
             input.value = value == null ? '' : value;
         }
-        function set_style(node, key, value, important) {
-            node.style.setProperty(key, value, important ? 'important' : '');
-        }
         function toggle_class(element, name, toggle) {
             element.classList[toggle ? 'add' : 'remove'](name);
         }
@@ -661,8 +658,8 @@ var app = (function () {
 
         function add_css() {
         	var style = element("style");
-        	style.id = "svelte-1bnuw38-style";
-        	style.textContent = ".default.svelte-1bnuw38{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;margin:0px;padding:5px;border:1px solid #0004;border-radius:5px;text-align:right;cursor:initial}.default.fast.svelte-1bnuw38{color:tomato}.default.slow.svelte-1bnuw38{color:green}.default.svelte-1bnuw38:focus{border:1px solid #06f;outline:none}.default.editing.svelte-1bnuw38{border:2px solid #06f;padding:4px;cursor:default}input.svelte-1bnuw38{user-select:none}input.svelte-1bnuw38:not(.editing)::selection{background:#0000}input.editing.svelte-1bnuw38{user-select:text}";
+        	style.id = "svelte-8bd7vo-style";
+        	style.textContent = ".default.svelte-8bd7vo{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:60px;height:25px;margin:0px;padding:5px;border:1px solid #0004;border-radius:5px;text-align:right;cursor:initial}.default.svelte-8bd7vo:focus{border:1px solid #06f;outline:none}.default.fast.svelte-8bd7vo{color:tomato}.default.slow.svelte-8bd7vo{color:green}.default.editing.svelte-8bd7vo{border:2px solid #06f;padding:4px;cursor:default}input.svelte-8bd7vo{user-select:none}input.svelte-8bd7vo:not(.editing)::selection{background:#0000}input.editing.svelte-8bd7vo{user-select:text}";
         	append(document.head, style);
         }
 
@@ -677,42 +674,41 @@ var app = (function () {
         		c() {
         			input = element("input");
         			attr(input, "type", "text");
-        			set_style(input, "width", /*width*/ ctx[0] + "px");
-        			set_style(input, "height", /*height*/ ctx[1] + "px");
-        			attr(input, "class", input_class_value = "" + (null_to_empty(/*$$props*/ ctx[17].class) + " svelte-1bnuw38"));
-        			attr(input, "contenteditable", input_contenteditable_value = /*editing*/ ctx[3] ? "true" : "false");
+        			attr(input, "style", /*style*/ ctx[5]);
+        			attr(input, "class", input_class_value = "" + (null_to_empty(/*$$props*/ ctx[16].class) + " svelte-8bd7vo"));
+        			attr(input, "contenteditable", input_contenteditable_value = /*editing*/ ctx[2] ? "true" : "false");
         			attr(input, "tabindex", "0");
-        			toggle_class(input, "default", !/*$$props*/ ctx[17].class ? true : false);
-        			toggle_class(input, "fast", /*stepFactor*/ ctx[4] > 1 ? "fast" : "");
-        			toggle_class(input, "slow", /*stepFactor*/ ctx[4] < 1 ? "slow" : "");
-        			toggle_class(input, "editing", /*editing*/ ctx[3]);
+        			toggle_class(input, "default", !/*$$props*/ ctx[16].class ? true : false);
+        			toggle_class(input, "fast", /*stepFactor*/ ctx[1] > 1 ? "fast" : "");
+        			toggle_class(input, "slow", /*stepFactor*/ ctx[1] < 1 ? "slow" : "");
+        			toggle_class(input, "editing", /*editing*/ ctx[2]);
         		},
         		m(target, anchor) {
         			insert(target, input, anchor);
-        			set_input_value(input, /*visibleValue*/ ctx[6]);
-        			/*input_binding*/ ctx[29](input);
+        			set_input_value(input, /*visibleValue*/ ctx[4]);
+        			/*input_binding*/ ctx[35](input);
 
         			if (!mounted) {
         				dispose = [
         					listen(window, "mousemove", function () {
-        						if (is_function(/*dragging*/ ctx[5] ? /*mousemoveHandler*/ ctx[8] : "")) (/*dragging*/ ctx[5] ? /*mousemoveHandler*/ ctx[8] : "").apply(this, arguments);
+        						if (is_function(/*dragging*/ ctx[3] ? /*mousemoveHandler*/ ctx[7] : "")) (/*dragging*/ ctx[3] ? /*mousemoveHandler*/ ctx[7] : "").apply(this, arguments);
         					}),
         					listen(window, "mouseup", function () {
-        						if (is_function(/*dragging*/ ctx[5] ? /*mouseupHandler*/ ctx[9] : "")) (/*dragging*/ ctx[5] ? /*mouseupHandler*/ ctx[9] : "").apply(this, arguments);
+        						if (is_function(/*dragging*/ ctx[3] ? /*mouseupHandler*/ ctx[8] : "")) (/*dragging*/ ctx[3] ? /*mouseupHandler*/ ctx[8] : "").apply(this, arguments);
         					}),
         					listen(window, "mousedown", function () {
-        						if (is_function(/*editing*/ ctx[3] ? /*windowdownHandler*/ ctx[11] : "")) (/*editing*/ ctx[3] ? /*windowdownHandler*/ ctx[11] : "").apply(this, arguments);
+        						if (is_function(/*editing*/ ctx[2] ? /*windowdownHandler*/ ctx[10] : "")) (/*editing*/ ctx[2] ? /*windowdownHandler*/ ctx[10] : "").apply(this, arguments);
         					}),
-        					listen(window, "keydown", /*keydownHandler*/ ctx[15]),
-        					listen(window, "keyup", /*keyupHandler*/ ctx[16]),
+        					listen(window, "keydown", /*keydownHandler*/ ctx[14]),
+        					listen(window, "keyup", /*keyupHandler*/ ctx[15]),
         					listen(input, "mouseenter", mouseenterHandler),
         					listen(input, "mouseleave", mouseleaveHandler),
-        					listen(input, "mousedown", /*mousedownHandler*/ ctx[7]),
-        					listen(input, "dblclick", /*dblclickHandler*/ ctx[10]),
-        					listen(input, "focus", /*focusHandler*/ ctx[12]),
-        					listen(input, "blur", /*blurHandler*/ ctx[13]),
-        					listen(input, "input", /*inputHandler*/ ctx[14]),
-        					listen(input, "input", /*input_input_handler*/ ctx[28])
+        					listen(input, "mousedown", /*mousedownHandler*/ ctx[6]),
+        					listen(input, "dblclick", /*dblclickHandler*/ ctx[9]),
+        					listen(input, "focus", /*focusHandler*/ ctx[11]),
+        					listen(input, "blur", /*blurHandler*/ ctx[12]),
+        					listen(input, "input", /*inputHandler*/ ctx[13]),
+        					listen(input, "input", /*input_input_handler*/ ctx[34])
         				];
 
         				mounted = true;
@@ -721,47 +717,43 @@ var app = (function () {
         		p(new_ctx, dirty) {
         			ctx = new_ctx;
 
-        			if (dirty[0] & /*width*/ 1) {
-        				set_style(input, "width", /*width*/ ctx[0] + "px");
+        			if (dirty[0] & /*style*/ 32) {
+        				attr(input, "style", /*style*/ ctx[5]);
         			}
 
-        			if (dirty[0] & /*height*/ 2) {
-        				set_style(input, "height", /*height*/ ctx[1] + "px");
-        			}
-
-        			if (dirty[0] & /*$$props*/ 131072 && input_class_value !== (input_class_value = "" + (null_to_empty(/*$$props*/ ctx[17].class) + " svelte-1bnuw38"))) {
+        			if (dirty[0] & /*$$props*/ 65536 && input_class_value !== (input_class_value = "" + (null_to_empty(/*$$props*/ ctx[16].class) + " svelte-8bd7vo"))) {
         				attr(input, "class", input_class_value);
         			}
 
-        			if (dirty[0] & /*editing*/ 8 && input_contenteditable_value !== (input_contenteditable_value = /*editing*/ ctx[3] ? "true" : "false")) {
+        			if (dirty[0] & /*editing*/ 4 && input_contenteditable_value !== (input_contenteditable_value = /*editing*/ ctx[2] ? "true" : "false")) {
         				attr(input, "contenteditable", input_contenteditable_value);
         			}
 
-        			if (dirty[0] & /*visibleValue*/ 64 && input.value !== /*visibleValue*/ ctx[6]) {
-        				set_input_value(input, /*visibleValue*/ ctx[6]);
+        			if (dirty[0] & /*visibleValue*/ 16 && input.value !== /*visibleValue*/ ctx[4]) {
+        				set_input_value(input, /*visibleValue*/ ctx[4]);
         			}
 
-        			if (dirty[0] & /*$$props, $$props*/ 131072) {
-        				toggle_class(input, "default", !/*$$props*/ ctx[17].class ? true : false);
+        			if (dirty[0] & /*$$props, $$props*/ 65536) {
+        				toggle_class(input, "default", !/*$$props*/ ctx[16].class ? true : false);
         			}
 
-        			if (dirty[0] & /*$$props, stepFactor*/ 131088) {
-        				toggle_class(input, "fast", /*stepFactor*/ ctx[4] > 1 ? "fast" : "");
+        			if (dirty[0] & /*$$props, stepFactor*/ 65538) {
+        				toggle_class(input, "fast", /*stepFactor*/ ctx[1] > 1 ? "fast" : "");
         			}
 
-        			if (dirty[0] & /*$$props, stepFactor*/ 131088) {
-        				toggle_class(input, "slow", /*stepFactor*/ ctx[4] < 1 ? "slow" : "");
+        			if (dirty[0] & /*$$props, stepFactor*/ 65538) {
+        				toggle_class(input, "slow", /*stepFactor*/ ctx[1] < 1 ? "slow" : "");
         			}
 
-        			if (dirty[0] & /*$$props, editing*/ 131080) {
-        				toggle_class(input, "editing", /*editing*/ ctx[3]);
+        			if (dirty[0] & /*$$props, editing*/ 65540) {
+        				toggle_class(input, "editing", /*editing*/ ctx[2]);
         			}
         		},
         		i: noop,
         		o: noop,
         		d(detaching) {
         			if (detaching) detach(input);
-        			/*input_binding*/ ctx[29](null);
+        			/*input_binding*/ ctx[35](null);
         			mounted = false;
         			run_all(dispose);
         		}
@@ -787,6 +779,13 @@ var app = (function () {
         	let { height = 25 } = $$props;
         	let { horizontal = true } = $$props;
         	let { vertical = true } = $$props;
+
+        	let { mainStyle } = $$props,
+        		{ fastStyle } = $$props,
+        		{ slowStyle } = $$props,
+        		{ focusStyle } = $$props,
+        		{ editingStyle } = $$props;
+
         	const dispatch = createEventDispatcher();
         	let inputElement;
         	let focussed = false;
@@ -798,6 +797,7 @@ var app = (function () {
         	let editing = false;
         	let altPressed = false;
         	let shiftPressed = false;
+        	let style;
         	visibleValue = setValue(value);
         	preciseValue = setValue(value);
 
@@ -808,7 +808,7 @@ var app = (function () {
         		} else {
         			clickX = e.clientX;
         			clickY = e.clientY;
-        			$$invalidate(5, dragging = true);
+        			$$invalidate(3, dragging = true);
         			preciseValue = setValue(value);
         		} //console.log(e.clientX, e.clientY);
         	}
@@ -826,9 +826,9 @@ var app = (function () {
 
         	function mouseupHandler(e) {
         		// console.log('up');
-        		$$invalidate(5, dragging = false);
+        		$$invalidate(3, dragging = false);
 
-        		$$invalidate(4, stepFactor = 1);
+        		$$invalidate(1, stepFactor = 1);
         	}
 
         	async function dblclickHandler(e) {
@@ -842,14 +842,14 @@ var app = (function () {
 
         	function focusHandler(e) {
         		// console.log(inputElement);
-        		$$invalidate(25, focussed = true);
+        		$$invalidate(31, focussed = true);
 
         		stopEditing();
         	}
 
         	function blurHandler(e) {
         		// console.log('blur');
-        		$$invalidate(25, focussed = false);
+        		$$invalidate(31, focussed = false);
 
         		stopEditing();
         	}
@@ -869,22 +869,22 @@ var app = (function () {
         	function keydownHandler(e) {
         		// console.log(e);
         		if (e.key == "Shift") {
-        			$$invalidate(27, shiftPressed = true);
+        			$$invalidate(33, shiftPressed = true);
         		}
 
         		if (e.key == "Alt") {
-        			$$invalidate(26, altPressed = true);
+        			$$invalidate(32, altPressed = true);
         		}
         	}
 
         	function keyupHandler(e) {
         		// console.log(e)
         		if (e.key == "Shift") {
-        			$$invalidate(27, shiftPressed = false);
+        			$$invalidate(33, shiftPressed = false);
         		}
 
         		if (e.key == "Alt") {
-        			$$invalidate(26, altPressed = false);
+        			$$invalidate(32, altPressed = false);
         		}
 
         		if (focussed) {
@@ -918,8 +918,8 @@ var app = (function () {
         		preciseValue = parseFloat(val);
         		preciseValue = Math.min(preciseValue, max);
         		preciseValue = Math.max(preciseValue, min);
-        		$$invalidate(6, visibleValue = preciseValue.toFixed(decimals));
-        		$$invalidate(18, value = preciseValue.toFixed(decimals));
+        		$$invalidate(4, visibleValue = preciseValue.toFixed(decimals));
+        		$$invalidate(17, value = preciseValue.toFixed(decimals));
         		dispatch("input", value);
         		dispatch("change", value);
         	}
@@ -929,20 +929,20 @@ var app = (function () {
         		preciseValue += numSteps * step * stepFactor;
         		preciseValue = Math.min(preciseValue, max);
         		preciseValue = Math.max(preciseValue, min);
-        		$$invalidate(6, visibleValue = preciseValue.toFixed(decimals));
-        		$$invalidate(18, value = preciseValue.toFixed(decimals));
+        		$$invalidate(4, visibleValue = preciseValue.toFixed(decimals));
+        		$$invalidate(17, value = preciseValue.toFixed(decimals));
         		dispatch("input", value);
         		dispatch("change", value);
         	}
 
         	function startEditing() {
         		preciseValue = parseFloat(visibleValue);
-        		$$invalidate(3, editing = true);
+        		$$invalidate(2, editing = true);
         		inputElement?.setSelectionRange(0, 30);
         	}
 
         	function stopEditing() {
-        		$$invalidate(3, editing = false);
+        		$$invalidate(2, editing = false);
         		inputElement?.setSelectionRange(0, 0);
         		preciseValue = parseFloat(visibleValue);
         		setValue(preciseValue);
@@ -950,48 +950,70 @@ var app = (function () {
 
         	function input_input_handler() {
         		visibleValue = this.value;
-        		$$invalidate(6, visibleValue);
+        		$$invalidate(4, visibleValue);
         	}
 
         	function input_binding($$value) {
         		binding_callbacks[$$value ? "unshift" : "push"](() => {
         			inputElement = $$value;
-        			($$invalidate(2, inputElement), $$invalidate(3, editing));
+        			($$invalidate(0, inputElement), $$invalidate(2, editing));
         		});
         	}
 
         	$$self.$$set = $$new_props => {
-        		$$invalidate(17, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
-        		if ("value" in $$new_props) $$invalidate(18, value = $$new_props.value);
-        		if ("min" in $$new_props) $$invalidate(19, min = $$new_props.min);
-        		if ("max" in $$new_props) $$invalidate(20, max = $$new_props.max);
-        		if ("step" in $$new_props) $$invalidate(21, step = $$new_props.step);
-        		if ("decimals" in $$new_props) $$invalidate(22, decimals = $$new_props.decimals);
-        		if ("width" in $$new_props) $$invalidate(0, width = $$new_props.width);
-        		if ("height" in $$new_props) $$invalidate(1, height = $$new_props.height);
-        		if ("horizontal" in $$new_props) $$invalidate(23, horizontal = $$new_props.horizontal);
-        		if ("vertical" in $$new_props) $$invalidate(24, vertical = $$new_props.vertical);
+        		$$invalidate(16, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
+        		if ("value" in $$new_props) $$invalidate(17, value = $$new_props.value);
+        		if ("min" in $$new_props) $$invalidate(18, min = $$new_props.min);
+        		if ("max" in $$new_props) $$invalidate(19, max = $$new_props.max);
+        		if ("step" in $$new_props) $$invalidate(20, step = $$new_props.step);
+        		if ("decimals" in $$new_props) $$invalidate(21, decimals = $$new_props.decimals);
+        		if ("width" in $$new_props) $$invalidate(22, width = $$new_props.width);
+        		if ("height" in $$new_props) $$invalidate(23, height = $$new_props.height);
+        		if ("horizontal" in $$new_props) $$invalidate(24, horizontal = $$new_props.horizontal);
+        		if ("vertical" in $$new_props) $$invalidate(25, vertical = $$new_props.vertical);
+        		if ("mainStyle" in $$new_props) $$invalidate(26, mainStyle = $$new_props.mainStyle);
+        		if ("fastStyle" in $$new_props) $$invalidate(27, fastStyle = $$new_props.fastStyle);
+        		if ("slowStyle" in $$new_props) $$invalidate(28, slowStyle = $$new_props.slowStyle);
+        		if ("focusStyle" in $$new_props) $$invalidate(29, focusStyle = $$new_props.focusStyle);
+        		if ("editingStyle" in $$new_props) $$invalidate(30, editingStyle = $$new_props.editingStyle);
         	};
 
         	$$self.$$.update = () => {
-        		if ($$self.$$.dirty[0] & /*inputElement, editing*/ 12) {
+        		if ($$self.$$.dirty[0] & /*inputElement, editing*/ 5) {
         			// updaters --------------------------------
         			 if (inputElement) {
-        				$$invalidate(2, inputElement.readOnly = !editing, inputElement);
+        				$$invalidate(0, inputElement.readOnly = !editing, inputElement);
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*focussed, altPressed, shiftPressed*/ 234881024) {
+        		if ($$self.$$.dirty[0] & /*editing*/ 4 | $$self.$$.dirty[1] & /*focussed, altPressed, shiftPressed*/ 7) {
         			 {
-        				$$invalidate(4, stepFactor = 1);
+        				$$invalidate(1, stepFactor = 1);
 
-        				if (focussed) {
+        				if (focussed && !editing) {
         					if (altPressed && shiftPressed) {
-        						$$invalidate(4, stepFactor = 10);
+        						$$invalidate(1, stepFactor = 10);
         					} else if (altPressed) {
-        						$$invalidate(4, stepFactor = 0.1);
+        						$$invalidate(1, stepFactor = 0.1);
         					}
         				}
+        			}
+        		}
+
+        		if ($$self.$$.dirty[0] & /*mainStyle, style, focusStyle, editing, stepFactor, fastStyle, slowStyle, editingStyle*/ 2080374822 | $$self.$$.dirty[1] & /*focussed*/ 1) {
+        			 {
+        				$$invalidate(5, style = mainStyle ?? "");
+        				$$invalidate(5, style += focussed && focusStyle ? ";" + focusStyle : "");
+
+        				$$invalidate(5, style += !editing && stepFactor > 1 && fastStyle
+        				? ";" + fastStyle
+        				: "");
+
+        				$$invalidate(5, style += !editing && stepFactor < 1 && slowStyle
+        				? ";" + slowStyle
+        				: "");
+
+        				$$invalidate(5, style += editing && editingStyle ? ";" + editingStyle : "");
         			}
         		}
         	};
@@ -999,13 +1021,12 @@ var app = (function () {
         	$$props = exclude_internal_props($$props);
 
         	return [
-        		width,
-        		height,
         		inputElement,
-        		editing,
         		stepFactor,
+        		editing,
         		dragging,
         		visibleValue,
+        		style,
         		mousedownHandler,
         		mousemoveHandler,
         		mouseupHandler,
@@ -1022,8 +1043,15 @@ var app = (function () {
         		max,
         		step,
         		decimals,
+        		width,
+        		height,
         		horizontal,
         		vertical,
+        		mainStyle,
+        		fastStyle,
+        		slowStyle,
+        		focusStyle,
+        		editingStyle,
         		focussed,
         		altPressed,
         		shiftPressed,
@@ -1035,7 +1063,7 @@ var app = (function () {
         class NumberSpinner extends SvelteComponent {
         	constructor(options) {
         		super();
-        		if (!document.getElementById("svelte-1bnuw38-style")) add_css();
+        		if (!document.getElementById("svelte-8bd7vo-style")) add_css();
 
         		init(
         			this,
@@ -1044,15 +1072,20 @@ var app = (function () {
         			create_fragment,
         			safe_not_equal,
         			{
-        				value: 18,
-        				min: 19,
-        				max: 20,
-        				step: 21,
-        				decimals: 22,
-        				width: 0,
-        				height: 1,
-        				horizontal: 23,
-        				vertical: 24
+        				value: 17,
+        				min: 18,
+        				max: 19,
+        				step: 20,
+        				decimals: 21,
+        				width: 22,
+        				height: 23,
+        				horizontal: 24,
+        				vertical: 25,
+        				mainStyle: 26,
+        				fastStyle: 27,
+        				slowStyle: 28,
+        				focusStyle: 29,
+        				editingStyle: 30
         			},
         			[-1, -1]
         		);
@@ -1129,17 +1162,28 @@ var app = (function () {
     	let t34;
     	let td13;
     	let numberspinner4;
+    	let updating_value_4;
     	let t35;
     	let td14;
     	let t36;
     	let t37;
-    	let br1;
     	let t38;
-    	let t39;
+    	let tr5;
+    	let td15;
+    	let t40;
+    	let td16;
+    	let numberspinner5;
+    	let t41;
+    	let td17;
+    	let t42;
+    	let t43;
+    	let br1;
+    	let t44;
+    	let t45;
     	let current;
 
     	function numberspinner0_value_binding(value) {
-    		/*numberspinner0_value_binding*/ ctx[7].call(null, value);
+    		/*numberspinner0_value_binding*/ ctx[8].call(null, value);
     	}
 
     	let numberspinner0_props = {};
@@ -1156,7 +1200,7 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner0, "value", numberspinner0_value_binding));
 
     	function numberspinner1_value_binding(value) {
-    		/*numberspinner1_value_binding*/ ctx[8].call(null, value);
+    		/*numberspinner1_value_binding*/ ctx[9].call(null, value);
     	}
 
     	let numberspinner1_props = { min: "0", max: "1000", vertical: false };
@@ -1173,7 +1217,7 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner1, "value", numberspinner1_value_binding));
 
     	function numberspinner2_value_binding(value) {
-    		/*numberspinner2_value_binding*/ ctx[9].call(null, value);
+    		/*numberspinner2_value_binding*/ ctx[10].call(null, value);
     	}
 
     	let numberspinner2_props = {
@@ -1195,15 +1239,16 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner2, "value", numberspinner2_value_binding));
 
     	function numberspinner3_value_binding(value) {
-    		/*numberspinner3_value_binding*/ ctx[10].call(null, value);
+    		/*numberspinner3_value_binding*/ ctx[11].call(null, value);
     	}
 
     	let numberspinner3_props = {
-    		min: "0",
-    		max: "1",
-    		step: "0.001",
-    		decimals: "3",
-    		class: "number-spinner-custom"
+    		step: "10",
+    		mainStyle: "color:#aaa; width:80px; border-radius:20px",
+    		focusStyle: "color:#06f",
+    		editingStyle: "color:#00f; background-color:#06f4",
+    		fastStyle: "color:#f00",
+    		slowStyle: "color:#0c0"
     	};
 
     	if (/*value4*/ ctx[3] !== void 0) {
@@ -1217,17 +1262,40 @@ var app = (function () {
 
     	binding_callbacks.push(() => bind(numberspinner3, "value", numberspinner3_value_binding));
 
+    	function numberspinner4_value_binding(value) {
+    		/*numberspinner4_value_binding*/ ctx[12].call(null, value);
+    	}
+
+    	let numberspinner4_props = {
+    		min: "0",
+    		max: "1",
+    		step: "0.001",
+    		decimals: "3",
+    		class: "number-spinner-custom"
+    	};
+
+    	if (/*value5*/ ctx[4] !== void 0) {
+    		numberspinner4_props.value = /*value5*/ ctx[4];
+    	}
+
     	numberspinner4 = new dist({
+    			props: numberspinner4_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(numberspinner4, "value", numberspinner4_value_binding));
+
+    	numberspinner5 = new dist({
     			props: {
-    				value: /*value5*/ ctx[6],
+    				value: /*value6*/ ctx[7],
     				min: "0",
     				max: "100"
     			},
     			$$inline: true
     		});
 
-    	numberspinner4.$on("change", /*change_handler*/ ctx[11]);
-    	numberspinner4.$on("input", /*input_handler*/ ctx[12]);
+    	numberspinner5.$on("change", /*change_handler*/ ctx[13]);
+    	numberspinner5.$on("input", /*input_handler*/ ctx[14]);
 
     	const block = {
     		c: function create() {
@@ -1281,7 +1349,7 @@ var app = (function () {
     			t26 = space();
     			tr3 = element("tr");
     			td9 = element("td");
-    			td9.textContent = "Custom class given for individual styling";
+    			td9.textContent = "Individual styling using props";
     			t28 = space();
     			td10 = element("td");
     			create_component(numberspinner3.$$.fragment);
@@ -1292,65 +1360,84 @@ var app = (function () {
     			t32 = space();
     			tr4 = element("tr");
     			td12 = element("td");
-    			td12.textContent = "Retreiving the value using the input and change events";
+    			td12.textContent = "Individual styling using custom class";
     			t34 = space();
     			td13 = element("td");
     			create_component(numberspinner4.$$.fragment);
     			t35 = space();
     			td14 = element("td");
-    			t36 = text("Current input value is ");
-    			t37 = text(/*value5input*/ ctx[4]);
+    			t36 = text("Current value is ");
+    			t37 = text(/*value5*/ ctx[4]);
+    			t38 = space();
+    			tr5 = element("tr");
+    			td15 = element("td");
+    			td15.textContent = "Retreiving the value using the input and change events";
+    			t40 = space();
+    			td16 = element("td");
+    			create_component(numberspinner5.$$.fragment);
+    			t41 = space();
+    			td17 = element("td");
+    			t42 = text("Current input value is ");
+    			t43 = text(/*value6input*/ ctx[5]);
     			br1 = element("br");
-    			t38 = text(" \n    Current change value is ");
-    			t39 = text(/*value5change*/ ctx[5]);
-    			add_location(h2, file, 13, 0, 229);
-    			add_location(br0, file, 16, 76, 349);
-    			add_location(i0, file, 17, 8, 362);
-    			add_location(i1, file, 17, 38, 392);
-    			add_location(p, file, 15, 0, 269);
-    			attr_dev(td0, "class", "svelte-zaqjbn");
-    			add_location(td0, file, 22, 4, 474);
-    			attr_dev(td1, "class", "svelte-zaqjbn");
-    			add_location(td1, file, 23, 4, 534);
-    			attr_dev(td2, "class", "svelte-zaqjbn");
-    			add_location(td2, file, 24, 4, 600);
-    			attr_dev(tr0, "class", "svelte-zaqjbn");
-    			add_location(tr0, file, 21, 2, 465);
-    			attr_dev(td3, "class", "svelte-zaqjbn");
-    			add_location(td3, file, 28, 4, 656);
-    			attr_dev(td4, "class", "svelte-zaqjbn");
-    			add_location(td4, file, 29, 4, 769);
-    			attr_dev(td5, "class", "svelte-zaqjbn");
-    			add_location(td5, file, 30, 4, 867);
-    			attr_dev(tr1, "class", "svelte-zaqjbn");
-    			add_location(tr1, file, 27, 2, 647);
-    			attr_dev(td6, "class", "svelte-zaqjbn");
-    			add_location(td6, file, 34, 4, 923);
-    			attr_dev(td7, "class", "svelte-zaqjbn");
-    			add_location(td7, file, 35, 3, 999);
-    			attr_dev(td8, "class", "svelte-zaqjbn");
-    			add_location(td8, file, 36, 4, 1099);
-    			attr_dev(tr2, "class", "svelte-zaqjbn");
-    			add_location(tr2, file, 33, 2, 914);
-    			attr_dev(td9, "class", "svelte-zaqjbn");
-    			add_location(td9, file, 40, 4, 1155);
-    			attr_dev(td10, "class", "svelte-zaqjbn");
-    			add_location(td10, file, 41, 4, 1211);
-    			attr_dev(td11, "class", "svelte-zaqjbn");
-    			add_location(td11, file, 42, 4, 1341);
-    			attr_dev(tr3, "class", "svelte-zaqjbn");
-    			add_location(tr3, file, 39, 2, 1146);
-    			attr_dev(td12, "class", "svelte-zaqjbn");
-    			add_location(td12, file, 46, 4, 1397);
-    			attr_dev(td13, "class", "svelte-zaqjbn");
-    			add_location(td13, file, 47, 4, 1466);
-    			add_location(br1, file, 48, 44, 1673);
-    			attr_dev(td14, "class", "svelte-zaqjbn");
-    			add_location(td14, file, 48, 4, 1633);
-    			attr_dev(tr4, "class", "svelte-zaqjbn");
-    			add_location(tr4, file, 45, 2, 1388);
-    			attr_dev(table, "class", "svelte-zaqjbn");
-    			add_location(table, file, 20, 0, 455);
+    			t44 = text(" \n    Current change value is ");
+    			t45 = text(/*value6change*/ ctx[6]);
+    			add_location(h2, file, 14, 0, 249);
+    			add_location(br0, file, 17, 76, 369);
+    			add_location(i0, file, 18, 8, 382);
+    			add_location(i1, file, 18, 38, 412);
+    			add_location(p, file, 16, 0, 289);
+    			attr_dev(td0, "class", "svelte-1cb7yrb");
+    			add_location(td0, file, 23, 4, 494);
+    			attr_dev(td1, "class", "svelte-1cb7yrb");
+    			add_location(td1, file, 24, 4, 554);
+    			attr_dev(td2, "class", "svelte-1cb7yrb");
+    			add_location(td2, file, 25, 4, 606);
+    			attr_dev(tr0, "class", "svelte-1cb7yrb");
+    			add_location(tr0, file, 22, 2, 485);
+    			attr_dev(td3, "class", "svelte-1cb7yrb");
+    			add_location(td3, file, 29, 4, 662);
+    			attr_dev(td4, "class", "svelte-1cb7yrb");
+    			add_location(td4, file, 30, 4, 775);
+    			attr_dev(td5, "class", "svelte-1cb7yrb");
+    			add_location(td5, file, 31, 4, 859);
+    			attr_dev(tr1, "class", "svelte-1cb7yrb");
+    			add_location(tr1, file, 28, 2, 653);
+    			attr_dev(td6, "class", "svelte-1cb7yrb");
+    			add_location(td6, file, 35, 4, 915);
+    			attr_dev(td7, "class", "svelte-1cb7yrb");
+    			add_location(td7, file, 36, 3, 991);
+    			attr_dev(td8, "class", "svelte-1cb7yrb");
+    			add_location(td8, file, 37, 4, 1077);
+    			attr_dev(tr2, "class", "svelte-1cb7yrb");
+    			add_location(tr2, file, 34, 2, 906);
+    			attr_dev(td9, "class", "svelte-1cb7yrb");
+    			add_location(td9, file, 41, 4, 1133);
+    			attr_dev(td10, "class", "svelte-1cb7yrb");
+    			add_location(td10, file, 42, 4, 1178);
+    			attr_dev(td11, "class", "svelte-1cb7yrb");
+    			add_location(td11, file, 50, 4, 1490);
+    			attr_dev(tr3, "class", "svelte-1cb7yrb");
+    			add_location(tr3, file, 40, 2, 1124);
+    			attr_dev(td12, "class", "svelte-1cb7yrb");
+    			add_location(td12, file, 54, 4, 1546);
+    			attr_dev(td13, "class", "svelte-1cb7yrb");
+    			add_location(td13, file, 55, 4, 1598);
+    			attr_dev(td14, "class", "svelte-1cb7yrb");
+    			add_location(td14, file, 59, 4, 1741);
+    			attr_dev(tr4, "class", "svelte-1cb7yrb");
+    			add_location(tr4, file, 53, 2, 1537);
+    			attr_dev(td15, "class", "svelte-1cb7yrb");
+    			add_location(td15, file, 63, 4, 1797);
+    			attr_dev(td16, "class", "svelte-1cb7yrb");
+    			add_location(td16, file, 64, 4, 1866);
+    			add_location(br1, file, 69, 44, 2099);
+    			attr_dev(td17, "class", "svelte-1cb7yrb");
+    			add_location(td17, file, 69, 4, 2059);
+    			attr_dev(tr5, "class", "svelte-1cb7yrb");
+    			add_location(tr5, file, 62, 2, 1788);
+    			attr_dev(table, "class", "svelte-1cb7yrb");
+    			add_location(table, file, 21, 0, 475);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1417,9 +1504,19 @@ var app = (function () {
     			append_dev(tr4, td14);
     			append_dev(td14, t36);
     			append_dev(td14, t37);
-    			append_dev(td14, br1);
-    			append_dev(td14, t38);
-    			append_dev(td14, t39);
+    			append_dev(table, t38);
+    			append_dev(table, tr5);
+    			append_dev(tr5, td15);
+    			append_dev(tr5, t40);
+    			append_dev(tr5, td16);
+    			mount_component(numberspinner5, td16, null);
+    			append_dev(tr5, t41);
+    			append_dev(tr5, td17);
+    			append_dev(td17, t42);
+    			append_dev(td17, t43);
+    			append_dev(td17, br1);
+    			append_dev(td17, t44);
+    			append_dev(td17, t45);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
@@ -1463,8 +1560,18 @@ var app = (function () {
 
     			numberspinner3.$set(numberspinner3_changes);
     			if (!current || dirty & /*value4*/ 8) set_data_dev(t31, /*value4*/ ctx[3]);
-    			if (!current || dirty & /*value5input*/ 16) set_data_dev(t37, /*value5input*/ ctx[4]);
-    			if (!current || dirty & /*value5change*/ 32) set_data_dev(t39, /*value5change*/ ctx[5]);
+    			const numberspinner4_changes = {};
+
+    			if (!updating_value_4 && dirty & /*value5*/ 16) {
+    				updating_value_4 = true;
+    				numberspinner4_changes.value = /*value5*/ ctx[4];
+    				add_flush_callback(() => updating_value_4 = false);
+    			}
+
+    			numberspinner4.$set(numberspinner4_changes);
+    			if (!current || dirty & /*value5*/ 16) set_data_dev(t37, /*value5*/ ctx[4]);
+    			if (!current || dirty & /*value6input*/ 32) set_data_dev(t43, /*value6input*/ ctx[5]);
+    			if (!current || dirty & /*value6change*/ 64) set_data_dev(t45, /*value6change*/ ctx[6]);
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -1473,6 +1580,7 @@ var app = (function () {
     			transition_in(numberspinner2.$$.fragment, local);
     			transition_in(numberspinner3.$$.fragment, local);
     			transition_in(numberspinner4.$$.fragment, local);
+    			transition_in(numberspinner5.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
@@ -1481,6 +1589,7 @@ var app = (function () {
     			transition_out(numberspinner2.$$.fragment, local);
     			transition_out(numberspinner3.$$.fragment, local);
     			transition_out(numberspinner4.$$.fragment, local);
+    			transition_out(numberspinner5.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
@@ -1494,6 +1603,7 @@ var app = (function () {
     			destroy_component(numberspinner2);
     			destroy_component(numberspinner3);
     			destroy_component(numberspinner4);
+    			destroy_component(numberspinner5);
     		}
     	};
 
@@ -1515,9 +1625,10 @@ var app = (function () {
     	let value2 = 500;
     	let value3 = 3.28;
     	let value4 = 0.5;
-    	let value5 = 50;
-    	let value5input = value5;
-    	let value5change = value5;
+    	let value5 = 0.5;
+    	let value6 = 50;
+    	let value6input = value6;
+    	let value6change = value6;
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
@@ -1544,12 +1655,17 @@ var app = (function () {
     		$$invalidate(3, value4);
     	}
 
+    	function numberspinner4_value_binding(value) {
+    		value5 = value;
+    		$$invalidate(4, value5);
+    	}
+
     	const change_handler = ev => {
-    		$$invalidate(5, value5change = ev.detail);
+    		$$invalidate(6, value6change = ev.detail);
     	};
 
     	const input_handler = ev => {
-    		$$invalidate(4, value5input = ev.detail);
+    		$$invalidate(5, value6input = ev.detail);
     	};
 
     	$$self.$capture_state = () => ({
@@ -1559,8 +1675,9 @@ var app = (function () {
     		value3,
     		value4,
     		value5,
-    		value5input,
-    		value5change
+    		value6,
+    		value6input,
+    		value6change
     	});
 
     	$$self.$inject_state = $$props => {
@@ -1568,9 +1685,10 @@ var app = (function () {
     		if ("value2" in $$props) $$invalidate(1, value2 = $$props.value2);
     		if ("value3" in $$props) $$invalidate(2, value3 = $$props.value3);
     		if ("value4" in $$props) $$invalidate(3, value4 = $$props.value4);
-    		if ("value5" in $$props) $$invalidate(6, value5 = $$props.value5);
-    		if ("value5input" in $$props) $$invalidate(4, value5input = $$props.value5input);
-    		if ("value5change" in $$props) $$invalidate(5, value5change = $$props.value5change);
+    		if ("value5" in $$props) $$invalidate(4, value5 = $$props.value5);
+    		if ("value6" in $$props) $$invalidate(7, value6 = $$props.value6);
+    		if ("value6input" in $$props) $$invalidate(5, value6input = $$props.value6input);
+    		if ("value6change" in $$props) $$invalidate(6, value6change = $$props.value6change);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -1582,13 +1700,15 @@ var app = (function () {
     		value2,
     		value3,
     		value4,
-    		value5input,
-    		value5change,
     		value5,
+    		value6input,
+    		value6change,
+    		value6,
     		numberspinner0_value_binding,
     		numberspinner1_value_binding,
     		numberspinner2_value_binding,
     		numberspinner3_value_binding,
+    		numberspinner4_value_binding,
     		change_handler,
     		input_handler
     	];

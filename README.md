@@ -22,27 +22,92 @@ npm install --save svelte-number-spinner
   let value = 50;
 </script>
 
-<NumberSpinner bind:value min=0 max=100 ></NumberSpinner>
+<NumberSpinner bind:value min=0 max=100 />
 ```
 
 <br />
 
 ## Props
 
-| Prop           | Type    | Default     | Description                             |
-| -------------- | ------- | ----------- | --------------------------------------- |
-| value          | Number  | 0           | Input value                             |
-| min            | Number  | -MAX_VALUE  | Minimum value                           |
-| max            | Number  | +MAX_VALUE  | Maximum value                           |
-| step           | Number  | 1           | Step                                    |
-| decimals       | Number  | 0           | Number of decimals                      | 
-| width          | Number  | 60          | Width of the component                  |
-| height         | Number  | 25          | Height of the component                 |
-| horizontal     | Boolean | true        | Change value by dragging horizontally   |
-| vertical       | Boolean | true        | Change value by dragging vertically     |
-| class          | String  | undefined   | Custom component class name             |
+| Prop           | Type    | Default     | Description                                 |
+| -------------- | ------- | ----------- | ------------------------------------------- |
+| value          | Number  | 0           | Input value                                 |
+| min            | Number  | -MAX_VALUE  | Minimum value                               |
+| max            | Number  | +MAX_VALUE  | Maximum value                               |
+| step           | Number  | 1           | Step                                        |
+| decimals       | Number  | 0           | Number of decimals                          | 
+| horizontal     | Boolean | true        | Change value by dragging horizontally       |
+| vertical       | Boolean | true        | Change value by dragging vertically         |
+| class          | String  | undefined   | Custom component class name                 |
+| mainStyle      | String  | undefined   | Custom inline style for general appearance  |
+| focusStyle     | String  | undefined   | Custom inline style when focussed           |
+| editingStyle   | String  | undefined   | Custom inline style when editing            |
+| fastStyle      | String  | undefined   | Custom inline style for fast mode           |
+| slowStyle      | String  | undefined   | Custom inline style for slow mode           |
 
 <br />
+
+## Styling
+
+### Styling with custom class name
+
+You can style the component by overriding the default styles by giving a custom class name. If you give your own class name all default styles are removed. So, best would be to take the default styles below, put it in your global css, rename the class and remove what you don't need.
+
+It's recomended to keep the order for `:focus` and `.fast`/`.slow` selectors. Default styles are:
+
+```css
+ .default {
+    display: inline-block;
+    box-sizing: border-box;
+    font-variant-numeric: tabular-nums;
+    background-color: white;
+    color: black;
+    width: 60px;
+    height: 25px;
+    margin: 0px;
+    padding: 5px;
+    border: 1px solid #0004;
+    border-radius: 5px;
+    text-align: right;
+    cursor: initial;
+  }
+
+  .default:focus {
+    border: 1px solid #06f;
+    outline:none;       /* removes the standard focus border */
+  }
+
+  .default.fast {
+    color: tomato;
+  }
+
+  .default.slow {
+    color: green;
+  }
+
+  .default.editing {
+    border: 2px solid #06f;
+    padding: 4px;
+    cursor: default;
+  }
+
+```
+
+### Styling with props
+
+If you want to replace just a few of the styles or add some more without removing the default style, it might be easier for you to use the props `mainStyle`, `focusStyle`, `fastStyle`, `slowStyle` and `editingStyle`.
+
+For each of them you can give a style string like `width:80px; padding-right:10px`. In the example below only the font color for fast and slow mode are changed:
+
+```html
+<script>
+  import NumberSpinner from "svelte-number-spinner";
+</script>
+
+<NumberSpinner fastStyle='color:orange' slowStyle='color:purple' />
+```
+
+
 
 ## Events
 
@@ -64,11 +129,18 @@ npm install --save svelte-number-spinner
   }
 </script>
 
-<NumberSpinner on:input="handleInput" on:change="handleChange" ></NumberSpinner>
+<NumberSpinner on:input="handleInput" on:change="handleChange" />
 ```
 
 In most cases you will probably use ```bind:value``` to react to changes of the value. This is more or less the same as listening to the change event. Use the input event if you need to get the changes while the user is typing.
 
 <br />
 
+## Develop
+
+```bash
+npm run dev
+```
+
+This will build the component and start a livereload server for the example. 
 

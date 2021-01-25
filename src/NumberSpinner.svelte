@@ -10,6 +10,7 @@
   export let height = 25;
   export let horizontal = true;
   export let vertical = true;
+  export let mainStyle, fastStyle, slowStyle, focusStyle, editingStyle;
 
   const dispatch = createEventDispatcher();
 
@@ -23,6 +24,7 @@
   let editing = false;
   let altPressed = false;
   let shiftPressed = false;
+  let style;
 
   visibleValue = setValue(value);
   preciseValue = setValue(value);
@@ -160,13 +162,21 @@
 
   $: {
     stepFactor = 1;
-    if (focussed) {
+    if (focussed && !editing) {
       if (altPressed && shiftPressed) {
         stepFactor = 10;
       } else if (altPressed) {
         stepFactor = 0.1; 
       }       
     }
+  }
+
+  $: {
+    style = mainStyle ?? '';
+    style += focussed && focusStyle ? ';' + focusStyle : '';
+    style += !editing && stepFactor > 1 && fastStyle ? ';' + fastStyle : '';
+    style += !editing && stepFactor < 1 && slowStyle ? ';' + slowStyle : '';
+    style += editing && editingStyle ? ';' + editingStyle : '';
   }
 
   function setValue(val) {
@@ -226,7 +236,7 @@
     on:focus={focusHandler}
     on:blur={blurHandler}
     on:input={inputHandler}
-    style='width:{width}px; height:{height}px;'
+    style={style}
     class={$$props.class}
     class:default={!$$props.class ? true : false}
     class:fast={stepFactor > 1 ? 'fast' : ''}
@@ -249,12 +259,19 @@
     font-variant-numeric: tabular-nums;
     background-color: white;
     color: black;
+    width: 60px;
+    height: 25px;
     margin: 0px;
     padding: 5px;
     border: 1px solid #0004;
     border-radius: 5px;
     text-align: right;
     cursor: initial;
+  }
+
+  .default:focus {
+    border: 1px solid #06f;
+    outline:none;       /* removes the standard focus border */
   }
 
   .default.fast {
@@ -265,17 +282,11 @@
     color: green;
   }
 
-  .default:focus {
-    border: 1px solid #06f;
-    outline:none;       /* removes the standard focus border */
-  }
-
   .default.editing {
     border: 2px solid #06f;
     padding: 4px;
     cursor: default;
   }
-
 
 
   /* mandatory css styles, not customizable */
