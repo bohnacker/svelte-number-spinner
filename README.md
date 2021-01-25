@@ -116,6 +116,8 @@ For each of them you can give a style string like `width:80px; padding-right:10p
 | input          | (ev) => ev.detail  | Fires when value changes                             |
 | change         | (ev) => ev.detail  | Fires when value changes, won't fire while typing    |
 
+<br>
+
 ```html
 <script>
   import NumberSpinner from "svelte-number-spinner";
