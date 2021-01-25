@@ -8,7 +8,11 @@
   export let decimals = 0;
   export let horizontal = true;
   export let vertical = true;
-  export let mainStyle, fastStyle, slowStyle, focusStyle, editingStyle;
+  export let mainStyle = undefined;
+  export let fastStyle = undefined;
+  export let slowStyle = undefined;
+  export let focusStyle = undefined;
+  export let editingStyle = undefined;
 
   const dispatch = createEventDispatcher();
 
