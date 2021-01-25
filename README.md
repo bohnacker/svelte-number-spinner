@@ -25,7 +25,6 @@ npm install --save svelte-number-spinner
 <NumberSpinner bind:value min=0 max=100 />
 ```
 
-<br />
 
 ## Props
 
@@ -45,7 +44,6 @@ npm install --save svelte-number-spinner
 | fastStyle      | String  | undefined   | Custom inline style for fast mode           |
 | slowStyle      | String  | undefined   | Custom inline style for slow mode           |
 
-<br />
 
 ## Styling
 
@@ -69,12 +67,12 @@ It's recomended to keep the order for `:focus` and `.fast`/`.slow` selectors. De
     border: 1px solid #0004;
     border-radius: 5px;
     text-align: right;
-    cursor: initial;
+    cursor: initial;            /* get rid of the caret cursor in non-editing mode */
   }
 
   .default:focus {
     border: 1px solid #06f;
-    outline:none;       /* removes the standard focus border */
+    outline:none;               /* removes the standard focus border */
   }
 
   .default.fast {
@@ -97,17 +95,15 @@ It's recomended to keep the order for `:focus` and `.fast`/`.slow` selectors. De
 
 If you want to replace just a few of the styles or add some more without removing the default style, it might be easier for you to use the props `mainStyle`, `focusStyle`, `fastStyle`, `slowStyle` and `editingStyle`.
 
-For each of them you can give a style string like `width:80px; padding-right:10px`. In the example below only the font color for fast and slow mode are changed:
+For each of them you can give a style string like `"width:80px; padding-right:10px"`. In the example below only the font color for fast and slow mode are changed:
 
 ```html
 <script>
   import NumberSpinner from "svelte-number-spinner";
 </script>
 
-<NumberSpinner fastStyle='color:orange' slowStyle='color:purple' />
+<NumberSpinner fastStyle="color:orange" slowStyle="color:purple" />
 ```
-
-
 
 ## Events
 
@@ -116,7 +112,7 @@ For each of them you can give a style string like `width:80px; padding-right:10p
 | input          | (ev) => ev.detail  | Fires when value changes                             |
 | change         | (ev) => ev.detail  | Fires when value changes, won't fire while typing    |
 
-<br>
+<br />
 
 ```html
 <script>
@@ -136,7 +132,6 @@ For each of them you can give a style string like `width:80px; padding-right:10p
 
 In most cases you will probably use ```bind:value``` to react to changes of the value. This is more or less the same as listening to the change event. Use the input event if you need to get the changes while the user is typing.
 
-<br />
 
 ## Develop
 

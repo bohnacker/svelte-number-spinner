@@ -268,12 +268,12 @@
     border: 1px solid #0004;
     border-radius: 5px;
     text-align: right;
-    cursor: initial;
+    cursor: initial;            /* get rid of the caret cursor in non-editing mode */
   }
 
   .default:focus {
     border: 1px solid #06f;
-    outline:none;       /* removes the standard focus border */
+    outline:none;               /* removes the standard focus border */
   }
 
   .default.fast {
