@@ -31,7 +31,8 @@
   // handlers --------------------------------
 
   function mouseenterHandler(e) {
-    inputElement?.focus();
+    // seems not to be very practical to have focus on rollover:
+    // inputElement?.focus();
   }
   
   function mouseleaveHandler(e) {
@@ -101,16 +102,9 @@
       preciseValue = Math.min(preciseValue, max);
       preciseValue = Math.max(preciseValue, min);
 
-      visibleValue = preciseValue.toFixed(decimals);
-      dispatch('input', visibleValue);
+      dispatch('input', preciseValue.toFixed(decimals));
     }
   }
-
-  function changeHandler(e) {
-    // console.log(e);
-    // dispatch('input', value);
-  }
-
 
   function keydownHandler(e) {
     // console.log(e);
@@ -232,7 +226,6 @@
     on:focus={focusHandler}
     on:blur={blurHandler}
     on:input={inputHandler}
-    on:change={changeHandler}
     style='width:{width}px; height:{height}px;'
     class={$$props.class}
     class:default={!$$props.class ? true : false}
@@ -274,7 +267,6 @@
 
   .default:focus {
     border: 1px solid #06f;
-    /*outline-width: 0;    removes the standard focus border */
     outline:none;       /* removes the standard focus border */
   }
 

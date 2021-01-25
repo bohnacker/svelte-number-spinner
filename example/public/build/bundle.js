@@ -661,8 +661,8 @@ var app = (function () {
 
         function add_css() {
         	var style = element("style");
-        	style.id = "svelte-dakzd9-style";
-        	style.textContent = ".default.svelte-dakzd9{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;margin:0px;padding:5px;border:1px solid #0004;border-radius:5px;text-align:right;cursor:initial}.default.fast.svelte-dakzd9{color:tomato}.default.slow.svelte-dakzd9{color:green}.default.svelte-dakzd9:focus{border:1px solid #06f;outline:none}.default.editing.svelte-dakzd9{border:2px solid #06f;padding:4px;cursor:default}input.svelte-dakzd9{user-select:none}input.svelte-dakzd9:not(.editing)::selection{background:#0000}input.editing.svelte-dakzd9{user-select:text}";
+        	style.id = "svelte-1bnuw38-style";
+        	style.textContent = ".default.svelte-1bnuw38{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;margin:0px;padding:5px;border:1px solid #0004;border-radius:5px;text-align:right;cursor:initial}.default.fast.svelte-1bnuw38{color:tomato}.default.slow.svelte-1bnuw38{color:green}.default.svelte-1bnuw38:focus{border:1px solid #06f;outline:none}.default.editing.svelte-1bnuw38{border:2px solid #06f;padding:4px;cursor:default}input.svelte-1bnuw38{user-select:none}input.svelte-1bnuw38:not(.editing)::selection{background:#0000}input.editing.svelte-1bnuw38{user-select:text}";
         	append(document.head, style);
         }
 
@@ -679,10 +679,10 @@ var app = (function () {
         			attr(input, "type", "text");
         			set_style(input, "width", /*width*/ ctx[0] + "px");
         			set_style(input, "height", /*height*/ ctx[1] + "px");
-        			attr(input, "class", input_class_value = "" + (null_to_empty(/*$$props*/ ctx[18].class) + " svelte-dakzd9"));
+        			attr(input, "class", input_class_value = "" + (null_to_empty(/*$$props*/ ctx[17].class) + " svelte-1bnuw38"));
         			attr(input, "contenteditable", input_contenteditable_value = /*editing*/ ctx[3] ? "true" : "false");
         			attr(input, "tabindex", "0");
-        			toggle_class(input, "default", !/*$$props*/ ctx[18].class ? true : false);
+        			toggle_class(input, "default", !/*$$props*/ ctx[17].class ? true : false);
         			toggle_class(input, "fast", /*stepFactor*/ ctx[4] > 1 ? "fast" : "");
         			toggle_class(input, "slow", /*stepFactor*/ ctx[4] < 1 ? "slow" : "");
         			toggle_class(input, "editing", /*editing*/ ctx[3]);
@@ -690,30 +690,29 @@ var app = (function () {
         		m(target, anchor) {
         			insert(target, input, anchor);
         			set_input_value(input, /*visibleValue*/ ctx[6]);
-        			/*input_binding*/ ctx[30](input);
+        			/*input_binding*/ ctx[29](input);
 
         			if (!mounted) {
         				dispose = [
         					listen(window, "mousemove", function () {
-        						if (is_function(/*dragging*/ ctx[5] ? /*mousemoveHandler*/ ctx[9] : "")) (/*dragging*/ ctx[5] ? /*mousemoveHandler*/ ctx[9] : "").apply(this, arguments);
+        						if (is_function(/*dragging*/ ctx[5] ? /*mousemoveHandler*/ ctx[8] : "")) (/*dragging*/ ctx[5] ? /*mousemoveHandler*/ ctx[8] : "").apply(this, arguments);
         					}),
         					listen(window, "mouseup", function () {
-        						if (is_function(/*dragging*/ ctx[5] ? /*mouseupHandler*/ ctx[10] : "")) (/*dragging*/ ctx[5] ? /*mouseupHandler*/ ctx[10] : "").apply(this, arguments);
+        						if (is_function(/*dragging*/ ctx[5] ? /*mouseupHandler*/ ctx[9] : "")) (/*dragging*/ ctx[5] ? /*mouseupHandler*/ ctx[9] : "").apply(this, arguments);
         					}),
         					listen(window, "mousedown", function () {
-        						if (is_function(/*editing*/ ctx[3] ? /*windowdownHandler*/ ctx[12] : "")) (/*editing*/ ctx[3] ? /*windowdownHandler*/ ctx[12] : "").apply(this, arguments);
+        						if (is_function(/*editing*/ ctx[3] ? /*windowdownHandler*/ ctx[11] : "")) (/*editing*/ ctx[3] ? /*windowdownHandler*/ ctx[11] : "").apply(this, arguments);
         					}),
-        					listen(window, "keydown", /*keydownHandler*/ ctx[16]),
-        					listen(window, "keyup", /*keyupHandler*/ ctx[17]),
-        					listen(input, "mouseenter", /*mouseenterHandler*/ ctx[7]),
+        					listen(window, "keydown", /*keydownHandler*/ ctx[15]),
+        					listen(window, "keyup", /*keyupHandler*/ ctx[16]),
+        					listen(input, "mouseenter", mouseenterHandler),
         					listen(input, "mouseleave", mouseleaveHandler),
-        					listen(input, "mousedown", /*mousedownHandler*/ ctx[8]),
-        					listen(input, "dblclick", /*dblclickHandler*/ ctx[11]),
-        					listen(input, "focus", /*focusHandler*/ ctx[13]),
-        					listen(input, "blur", /*blurHandler*/ ctx[14]),
-        					listen(input, "input", /*inputHandler*/ ctx[15]),
-        					listen(input, "change", changeHandler),
-        					listen(input, "input", /*input_input_handler*/ ctx[29])
+        					listen(input, "mousedown", /*mousedownHandler*/ ctx[7]),
+        					listen(input, "dblclick", /*dblclickHandler*/ ctx[10]),
+        					listen(input, "focus", /*focusHandler*/ ctx[12]),
+        					listen(input, "blur", /*blurHandler*/ ctx[13]),
+        					listen(input, "input", /*inputHandler*/ ctx[14]),
+        					listen(input, "input", /*input_input_handler*/ ctx[28])
         				];
 
         				mounted = true;
@@ -730,7 +729,7 @@ var app = (function () {
         				set_style(input, "height", /*height*/ ctx[1] + "px");
         			}
 
-        			if (dirty[0] & /*$$props*/ 262144 && input_class_value !== (input_class_value = "" + (null_to_empty(/*$$props*/ ctx[18].class) + " svelte-dakzd9"))) {
+        			if (dirty[0] & /*$$props*/ 131072 && input_class_value !== (input_class_value = "" + (null_to_empty(/*$$props*/ ctx[17].class) + " svelte-1bnuw38"))) {
         				attr(input, "class", input_class_value);
         			}
 
@@ -742,19 +741,19 @@ var app = (function () {
         				set_input_value(input, /*visibleValue*/ ctx[6]);
         			}
 
-        			if (dirty[0] & /*$$props, $$props*/ 262144) {
-        				toggle_class(input, "default", !/*$$props*/ ctx[18].class ? true : false);
+        			if (dirty[0] & /*$$props, $$props*/ 131072) {
+        				toggle_class(input, "default", !/*$$props*/ ctx[17].class ? true : false);
         			}
 
-        			if (dirty[0] & /*$$props, stepFactor*/ 262160) {
+        			if (dirty[0] & /*$$props, stepFactor*/ 131088) {
         				toggle_class(input, "fast", /*stepFactor*/ ctx[4] > 1 ? "fast" : "");
         			}
 
-        			if (dirty[0] & /*$$props, stepFactor*/ 262160) {
+        			if (dirty[0] & /*$$props, stepFactor*/ 131088) {
         				toggle_class(input, "slow", /*stepFactor*/ ctx[4] < 1 ? "slow" : "");
         			}
 
-        			if (dirty[0] & /*$$props, editing*/ 262152) {
+        			if (dirty[0] & /*$$props, editing*/ 131080) {
         				toggle_class(input, "editing", /*editing*/ ctx[3]);
         			}
         		},
@@ -762,21 +761,21 @@ var app = (function () {
         		o: noop,
         		d(detaching) {
         			if (detaching) detach(input);
-        			/*input_binding*/ ctx[30](null);
+        			/*input_binding*/ ctx[29](null);
         			mounted = false;
         			run_all(dispose);
         		}
         	};
         }
 
+        function mouseenterHandler(e) {
+        	
+        } // seems not to be very practical to have focus on rollover:
+        // inputElement?.focus();
+
         function mouseleaveHandler(e) {
         	
         }
-
-        function changeHandler(e) {
-        	
-        } // console.log(e);
-        // dispatch('input', value);
 
         function instance($$self, $$props, $$invalidate) {
         	let { value = 0 } = $$props;
@@ -801,11 +800,6 @@ var app = (function () {
         	let shiftPressed = false;
         	visibleValue = setValue(value);
         	preciseValue = setValue(value);
-
-        	// handlers --------------------------------
-        	function mouseenterHandler(e) {
-        		inputElement?.focus();
-        	}
 
         	function mousedownHandler(e) {
         		// console.log('down');
@@ -848,14 +842,14 @@ var app = (function () {
 
         	function focusHandler(e) {
         		// console.log(inputElement);
-        		$$invalidate(26, focussed = true);
+        		$$invalidate(25, focussed = true);
 
         		stopEditing();
         	}
 
         	function blurHandler(e) {
         		// console.log('blur');
-        		$$invalidate(26, focussed = false);
+        		$$invalidate(25, focussed = false);
 
         		stopEditing();
         	}
@@ -868,30 +862,29 @@ var app = (function () {
         			preciseValue = checkValue;
         			preciseValue = Math.min(preciseValue, max);
         			preciseValue = Math.max(preciseValue, min);
-        			$$invalidate(6, visibleValue = preciseValue.toFixed(decimals));
-        			dispatch("input", visibleValue);
+        			dispatch("input", preciseValue.toFixed(decimals));
         		}
         	}
 
         	function keydownHandler(e) {
         		// console.log(e);
         		if (e.key == "Shift") {
-        			$$invalidate(28, shiftPressed = true);
+        			$$invalidate(27, shiftPressed = true);
         		}
 
         		if (e.key == "Alt") {
-        			$$invalidate(27, altPressed = true);
+        			$$invalidate(26, altPressed = true);
         		}
         	}
 
         	function keyupHandler(e) {
         		// console.log(e)
         		if (e.key == "Shift") {
-        			$$invalidate(28, shiftPressed = false);
+        			$$invalidate(27, shiftPressed = false);
         		}
 
         		if (e.key == "Alt") {
-        			$$invalidate(27, altPressed = false);
+        			$$invalidate(26, altPressed = false);
         		}
 
         		if (focussed) {
@@ -926,7 +919,7 @@ var app = (function () {
         		preciseValue = Math.min(preciseValue, max);
         		preciseValue = Math.max(preciseValue, min);
         		$$invalidate(6, visibleValue = preciseValue.toFixed(decimals));
-        		$$invalidate(19, value = preciseValue.toFixed(decimals));
+        		$$invalidate(18, value = preciseValue.toFixed(decimals));
         		dispatch("input", value);
         		dispatch("change", value);
         	}
@@ -937,7 +930,7 @@ var app = (function () {
         		preciseValue = Math.min(preciseValue, max);
         		preciseValue = Math.max(preciseValue, min);
         		$$invalidate(6, visibleValue = preciseValue.toFixed(decimals));
-        		$$invalidate(19, value = preciseValue.toFixed(decimals));
+        		$$invalidate(18, value = preciseValue.toFixed(decimals));
         		dispatch("input", value);
         		dispatch("change", value);
         	}
@@ -968,16 +961,16 @@ var app = (function () {
         	}
 
         	$$self.$$set = $$new_props => {
-        		$$invalidate(18, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
-        		if ("value" in $$new_props) $$invalidate(19, value = $$new_props.value);
-        		if ("min" in $$new_props) $$invalidate(20, min = $$new_props.min);
-        		if ("max" in $$new_props) $$invalidate(21, max = $$new_props.max);
-        		if ("step" in $$new_props) $$invalidate(22, step = $$new_props.step);
-        		if ("decimals" in $$new_props) $$invalidate(23, decimals = $$new_props.decimals);
+        		$$invalidate(17, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
+        		if ("value" in $$new_props) $$invalidate(18, value = $$new_props.value);
+        		if ("min" in $$new_props) $$invalidate(19, min = $$new_props.min);
+        		if ("max" in $$new_props) $$invalidate(20, max = $$new_props.max);
+        		if ("step" in $$new_props) $$invalidate(21, step = $$new_props.step);
+        		if ("decimals" in $$new_props) $$invalidate(22, decimals = $$new_props.decimals);
         		if ("width" in $$new_props) $$invalidate(0, width = $$new_props.width);
         		if ("height" in $$new_props) $$invalidate(1, height = $$new_props.height);
-        		if ("horizontal" in $$new_props) $$invalidate(24, horizontal = $$new_props.horizontal);
-        		if ("vertical" in $$new_props) $$invalidate(25, vertical = $$new_props.vertical);
+        		if ("horizontal" in $$new_props) $$invalidate(23, horizontal = $$new_props.horizontal);
+        		if ("vertical" in $$new_props) $$invalidate(24, vertical = $$new_props.vertical);
         	};
 
         	$$self.$$.update = () => {
@@ -988,7 +981,7 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*focussed, altPressed, shiftPressed*/ 469762048) {
+        		if ($$self.$$.dirty[0] & /*focussed, altPressed, shiftPressed*/ 234881024) {
         			 {
         				$$invalidate(4, stepFactor = 1);
 
@@ -1013,7 +1006,6 @@ var app = (function () {
         		stepFactor,
         		dragging,
         		visibleValue,
-        		mouseenterHandler,
         		mousedownHandler,
         		mousemoveHandler,
         		mouseupHandler,
@@ -1043,7 +1035,7 @@ var app = (function () {
         class NumberSpinner extends SvelteComponent {
         	constructor(options) {
         		super();
-        		if (!document.getElementById("svelte-dakzd9-style")) add_css();
+        		if (!document.getElementById("svelte-1bnuw38-style")) add_css();
 
         		init(
         			this,
@@ -1052,15 +1044,15 @@ var app = (function () {
         			create_fragment,
         			safe_not_equal,
         			{
-        				value: 19,
-        				min: 20,
-        				max: 21,
-        				step: 22,
-        				decimals: 23,
+        				value: 18,
+        				min: 19,
+        				max: 20,
+        				step: 21,
+        				decimals: 22,
         				width: 0,
         				height: 1,
-        				horizontal: 24,
-        				vertical: 25
+        				horizontal: 23,
+        				vertical: 24
         			},
         			[-1, -1]
         		);
