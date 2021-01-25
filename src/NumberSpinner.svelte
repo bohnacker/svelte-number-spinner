@@ -167,7 +167,7 @@
   $: {
     stepFactor = 1;
     if (focussed) {
-      if (shiftPressed) {
+      if (altPressed && shiftPressed) {
         stepFactor = 10;
       } else if (altPressed) {
         stepFactor = 0.1; 

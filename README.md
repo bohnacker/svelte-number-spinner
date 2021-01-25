@@ -1,6 +1,6 @@
 # svelte-number-spinner
 
-A number spinner component for Svelte. It's a simple input field with a number that can be controlled using the mouse or keyboard. Pressing *Alt* or *Shift* makes steps smaller or bigger.
+A number spinner component for Svelte. It's a simple input field with a number that can be controlled using the mouse or keyboard. Pressing *Alt* or *Alt+Shift* makes steps smaller or bigger.
 
 ## Demo
 
@@ -51,8 +51,6 @@ npm install --save svelte-number-spinner
 | input          | (ev) => ev.detail  | Fires when value changes                             |
 | change         | (ev) => ev.detail  | Fires when value changes, won't fire while typing    |
 
-In most cases you will probably use ```bind:value``` to react to changes of the value. This is more or less the same as listening to the change event. Use the input event if you need to get the changes while the user is typing.
-
 ```html
 <script>
   import NumberSpinner from "svelte-number-spinner";
@@ -68,6 +66,8 @@ In most cases you will probably use ```bind:value``` to react to changes of the 
 
 <NumberSpinner on:input="handleInput" on:change="handleChange" ></NumberSpinner>
 ```
+
+In most cases you will probably use ```bind:value``` to react to changes of the value. This is more or less the same as listening to the change event. Use the input event if you need to get the changes while the user is typing.
 
 <br />
 
