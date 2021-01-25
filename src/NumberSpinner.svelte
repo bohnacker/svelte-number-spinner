@@ -6,8 +6,6 @@
   export let max = Number.MAX_VALUE;
   export let step = 1;
   export let decimals = 0;
-  export let width = 60;
-  export let height = 25;
   export let horizontal = true;
   export let vertical = true;
   export let mainStyle, fastStyle, slowStyle, focusStyle, editingStyle;
