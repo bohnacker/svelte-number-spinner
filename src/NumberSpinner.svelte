@@ -1,5 +1,5 @@
 <script>
-  import { tick, afterUpdate, createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
 
   export let value = 0;
   export let min = -Number.MAX_VALUE;
@@ -211,12 +211,6 @@
     setValue(preciseValue);     
   }
 
-  // afterUpdate(() => {
-  //  inputElement.contentEditable = true;
-  //  inputElement.setSelectionRange(0, 0);
-  //  inputElement.contentEditable = false;
-  // });
-
 </script>
 
 
@@ -245,15 +239,12 @@
     class:fast={stepFactor > 1 ? 'fast' : ''}
     class:slow={stepFactor < 1 ? 'slow' : ''}
     class:editing
-    class:hide-selection={editing ? '' : 'hide-selection  '}
     contenteditable={editing ? 'true' : 'false'} 
     tabindex=0
     bind:value={visibleValue}
     bind:this={inputElement}
     />
 
-<!--     
- -->
 
 <!-- CSS --------------------------------------------------------------->
 
@@ -273,22 +264,6 @@
     cursor: initial;
   }
 
-  .default:focus {
-    border: 1px solid #06f;
-    outline-width: 0;
-    outline:none;
-  }
-
-  .default.editing {
-    border: 2px solid #06f;
-    padding: 4px;
-    cursor: default;
-  }
-
-  .default::selection {
-    background: #06f3;
-  }
-
   .default.fast {
     color: tomato;
   }
@@ -297,13 +272,27 @@
     color: green;
   }
 
+  .default:focus {
+    border: 1px solid #06f;
+    /*outline-width: 0;    removes the standard focus border */
+    outline:none;       /* removes the standard focus border */
+  }
+
+  .default.editing {
+    border: 2px solid #06f;
+    padding: 4px;
+    cursor: default;
+  }
+
+
+
   /* mandatory css styles, not customizable */
 
   input { 
     user-select: none;
   }
 
-  input.hide-selection::selection {
+  input:not(.editing)::selection {
     background: #0000;
   }
 

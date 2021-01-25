@@ -15,7 +15,7 @@
 
 <p>
   Change the values of the number spinners through mousedrag and arrow keys.<br>
-  Press 'Alt' for smaller steps, 'Shift' for larger steps. Double click to edit.
+  Press <i>Alt</i> for smaller steps, <i>Alt+Shift</i> for larger steps. Double click to edit.
 </p>
 
 <table>
@@ -38,7 +38,7 @@
   </tr>
 
   <tr>
-    <td>Custom class given for individual styling:</td> 
+    <td>Custom class given for individual styling</td> 
     <td><NumberSpinner bind:value={value4} min=0 max=1 step=0.001 decimals=3 class='number-spinner-custom'></NumberSpinner></td> 
     <td>Current value is {value4}</td> 
   </tr>
