@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { afterUpdate, tick, createEventDispatcher } from 'svelte';
 
   export let value = 0;
   export let min = -Number.MAX_VALUE;
@@ -16,14 +16,16 @@
 
   const dispatch = createEventDispatcher();
 
-  let inputElement;
-  let focussed = false;
+  let dragElement, editElement;
+  let dragFocussed = false;
+  let editFocussed = false;
   let stepFactor = 1;
   let dragging = false;
   let clickX, clickY;
   let visibleValue;
   let preciseValue;
   let editing = false;
+  let justStartedEditing = false;
   let altPressed = false;
   let shiftPressed = false;
   let style;
@@ -31,24 +33,34 @@
   visibleValue = setValue(value);
   preciseValue = setValue(value);
 
+  // window.setTimeout(() => {
+  //   console.log('timeout focus')
+  //   dragElement.focus();      
+  // }, Math.random() * 4000);
+
 
   // handlers --------------------------------
 
   function mouseenterHandler(e) {
     // seems not to be very practical to have focus on rollover:
-    // inputElement?.focus();
+    // dragElement?.focus();
   }
   
   function mouseleaveHandler(e) {
   }
 
   function mousedownHandler(e) {
+    dispatch('consoleLog', 'down ' + e.target.id);
     // console.log('down');
     if (editing) { 
       e.stopPropagation();
     } else {
       clickX = e.clientX;
       clickY = e.clientY;
+      if (e.type == "touchstart") {
+        clickX = e.touches[0].clientX;
+        clickY = e.touches[0].clientY;
+      }
       dragging = true;
       preciseValue = setValue(value);
       //console.log(e.clientX, e.clientY);
@@ -56,9 +68,14 @@
   }
   
   function mousemoveHandler(e) {
+    e.preventDefault();
+
     let actX = e.clientX;
     let actY = e.clientY;
-
+    if (e.type == "touchmove") {
+      actX = e.touches[0].clientX;
+      actY = e.touches[0].clientY;
+    }
     let distX = horizontal ? actX - clickX : 0;
     let distY = vertical ? -( actY - clickY) : 0;
 
@@ -71,35 +88,68 @@
   }
   
   function mouseupHandler(e) {
+    dispatch('consoleLog', 'up ' + e.target.id);
     // console.log('up');
     dragging = false;
     stepFactor = 1;
   }
 
-  async function dblclickHandler(e) {
+  function dblclickHandler(e) {
+    dispatch('consoleLog', 'dblClick ' + e.target.id);
     startEditing();
+    // dragElement.focus();
   }
 
   function windowdownHandler(e) {
+    dispatch('consoleLog', 'down window');
     // console.log('window mousedown');
     stopEditing();
   }
 
-  function focusHandler(e) {
-    // console.log(inputElement);
-    focussed = true;
-    stopEditing();
+  function dragFocusHandler(e) {
+    dispatch('consoleLog', 'focus ' + e.target.id);
+    // // console.log(dragElement);
+
+    dragFocussed = true;
+    // if (!justStartedEditing) {
+    //   stopEditing();      
+    // }
+    // justStartedEditing = false;
   }
 
-  function blurHandler(e) {
-    // console.log('blur');
-    focussed = false;
-    stopEditing();
+  function dragBlurHandler(e) {
+    dispatch('consoleLog', 'blur ' + e.target.id);
+    console.log('blur ' + e.target.id );
+    dragFocussed = false;
+    // if (!justStartedEditing) {
+    //   stopEditing();      
+    // }
   }
   
+  function editFocusHandler(e) {
+    dispatch('consoleLog', 'focus ' + e.target.id);
+    // // console.log(dragElement);
+
+    editFocussed = true;
+    // if (!justStartedEditing) {
+    //   stopEditing();      
+    // }
+    // justStartedEditing = false;
+  }
+
+  function editBlurHandler(e) {
+    dispatch('consoleLog', 'blur ' + e.target.id);
+    console.log('blur ' + e.target.id );
+
+    editFocussed = false;
+    // if (!justStartedEditing) {
+    //   stopEditing();      
+    // }
+  }
+
   function inputHandler(e) {
     // console.log(e);
-    let checkValue = parseFloat(inputElement.value);
+    let checkValue = parseFloat(dragElement.value);
 
     if (!isNaN(checkValue)) {
       preciseValue = checkValue;
@@ -130,7 +180,7 @@
       altPressed = false;
     }
 
-    if (focussed) {
+    if (dragFocussed) {
       if (!editing) {
         if (vertical && e.key == 'ArrowUp' || horizontal && e.key == 'ArrowRight') {
           stepValue(10);
@@ -158,13 +208,16 @@
 
   // updaters --------------------------------
 
-  $: if (inputElement) {
-    inputElement.readOnly = !editing;
+  // update readonly state of input element
+  $: if (dragElement) {
+    // dragElement.readOnly = !editing;
+    dragElement.readOnly = true;
   }
 
+  // update stepFactor
   $: {
     stepFactor = 1;
-    if (focussed && !editing) {
+    if (dragFocussed && !editing) {
       if (altPressed && shiftPressed) {
         stepFactor = 10;
       } else if (altPressed) {
@@ -173,16 +226,18 @@
     }
   }
 
+  // update inline style string
   $: {
     style = mainStyle ?? '';
-    style += focussed && focusStyle ? ';' + focusStyle : '';
+    style += dragFocussed && focusStyle ? ';' + focusStyle : '';
     style += !editing && stepFactor > 1 && fastStyle ? ';' + fastStyle : '';
     style += !editing && stepFactor < 1 && slowStyle ? ';' + slowStyle : '';
     style += editing && editingStyle ? ';' + editingStyle : '';
   }
 
   function setValue(val) {
-    preciseValue = parseFloat(val);
+    val = parseFloat(val);
+    if (!isNaN(val)) preciseValue = val;
     preciseValue = Math.min(preciseValue, max);
     preciseValue = Math.max(preciseValue, min);
 
@@ -204,17 +259,35 @@
     dispatch('change', value);
   }
 
-  function startEditing() {
+  async function startEditing() {
+    // console.log('startEditing')
+    // justStartedEditing = true;
+
     preciseValue = parseFloat(visibleValue);
     editing = true;
-    inputElement?.setSelectionRange(0, 30);        
+    editElement.setSelectionRange(0, 30);
+    editElement.focus();
+
+    // window.setTimeout(() => {
+    //   console.log('timeout blur')
+    //   dragElement.blur();
+
+    //   window.setTimeout(() => {
+    //     console.log('timeout focus')
+    //     dragElement.focus();      
+    //   }, 1000);
+
+    // }, 1000);
   }
 
   function stopEditing() {
+    console.log('stopEditing');
+    dispatch('consoleLog', 'stopEditing');
+
     editing = false;
-    inputElement?.setSelectionRange(0, 0);
-    preciseValue = parseFloat(visibleValue);
-    setValue(preciseValue);     
+    editElement.setSelectionRange(0, 0);
+    // dragElement.focus();
+    setValue(visibleValue);     
   }
 
 </script>
@@ -224,33 +297,69 @@
 
 <svelte:window 
     on:mousemove={dragging ? mousemoveHandler : ''} 
+    on:touchmove={dragging ? mousemoveHandler : ''}
     on:mouseup={dragging ? mouseupHandler : ''}
+    on:touchend={dragging ? mouseupHandler : ''}
     on:mousedown={editing ? windowdownHandler : ''}
+    on:touchstart={editing ? windowdownHandler : ''}
     on:keydown={keydownHandler}
     on:keyup={keyupHandler}
    />
 
-<input type='text'
-    on:mouseenter={mouseenterHandler} 
-    on:mouseleave={mouseleaveHandler} 
-    on:mousedown={mousedownHandler} 
-    on:dblclick={dblclickHandler}
-    on:focus={focusHandler}
-    on:blur={blurHandler}
-    on:input={inputHandler}
+<svelte:body style={dragging ? "position:fixed; overflow:hidden" : ""} />
+
+
+<!-- I did a lot of versions to all the functionality in one input element, but didn't succeed -->
+
+<!-- this is the editable input field -->
+<input id="edit" type='text' pattern={min>=0 && step==Math.round(step) ? "[0-9]+" : undefined}
+    on:mousedown|stopPropagation={() => {}}
+    on:touchstart|stopPropagation={() => {}}
+    on:input={inputHandler} 
+    on:focus={editFocusHandler}
+    on:blur={editBlurHandler}
     style={style}
     class={$$props.class}
     class:default={!$$props.class ? true : false}
     class:fast={stepFactor > 1 ? 'fast' : ''}
     class:slow={stepFactor < 1 ? 'slow' : ''}
     class:editing
-    contenteditable={editing ? 'true' : 'false'} 
+    class:edit={true}
+    class:hide={!editing}
+    tabindex={-1}
+    bind:value={visibleValue}
+    bind:this={editElement}
+/>
+
+<!-- this is the input field controlled by mouse and touch drag events -->
+<input id="drag" type='text'
+    on:mouseenter={mouseenterHandler} 
+    on:mouseleave={mouseleaveHandler} 
+    on:mousedown|stopPropagation={mousedownHandler} 
+    on:touchstart|stopPropagation={mousedownHandler}
+    on:dblclick|stopPropagation={dblclickHandler}
+    on:focus={dragFocusHandler}
+    on:blur={dragBlurHandler}
+    on:input={inputHandler} 
+    style={style}
+    class={$$props.class}
+    class:default={!$$props.class ? true : false}
+    class:fast={stepFactor > 1 ? 'fast' : ''}
+    class:slow={stepFactor < 1 ? 'slow' : ''}
+    class:drag={true}
+    class:hide={editing}
+    contenteditable={false}
+    readonly="" 
     tabindex=0
     bind:value={visibleValue}
-    bind:this={inputElement}
-    />
+    bind:this={dragElement}
+/>
 
 
+<!-- 
+    on:input={editing ? inputHandler : ''} 
+-->
+    
 <!-- CSS --------------------------------------------------------------->
 
 <style>
@@ -261,12 +370,12 @@
     font-variant-numeric: tabular-nums;
     background-color: white;
     color: black;
-    width: 60px;
-    height: 25px;
+    width: 4em;
+    height: 1.6em;
     margin: 0px;
     padding: 5px;
-    border: 1px solid #0004;
-    border-radius: 5px;
+    border: 1 solid #0004;
+    border-radius: 4px;
     text-align: right;
     cursor: initial;            /* get rid of the caret cursor in non-editing mode */
   }
@@ -286,7 +395,7 @@
 
   .default.editing {
     border: 2px solid #06f;
-    padding: 4px;
+    padding: 3px;
     cursor: default;
   }
 
@@ -303,6 +412,10 @@
 
   input.editing {
     user-select: text;
+  }
+
+  input.hide {
+    opacity: 0.2;
   }
 
 

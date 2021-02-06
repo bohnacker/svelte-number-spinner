@@ -1,7 +1,14 @@
+
+(function(l, r) { if (l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (window.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(window.document);
 var app = (function () {
     'use strict';
 
     function noop() { }
+    function add_location(element, file, line, column, char) {
+        element.__svelte_meta = {
+            loc: { file, line, column, char }
+        };
+    }
     function run(fn) {
         return fn();
     }
@@ -20,15 +27,17 @@ var app = (function () {
     function is_empty(obj) {
         return Object.keys(obj).length === 0;
     }
-
-    function append(target, node) {
-        target.appendChild(node);
-    }
     function insert(target, node, anchor) {
         target.insertBefore(node, anchor || null);
     }
     function detach(node) {
         node.parentNode.removeChild(node);
+    }
+    function destroy_each(iterations, detaching) {
+        for (let i = 0; i < iterations.length; i += 1) {
+            if (iterations[i])
+                iterations[i].d(detaching);
+        }
     }
     function element(name) {
         return document.createElement(name);
@@ -48,10 +57,10 @@ var app = (function () {
     function children(element) {
         return Array.from(element.childNodes);
     }
-    function set_data(text, data) {
-        data = '' + data;
-        if (text.wholeText !== data)
-            text.data = data;
+    function custom_event(type, detail) {
+        const e = document.createEvent('CustomEvent');
+        e.initCustomEvent(type, false, false, detail);
+        return e;
     }
 
     let current_component;
@@ -282,6 +291,67 @@ var app = (function () {
         }
     }
 
+    function dispatch_dev(type, detail) {
+        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.31.2' }, detail)));
+    }
+    function insert_dev(target, node, anchor) {
+        dispatch_dev('SvelteDOMInsert', { target, node, anchor });
+        insert(target, node, anchor);
+    }
+    function detach_dev(node) {
+        dispatch_dev('SvelteDOMRemove', { node });
+        detach(node);
+    }
+    function attr_dev(node, attribute, value) {
+        attr(node, attribute, value);
+        if (value == null)
+            dispatch_dev('SvelteDOMRemoveAttribute', { node, attribute });
+        else
+            dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
+    }
+    function set_data_dev(text, data) {
+        data = '' + data;
+        if (text.wholeText === data)
+            return;
+        dispatch_dev('SvelteDOMSetData', { node: text, data });
+        text.data = data;
+    }
+    function validate_each_argument(arg) {
+        if (typeof arg !== 'string' && !(arg && typeof arg === 'object' && 'length' in arg)) {
+            let msg = '{#each} only iterates over array-like objects.';
+            if (typeof Symbol === 'function' && arg && Symbol.iterator in arg) {
+                msg += ' You can use a spread to convert this iterable into an array.';
+            }
+            throw new Error(msg);
+        }
+    }
+    function validate_slots(name, slot, keys) {
+        for (const slot_key of Object.keys(slot)) {
+            if (!~keys.indexOf(slot_key)) {
+                console.warn(`<${name}> received an unexpected slot "${slot_key}".`);
+            }
+        }
+    }
+    /**
+     * Base class for Svelte components with some minor dev-enhancements. Used when dev=true.
+     */
+    class SvelteComponentDev extends SvelteComponent {
+        constructor(options) {
+            if (!options || (!options.target && !options.$$inline)) {
+                throw new Error("'target' is a required option");
+            }
+            super();
+        }
+        $destroy() {
+            super.$destroy();
+            this.$destroy = () => {
+                console.warn('Component was already destroyed'); // eslint-disable-line no-console
+            };
+        }
+        $capture_state() { }
+        $inject_state() { }
+    }
+
     var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
     function createCommonjsModule(fn, basedir, module) {
@@ -350,9 +420,22 @@ var app = (function () {
         function element(name) {
             return document.createElement(name);
         }
+        function text(data) {
+            return document.createTextNode(data);
+        }
+        function space() {
+            return text(' ');
+        }
         function listen(node, event, handler, options) {
             node.addEventListener(event, handler, options);
             return () => node.removeEventListener(event, handler, options);
+        }
+        function stop_propagation(fn) {
+            return function (event) {
+                event.stopPropagation();
+                // @ts-ignore
+                return fn.call(this, event);
+            };
         }
         function attr(node, attribute, value) {
             if (value == null)
@@ -595,57 +678,104 @@ var app = (function () {
 
         function add_css() {
         	var style = element("style");
-        	style.id = "svelte-8bd7vo-style";
-        	style.textContent = ".default.svelte-8bd7vo{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:60px;height:25px;margin:0px;padding:5px;border:1px solid #0004;border-radius:5px;text-align:right;cursor:initial}.default.svelte-8bd7vo:focus{border:1px solid #06f;outline:none}.default.fast.svelte-8bd7vo{color:tomato}.default.slow.svelte-8bd7vo{color:green}.default.editing.svelte-8bd7vo{border:2px solid #06f;padding:4px;cursor:default}input.svelte-8bd7vo{user-select:none}input.svelte-8bd7vo:not(.editing)::selection{background:#0000}input.editing.svelte-8bd7vo{user-select:text}";
+        	style.id = "svelte-17pi914-style";
+        	style.textContent = ".default.svelte-17pi914{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:4em;height:1.6em;margin:0px;padding:5px;border:1 solid #0004;border-radius:4px;text-align:right;cursor:initial}.default.svelte-17pi914:focus{border:1px solid #06f;outline:none}.default.fast.svelte-17pi914{color:tomato}.default.slow.svelte-17pi914{color:green}.default.editing.svelte-17pi914{border:2px solid #06f;padding:3px;cursor:default}input.svelte-17pi914{user-select:none}input.svelte-17pi914:not(.editing)::selection{background:#0000}input.editing.svelte-17pi914{user-select:text}input.hide.svelte-17pi914{opacity:0.2}";
         	append(document.head, style);
         }
 
         function create_fragment(ctx) {
-        	let input;
-        	let input_class_value;
-        	let input_contenteditable_value;
+        	let t0;
+        	let input0;
+        	let input0_pattern_value;
+        	let input0_class_value;
+        	let t1;
+        	let input1;
+        	let input1_class_value;
         	let mounted;
         	let dispose;
 
         	return {
         		c() {
-        			input = element("input");
-        			attr(input, "type", "text");
-        			attr(input, "style", /*style*/ ctx[5]);
-        			attr(input, "class", input_class_value = "" + (null_to_empty(/*$$props*/ ctx[16].class) + " svelte-8bd7vo"));
-        			attr(input, "contenteditable", input_contenteditable_value = /*editing*/ ctx[2] ? "true" : "false");
-        			attr(input, "tabindex", "0");
-        			toggle_class(input, "default", !/*$$props*/ ctx[16].class ? true : false);
-        			toggle_class(input, "fast", /*stepFactor*/ ctx[1] > 1 ? "fast" : "");
-        			toggle_class(input, "slow", /*stepFactor*/ ctx[1] < 1 ? "slow" : "");
-        			toggle_class(input, "editing", /*editing*/ ctx[2]);
+        			t0 = space();
+        			input0 = element("input");
+        			t1 = space();
+        			input1 = element("input");
+        			attr(input0, "id", "edit");
+        			attr(input0, "type", "text");
+
+        			attr(input0, "pattern", input0_pattern_value = /*min*/ ctx[0] >= 0 && /*step*/ ctx[1] == Math.round(/*step*/ ctx[1])
+        			? "[0-9]+"
+        			: undefined);
+
+        			attr(input0, "style", /*style*/ ctx[8]);
+        			attr(input0, "class", input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[21].class) + " svelte-17pi914"));
+        			attr(input0, "tabindex", -1);
+        			toggle_class(input0, "default", !/*$$props*/ ctx[21].class ? true : false);
+        			toggle_class(input0, "fast", /*stepFactor*/ ctx[3] > 1 ? "fast" : "");
+        			toggle_class(input0, "slow", /*stepFactor*/ ctx[3] < 1 ? "slow" : "");
+        			toggle_class(input0, "editing", /*editing*/ ctx[4]);
+        			toggle_class(input0, "edit", true);
+        			toggle_class(input0, "hide", !/*editing*/ ctx[4]);
+        			attr(input1, "id", "drag");
+        			attr(input1, "type", "text");
+        			attr(input1, "style", /*style*/ ctx[8]);
+        			attr(input1, "class", input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[21].class) + " svelte-17pi914"));
+        			attr(input1, "contenteditable", false);
+        			input1.readOnly = "";
+        			attr(input1, "tabindex", "0");
+        			toggle_class(input1, "default", !/*$$props*/ ctx[21].class ? true : false);
+        			toggle_class(input1, "fast", /*stepFactor*/ ctx[3] > 1 ? "fast" : "");
+        			toggle_class(input1, "slow", /*stepFactor*/ ctx[3] < 1 ? "slow" : "");
+        			toggle_class(input1, "drag", true);
+        			toggle_class(input1, "hide", /*editing*/ ctx[4]);
         		},
         		m(target, anchor) {
-        			insert(target, input, anchor);
-        			set_input_value(input, /*visibleValue*/ ctx[4]);
-        			/*input_binding*/ ctx[33](input);
+        			insert(target, t0, anchor);
+        			insert(target, input0, anchor);
+        			set_input_value(input0, /*visibleValue*/ ctx[7]);
+        			/*input0_binding*/ ctx[36](input0);
+        			insert(target, t1, anchor);
+        			insert(target, input1, anchor);
+        			set_input_value(input1, /*visibleValue*/ ctx[7]);
+        			/*input1_binding*/ ctx[38](input1);
 
         			if (!mounted) {
         				dispose = [
         					listen(window, "mousemove", function () {
-        						if (is_function(/*dragging*/ ctx[3] ? /*mousemoveHandler*/ ctx[7] : "")) (/*dragging*/ ctx[3] ? /*mousemoveHandler*/ ctx[7] : "").apply(this, arguments);
+        						if (is_function(/*dragging*/ ctx[6] ? /*mousemoveHandler*/ ctx[10] : "")) (/*dragging*/ ctx[6] ? /*mousemoveHandler*/ ctx[10] : "").apply(this, arguments);
+        					}),
+        					listen(window, "touchmove", function () {
+        						if (is_function(/*dragging*/ ctx[6] ? /*mousemoveHandler*/ ctx[10] : "")) (/*dragging*/ ctx[6] ? /*mousemoveHandler*/ ctx[10] : "").apply(this, arguments);
         					}),
         					listen(window, "mouseup", function () {
-        						if (is_function(/*dragging*/ ctx[3] ? /*mouseupHandler*/ ctx[8] : "")) (/*dragging*/ ctx[3] ? /*mouseupHandler*/ ctx[8] : "").apply(this, arguments);
+        						if (is_function(/*dragging*/ ctx[6] ? /*mouseupHandler*/ ctx[11] : "")) (/*dragging*/ ctx[6] ? /*mouseupHandler*/ ctx[11] : "").apply(this, arguments);
+        					}),
+        					listen(window, "touchend", function () {
+        						if (is_function(/*dragging*/ ctx[6] ? /*mouseupHandler*/ ctx[11] : "")) (/*dragging*/ ctx[6] ? /*mouseupHandler*/ ctx[11] : "").apply(this, arguments);
         					}),
         					listen(window, "mousedown", function () {
-        						if (is_function(/*editing*/ ctx[2] ? /*windowdownHandler*/ ctx[10] : "")) (/*editing*/ ctx[2] ? /*windowdownHandler*/ ctx[10] : "").apply(this, arguments);
+        						if (is_function(/*editing*/ ctx[4] ? /*windowdownHandler*/ ctx[13] : "")) (/*editing*/ ctx[4] ? /*windowdownHandler*/ ctx[13] : "").apply(this, arguments);
         					}),
-        					listen(window, "keydown", /*keydownHandler*/ ctx[14]),
-        					listen(window, "keyup", /*keyupHandler*/ ctx[15]),
-        					listen(input, "mouseenter", mouseenterHandler),
-        					listen(input, "mouseleave", mouseleaveHandler),
-        					listen(input, "mousedown", /*mousedownHandler*/ ctx[6]),
-        					listen(input, "dblclick", /*dblclickHandler*/ ctx[9]),
-        					listen(input, "focus", /*focusHandler*/ ctx[11]),
-        					listen(input, "blur", /*blurHandler*/ ctx[12]),
-        					listen(input, "input", /*inputHandler*/ ctx[13]),
-        					listen(input, "input", /*input_input_handler*/ ctx[32])
+        					listen(window, "touchstart", function () {
+        						if (is_function(/*editing*/ ctx[4] ? /*windowdownHandler*/ ctx[13] : "")) (/*editing*/ ctx[4] ? /*windowdownHandler*/ ctx[13] : "").apply(this, arguments);
+        					}),
+        					listen(window, "keydown", /*keydownHandler*/ ctx[19]),
+        					listen(window, "keyup", /*keyupHandler*/ ctx[20]),
+        					listen(input0, "mousedown", stop_propagation(mousedown_handler)),
+        					listen(input0, "touchstart", stop_propagation(touchstart_handler), { passive: true }),
+        					listen(input0, "input", /*inputHandler*/ ctx[18]),
+        					listen(input0, "focus", /*editFocusHandler*/ ctx[16]),
+        					listen(input0, "blur", /*editBlurHandler*/ ctx[17]),
+        					listen(input0, "input", /*input0_input_handler*/ ctx[35]),
+        					listen(input1, "mouseenter", mouseenterHandler),
+        					listen(input1, "mouseleave", mouseleaveHandler),
+        					listen(input1, "mousedown", stop_propagation(/*mousedownHandler*/ ctx[9])),
+        					listen(input1, "touchstart", stop_propagation(/*mousedownHandler*/ ctx[9])),
+        					listen(input1, "dblclick", stop_propagation(/*dblclickHandler*/ ctx[12])),
+        					listen(input1, "focus", /*dragFocusHandler*/ ctx[14]),
+        					listen(input1, "blur", /*dragBlurHandler*/ ctx[15]),
+        					listen(input1, "input", /*inputHandler*/ ctx[18]),
+        					listen(input1, "input", /*input1_input_handler*/ ctx[37])
         				];
 
         				mounted = true;
@@ -654,57 +784,116 @@ var app = (function () {
         		p(new_ctx, dirty) {
         			ctx = new_ctx;
 
-        			if (dirty[0] & /*style*/ 32) {
-        				attr(input, "style", /*style*/ ctx[5]);
+        			if (dirty[0] & /*min, step*/ 3 && input0_pattern_value !== (input0_pattern_value = /*min*/ ctx[0] >= 0 && /*step*/ ctx[1] == Math.round(/*step*/ ctx[1])
+        			? "[0-9]+"
+        			: undefined)) {
+        				attr(input0, "pattern", input0_pattern_value);
         			}
 
-        			if (dirty[0] & /*$$props*/ 65536 && input_class_value !== (input_class_value = "" + (null_to_empty(/*$$props*/ ctx[16].class) + " svelte-8bd7vo"))) {
-        				attr(input, "class", input_class_value);
+        			if (dirty[0] & /*style*/ 256) {
+        				attr(input0, "style", /*style*/ ctx[8]);
         			}
 
-        			if (dirty[0] & /*editing*/ 4 && input_contenteditable_value !== (input_contenteditable_value = /*editing*/ ctx[2] ? "true" : "false")) {
-        				attr(input, "contenteditable", input_contenteditable_value);
+        			if (dirty[0] & /*$$props*/ 2097152 && input0_class_value !== (input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[21].class) + " svelte-17pi914"))) {
+        				attr(input0, "class", input0_class_value);
         			}
 
-        			if (dirty[0] & /*visibleValue*/ 16 && input.value !== /*visibleValue*/ ctx[4]) {
-        				set_input_value(input, /*visibleValue*/ ctx[4]);
+        			if (dirty[0] & /*visibleValue*/ 128 && input0.value !== /*visibleValue*/ ctx[7]) {
+        				set_input_value(input0, /*visibleValue*/ ctx[7]);
         			}
 
-        			if (dirty[0] & /*$$props, $$props*/ 65536) {
-        				toggle_class(input, "default", !/*$$props*/ ctx[16].class ? true : false);
+        			if (dirty[0] & /*$$props, $$props*/ 2097152) {
+        				toggle_class(input0, "default", !/*$$props*/ ctx[21].class ? true : false);
         			}
 
-        			if (dirty[0] & /*$$props, stepFactor*/ 65538) {
-        				toggle_class(input, "fast", /*stepFactor*/ ctx[1] > 1 ? "fast" : "");
+        			if (dirty[0] & /*$$props, stepFactor*/ 2097160) {
+        				toggle_class(input0, "fast", /*stepFactor*/ ctx[3] > 1 ? "fast" : "");
         			}
 
-        			if (dirty[0] & /*$$props, stepFactor*/ 65538) {
-        				toggle_class(input, "slow", /*stepFactor*/ ctx[1] < 1 ? "slow" : "");
+        			if (dirty[0] & /*$$props, stepFactor*/ 2097160) {
+        				toggle_class(input0, "slow", /*stepFactor*/ ctx[3] < 1 ? "slow" : "");
         			}
 
-        			if (dirty[0] & /*$$props, editing*/ 65540) {
-        				toggle_class(input, "editing", /*editing*/ ctx[2]);
+        			if (dirty[0] & /*$$props, editing*/ 2097168) {
+        				toggle_class(input0, "editing", /*editing*/ ctx[4]);
+        			}
+
+        			if (dirty[0] & /*$$props*/ 2097152) {
+        				toggle_class(input0, "edit", true);
+        			}
+
+        			if (dirty[0] & /*$$props, editing*/ 2097168) {
+        				toggle_class(input0, "hide", !/*editing*/ ctx[4]);
+        			}
+
+        			if (dirty[0] & /*style*/ 256) {
+        				attr(input1, "style", /*style*/ ctx[8]);
+        			}
+
+        			if (dirty[0] & /*$$props*/ 2097152 && input1_class_value !== (input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[21].class) + " svelte-17pi914"))) {
+        				attr(input1, "class", input1_class_value);
+        			}
+
+        			if (dirty[0] & /*visibleValue*/ 128 && input1.value !== /*visibleValue*/ ctx[7]) {
+        				set_input_value(input1, /*visibleValue*/ ctx[7]);
+        			}
+
+        			if (dirty[0] & /*$$props, $$props*/ 2097152) {
+        				toggle_class(input1, "default", !/*$$props*/ ctx[21].class ? true : false);
+        			}
+
+        			if (dirty[0] & /*$$props, stepFactor*/ 2097160) {
+        				toggle_class(input1, "fast", /*stepFactor*/ ctx[3] > 1 ? "fast" : "");
+        			}
+
+        			if (dirty[0] & /*$$props, stepFactor*/ 2097160) {
+        				toggle_class(input1, "slow", /*stepFactor*/ ctx[3] < 1 ? "slow" : "");
+        			}
+
+        			if (dirty[0] & /*$$props*/ 2097152) {
+        				toggle_class(input1, "drag", true);
+        			}
+
+        			if (dirty[0] & /*$$props, editing*/ 2097168) {
+        				toggle_class(input1, "hide", /*editing*/ ctx[4]);
         			}
         		},
         		i: noop,
         		o: noop,
         		d(detaching) {
-        			if (detaching) detach(input);
-        			/*input_binding*/ ctx[33](null);
+        			if (detaching) detach(t0);
+        			if (detaching) detach(input0);
+        			/*input0_binding*/ ctx[36](null);
+        			if (detaching) detach(t1);
+        			if (detaching) detach(input1);
+        			/*input1_binding*/ ctx[38](null);
         			mounted = false;
         			run_all(dispose);
         		}
         	};
         }
 
+        // window.setTimeout(() => {
+        //   console.log('timeout focus')
+        //   dragElement.focus();      
+        // }, Math.random() * 4000);
+        // handlers --------------------------------
         function mouseenterHandler(e) {
         	
         } // seems not to be very practical to have focus on rollover:
-        // inputElement?.focus();
+        // dragElement?.focus();
 
         function mouseleaveHandler(e) {
         	
         }
+
+        const mousedown_handler = () => {
+        	
+        };
+
+        const touchstart_handler = () => {
+        	
+        };
 
         function instance($$self, $$props, $$invalidate) {
         	let { value = 0 } = $$props;
@@ -720,8 +909,8 @@ var app = (function () {
         	let { focusStyle = undefined } = $$props;
         	let { editingStyle = undefined } = $$props;
         	const dispatch = createEventDispatcher();
-        	let inputElement;
-        	let focussed = false;
+        	let dragElement, editElement;
+        	let dragFocussed = false;
         	let stepFactor = 1;
         	let dragging = false;
         	let clickX, clickY;
@@ -735,20 +924,35 @@ var app = (function () {
         	preciseValue = setValue(value);
 
         	function mousedownHandler(e) {
+        		dispatch("consoleLog", "down " + e.target.id);
+
         		// console.log('down');
         		if (editing) {
         			e.stopPropagation();
         		} else {
         			clickX = e.clientX;
         			clickY = e.clientY;
-        			$$invalidate(3, dragging = true);
+
+        			if (e.type == "touchstart") {
+        				clickX = e.touches[0].clientX;
+        				clickY = e.touches[0].clientY;
+        			}
+
+        			$$invalidate(6, dragging = true);
         			preciseValue = setValue(value);
         		} //console.log(e.clientX, e.clientY);
         	}
 
         	function mousemoveHandler(e) {
+        		e.preventDefault();
         		let actX = e.clientX;
         		let actY = e.clientY;
+
+        		if (e.type == "touchmove") {
+        			actX = e.touches[0].clientX;
+        			actY = e.touches[0].clientY;
+        		}
+
         		let distX = horizontal ? actX - clickX : 0;
         		let distY = vertical ? -(actY - clickY) : 0;
         		let stepNum = Math.abs(distX) > Math.abs(distY) ? distX : distY;
@@ -758,38 +962,61 @@ var app = (function () {
         	}
 
         	function mouseupHandler(e) {
+        		dispatch("consoleLog", "up " + e.target.id);
+
         		// console.log('up');
-        		$$invalidate(3, dragging = false);
+        		$$invalidate(6, dragging = false);
 
-        		$$invalidate(1, stepFactor = 1);
+        		$$invalidate(3, stepFactor = 1);
         	}
 
-        	async function dblclickHandler(e) {
+        	function dblclickHandler(e) {
+        		dispatch("consoleLog", "dblClick " + e.target.id);
         		startEditing();
-        	}
+        	} // dragElement.focus();
 
         	function windowdownHandler(e) {
+        		dispatch("consoleLog", "down window");
+
         		// console.log('window mousedown');
         		stopEditing();
         	}
 
-        	function focusHandler(e) {
-        		// console.log(inputElement);
-        		$$invalidate(29, focussed = true);
+        	function dragFocusHandler(e) {
+        		dispatch("consoleLog", "focus " + e.target.id);
 
-        		stopEditing();
-        	}
+        		// // console.log(dragElement);
+        		$$invalidate(32, dragFocussed = true);
+        	} // if (!justStartedEditing) {
+        	//   stopEditing();      
 
-        	function blurHandler(e) {
-        		// console.log('blur');
-        		$$invalidate(29, focussed = false);
+        	// }
+        	// justStartedEditing = false;
+        	function dragBlurHandler(e) {
+        		dispatch("consoleLog", "blur " + e.target.id);
+        		console.log("blur " + e.target.id);
+        		$$invalidate(32, dragFocussed = false);
+        	} // if (!justStartedEditing) {
+        	//   stopEditing();      
 
-        		stopEditing();
-        	}
+        	// }
+        	function editFocusHandler(e) {
+        		dispatch("consoleLog", "focus " + e.target.id);
+        	} // if (!justStartedEditing) {
+        	//   stopEditing();      
 
+        	// }
+        	// justStartedEditing = false;
+        	function editBlurHandler(e) {
+        		dispatch("consoleLog", "blur " + e.target.id);
+        		console.log("blur " + e.target.id);
+        	} // if (!justStartedEditing) {
+        	//   stopEditing();      
+
+        	// }
         	function inputHandler(e) {
         		// console.log(e);
-        		let checkValue = parseFloat(inputElement.value);
+        		let checkValue = parseFloat(dragElement.value);
 
         		if (!isNaN(checkValue)) {
         			preciseValue = checkValue;
@@ -802,25 +1029,25 @@ var app = (function () {
         	function keydownHandler(e) {
         		// console.log(e);
         		if (e.key == "Shift") {
-        			$$invalidate(31, shiftPressed = true);
+        			$$invalidate(34, shiftPressed = true);
         		}
 
         		if (e.key == "Alt") {
-        			$$invalidate(30, altPressed = true);
+        			$$invalidate(33, altPressed = true);
         		}
         	}
 
         	function keyupHandler(e) {
         		// console.log(e)
         		if (e.key == "Shift") {
-        			$$invalidate(31, shiftPressed = false);
+        			$$invalidate(34, shiftPressed = false);
         		}
 
         		if (e.key == "Alt") {
-        			$$invalidate(30, altPressed = false);
+        			$$invalidate(33, altPressed = false);
         		}
 
-        		if (focussed) {
+        		if (dragFocussed) {
         			if (!editing) {
         				if (vertical && e.key == "ArrowUp" || horizontal && e.key == "ArrowRight") {
         					stepValue(10);
@@ -848,11 +1075,12 @@ var app = (function () {
         	}
 
         	function setValue(val) {
-        		preciseValue = parseFloat(val);
+        		val = parseFloat(val);
+        		if (!isNaN(val)) preciseValue = val;
         		preciseValue = Math.min(preciseValue, max);
         		preciseValue = Math.max(preciseValue, min);
-        		$$invalidate(4, visibleValue = preciseValue.toFixed(decimals));
-        		$$invalidate(17, value = preciseValue.toFixed(decimals));
+        		$$invalidate(7, visibleValue = preciseValue.toFixed(decimals));
+        		$$invalidate(22, value = preciseValue.toFixed(decimals));
         		dispatch("input", value);
         		dispatch("change", value);
         	}
@@ -862,89 +1090,119 @@ var app = (function () {
         		preciseValue += numSteps * step * stepFactor;
         		preciseValue = Math.min(preciseValue, max);
         		preciseValue = Math.max(preciseValue, min);
-        		$$invalidate(4, visibleValue = preciseValue.toFixed(decimals));
-        		$$invalidate(17, value = preciseValue.toFixed(decimals));
+        		$$invalidate(7, visibleValue = preciseValue.toFixed(decimals));
+        		$$invalidate(22, value = preciseValue.toFixed(decimals));
         		dispatch("input", value);
         		dispatch("change", value);
         	}
 
-        	function startEditing() {
+        	async function startEditing() {
+        		// console.log('startEditing')
+        		// justStartedEditing = true;
         		preciseValue = parseFloat(visibleValue);
-        		$$invalidate(2, editing = true);
-        		inputElement?.setSelectionRange(0, 30);
-        	}
 
+        		$$invalidate(4, editing = true);
+        		editElement.setSelectionRange(0, 30);
+        		editElement.focus();
+        	} // window.setTimeout(() => {
+        	//   console.log('timeout blur')
+
+        	//   dragElement.blur();
+        	//   window.setTimeout(() => {
+        	//     console.log('timeout focus')
+        	//     dragElement.focus();      
+        	//   }, 1000);
+        	// }, 1000);
         	function stopEditing() {
-        		$$invalidate(2, editing = false);
-        		inputElement?.setSelectionRange(0, 0);
-        		preciseValue = parseFloat(visibleValue);
-        		setValue(preciseValue);
+        		console.log("stopEditing");
+        		dispatch("consoleLog", "stopEditing");
+        		$$invalidate(4, editing = false);
+        		editElement.setSelectionRange(0, 0);
+
+        		// dragElement.focus();
+        		setValue(visibleValue);
         	}
 
-        	function input_input_handler() {
+        	function input0_input_handler() {
         		visibleValue = this.value;
-        		$$invalidate(4, visibleValue);
+        		$$invalidate(7, visibleValue);
         	}
 
-        	function input_binding($$value) {
+        	function input0_binding($$value) {
         		binding_callbacks[$$value ? "unshift" : "push"](() => {
-        			inputElement = $$value;
-        			($$invalidate(0, inputElement), $$invalidate(2, editing));
+        			editElement = $$value;
+        			$$invalidate(5, editElement);
+        		});
+        	}
+
+        	function input1_input_handler() {
+        		visibleValue = this.value;
+        		$$invalidate(7, visibleValue);
+        	}
+
+        	function input1_binding($$value) {
+        		binding_callbacks[$$value ? "unshift" : "push"](() => {
+        			dragElement = $$value;
+        			$$invalidate(2, dragElement);
         		});
         	}
 
         	$$self.$$set = $$new_props => {
-        		$$invalidate(16, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
-        		if ("value" in $$new_props) $$invalidate(17, value = $$new_props.value);
-        		if ("min" in $$new_props) $$invalidate(18, min = $$new_props.min);
-        		if ("max" in $$new_props) $$invalidate(19, max = $$new_props.max);
-        		if ("step" in $$new_props) $$invalidate(20, step = $$new_props.step);
-        		if ("decimals" in $$new_props) $$invalidate(21, decimals = $$new_props.decimals);
-        		if ("horizontal" in $$new_props) $$invalidate(22, horizontal = $$new_props.horizontal);
-        		if ("vertical" in $$new_props) $$invalidate(23, vertical = $$new_props.vertical);
-        		if ("mainStyle" in $$new_props) $$invalidate(24, mainStyle = $$new_props.mainStyle);
-        		if ("fastStyle" in $$new_props) $$invalidate(25, fastStyle = $$new_props.fastStyle);
-        		if ("slowStyle" in $$new_props) $$invalidate(26, slowStyle = $$new_props.slowStyle);
-        		if ("focusStyle" in $$new_props) $$invalidate(27, focusStyle = $$new_props.focusStyle);
-        		if ("editingStyle" in $$new_props) $$invalidate(28, editingStyle = $$new_props.editingStyle);
+        		$$invalidate(21, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
+        		if ("value" in $$new_props) $$invalidate(22, value = $$new_props.value);
+        		if ("min" in $$new_props) $$invalidate(0, min = $$new_props.min);
+        		if ("max" in $$new_props) $$invalidate(23, max = $$new_props.max);
+        		if ("step" in $$new_props) $$invalidate(1, step = $$new_props.step);
+        		if ("decimals" in $$new_props) $$invalidate(24, decimals = $$new_props.decimals);
+        		if ("horizontal" in $$new_props) $$invalidate(25, horizontal = $$new_props.horizontal);
+        		if ("vertical" in $$new_props) $$invalidate(26, vertical = $$new_props.vertical);
+        		if ("mainStyle" in $$new_props) $$invalidate(27, mainStyle = $$new_props.mainStyle);
+        		if ("fastStyle" in $$new_props) $$invalidate(28, fastStyle = $$new_props.fastStyle);
+        		if ("slowStyle" in $$new_props) $$invalidate(29, slowStyle = $$new_props.slowStyle);
+        		if ("focusStyle" in $$new_props) $$invalidate(30, focusStyle = $$new_props.focusStyle);
+        		if ("editingStyle" in $$new_props) $$invalidate(31, editingStyle = $$new_props.editingStyle);
         	};
 
         	$$self.$$.update = () => {
-        		if ($$self.$$.dirty[0] & /*inputElement, editing*/ 5) {
+        		if ($$self.$$.dirty[0] & /*dragElement*/ 4) {
         			// updaters --------------------------------
-        			 if (inputElement) {
-        				$$invalidate(0, inputElement.readOnly = !editing, inputElement);
+        			// update readonly state of input element
+        			 if (dragElement) {
+        				// dragElement.readOnly = !editing;
+        				$$invalidate(2, dragElement.readOnly = true, dragElement);
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*focussed, editing, altPressed*/ 1610612740 | $$self.$$.dirty[1] & /*shiftPressed*/ 1) {
+        		if ($$self.$$.dirty[0] & /*editing*/ 16 | $$self.$$.dirty[1] & /*dragFocussed, altPressed, shiftPressed*/ 14) {
+        			// update stepFactor
         			 {
-        				$$invalidate(1, stepFactor = 1);
+        				$$invalidate(3, stepFactor = 1);
 
-        				if (focussed && !editing) {
+        				if (dragFocussed && !editing) {
         					if (altPressed && shiftPressed) {
-        						$$invalidate(1, stepFactor = 10);
+        						$$invalidate(3, stepFactor = 10);
         					} else if (altPressed) {
-        						$$invalidate(1, stepFactor = 0.1);
+        						$$invalidate(3, stepFactor = 0.1);
         					}
         				}
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*mainStyle, style, focussed, focusStyle, editing, stepFactor, fastStyle, slowStyle, editingStyle*/ 1056964646) {
+        		if ($$self.$$.dirty[0] & /*mainStyle, style, focusStyle, editing, stepFactor, fastStyle, slowStyle*/ 2013266200 | $$self.$$.dirty[1] & /*dragFocussed, editingStyle*/ 3) {
+        			// update inline style string
         			 {
-        				$$invalidate(5, style = mainStyle ?? "");
-        				$$invalidate(5, style += focussed && focusStyle ? ";" + focusStyle : "");
+        				$$invalidate(8, style = mainStyle ?? "");
+        				$$invalidate(8, style += dragFocussed && focusStyle ? ";" + focusStyle : "");
 
-        				$$invalidate(5, style += !editing && stepFactor > 1 && fastStyle
+        				$$invalidate(8, style += !editing && stepFactor > 1 && fastStyle
         				? ";" + fastStyle
         				: "");
 
-        				$$invalidate(5, style += !editing && stepFactor < 1 && slowStyle
+        				$$invalidate(8, style += !editing && stepFactor < 1 && slowStyle
         				? ";" + slowStyle
         				: "");
 
-        				$$invalidate(5, style += editing && editingStyle ? ";" + editingStyle : "");
+        				$$invalidate(8, style += editing && editingStyle ? ";" + editingStyle : "");
         			}
         		}
         	};
@@ -952,9 +1210,12 @@ var app = (function () {
         	$$props = exclude_internal_props($$props);
 
         	return [
-        		inputElement,
+        		min,
+        		step,
+        		dragElement,
         		stepFactor,
         		editing,
+        		editElement,
         		dragging,
         		visibleValue,
         		style,
@@ -963,16 +1224,16 @@ var app = (function () {
         		mouseupHandler,
         		dblclickHandler,
         		windowdownHandler,
-        		focusHandler,
-        		blurHandler,
+        		dragFocusHandler,
+        		dragBlurHandler,
+        		editFocusHandler,
+        		editBlurHandler,
         		inputHandler,
         		keydownHandler,
         		keyupHandler,
         		$$props,
         		value,
-        		min,
         		max,
-        		step,
         		decimals,
         		horizontal,
         		vertical,
@@ -981,18 +1242,20 @@ var app = (function () {
         		slowStyle,
         		focusStyle,
         		editingStyle,
-        		focussed,
+        		dragFocussed,
         		altPressed,
         		shiftPressed,
-        		input_input_handler,
-        		input_binding
+        		input0_input_handler,
+        		input0_binding,
+        		input1_input_handler,
+        		input1_binding
         	];
         }
 
         class NumberSpinner extends SvelteComponent {
         	constructor(options) {
         		super();
-        		if (!document.getElementById("svelte-8bd7vo-style")) add_css();
+        		if (!document.getElementById("svelte-17pi914-style")) add_css();
 
         		init(
         			this,
@@ -1001,18 +1264,18 @@ var app = (function () {
         			create_fragment,
         			safe_not_equal,
         			{
-        				value: 17,
-        				min: 18,
-        				max: 19,
-        				step: 20,
-        				decimals: 21,
-        				horizontal: 22,
-        				vertical: 23,
-        				mainStyle: 24,
-        				fastStyle: 25,
-        				slowStyle: 26,
-        				focusStyle: 27,
-        				editingStyle: 28
+        				value: 22,
+        				min: 0,
+        				max: 23,
+        				step: 1,
+        				decimals: 24,
+        				horizontal: 25,
+        				vertical: 26,
+        				mainStyle: 27,
+        				fastStyle: 28,
+        				slowStyle: 29,
+        				focusStyle: 30,
+        				editingStyle: 31
         			},
         			[-1, -1]
         		);
@@ -1024,508 +1287,235 @@ var app = (function () {
     })));
     });
 
-    /* example/src/App.svelte generated by Svelte v3.31.2 */
+    /* example/src/App2.svelte generated by Svelte v3.31.2 */
+    const file = "example/src/App2.svelte";
+
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[4] = list[i];
+    	return child_ctx;
+    }
+
+    // (18:2) {#each logs as log}
+    function create_each_block(ctx) {
+    	let t_value = /*log*/ ctx[4] + "";
+    	let t;
+    	let br;
+
+    	const block = {
+    		c: function create() {
+    			t = text(t_value);
+    			br = element("br");
+    			add_location(br, file, 18, 9, 334);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    			insert_dev(target, br, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*logs*/ 2 && t_value !== (t_value = /*log*/ ctx[4] + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(br);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block.name,
+    		type: "each",
+    		source: "(18:2) {#each logs as log}",
+    		ctx
+    	});
+
+    	return block;
+    }
 
     function create_fragment(ctx) {
-    	let h2;
-    	let t1;
-    	let p;
-    	let t8;
-    	let table;
-    	let tr0;
-    	let td0;
-    	let t10;
-    	let td1;
-    	let numberspinner0;
+    	let div0;
+    	let numberspinner;
     	let updating_value;
-    	let t11;
-    	let td2;
-    	let t12;
-    	let t13;
-    	let t14;
-    	let tr1;
-    	let td3;
-    	let t16;
-    	let td4;
-    	let numberspinner1;
-    	let updating_value_1;
-    	let t17;
-    	let td5;
-    	let t18;
-    	let t19;
-    	let t20;
-    	let tr2;
-    	let td6;
-    	let t22;
-    	let td7;
-    	let numberspinner2;
-    	let updating_value_2;
-    	let t23;
-    	let td8;
-    	let t24;
-    	let t25;
-    	let t26;
-    	let tr3;
-    	let td9;
-    	let t28;
-    	let td10;
-    	let numberspinner3;
-    	let updating_value_3;
-    	let t29;
-    	let td11;
-    	let t30;
-    	let t31;
-    	let t32;
-    	let tr4;
-    	let td12;
-    	let t34;
-    	let td13;
-    	let numberspinner4;
-    	let updating_value_4;
-    	let t35;
-    	let td14;
-    	let t36;
-    	let t37;
-    	let t38;
-    	let tr5;
-    	let td15;
-    	let t40;
-    	let td16;
-    	let numberspinner5;
-    	let t41;
-    	let td17;
-    	let t42;
-    	let t43;
-    	let br1;
-    	let t44;
-    	let t45;
+    	let t0;
+    	let hr;
+    	let t1;
+    	let div1;
     	let current;
 
-    	function numberspinner0_value_binding(value) {
-    		/*numberspinner0_value_binding*/ ctx[7].call(null, value);
+    	function numberspinner_value_binding(value) {
+    		/*numberspinner_value_binding*/ ctx[2].call(null, value);
     	}
 
-    	let numberspinner0_props = {};
+    	let numberspinner_props = {};
 
     	if (/*value1*/ ctx[0] !== void 0) {
-    		numberspinner0_props.value = /*value1*/ ctx[0];
+    		numberspinner_props.value = /*value1*/ ctx[0];
     	}
 
-    	numberspinner0 = new dist({ props: numberspinner0_props });
-    	binding_callbacks.push(() => bind(numberspinner0, "value", numberspinner0_value_binding));
-
-    	function numberspinner1_value_binding(value) {
-    		/*numberspinner1_value_binding*/ ctx[8].call(null, value);
-    	}
-
-    	let numberspinner1_props = { min: "0", max: "1000", vertical: false };
-
-    	if (/*value2*/ ctx[1] !== void 0) {
-    		numberspinner1_props.value = /*value2*/ ctx[1];
-    	}
-
-    	numberspinner1 = new dist({ props: numberspinner1_props });
-    	binding_callbacks.push(() => bind(numberspinner1, "value", numberspinner1_value_binding));
-
-    	function numberspinner2_value_binding(value) {
-    		/*numberspinner2_value_binding*/ ctx[9].call(null, value);
-    	}
-
-    	let numberspinner2_props = {
-    		min: "-5",
-    		max: "5",
-    		step: "0.01",
-    		decimals: "2"
-    	};
-
-    	if (/*value3*/ ctx[2] !== void 0) {
-    		numberspinner2_props.value = /*value3*/ ctx[2];
-    	}
-
-    	numberspinner2 = new dist({ props: numberspinner2_props });
-    	binding_callbacks.push(() => bind(numberspinner2, "value", numberspinner2_value_binding));
-
-    	function numberspinner3_value_binding(value) {
-    		/*numberspinner3_value_binding*/ ctx[10].call(null, value);
-    	}
-
-    	let numberspinner3_props = {
-    		step: "10",
-    		mainStyle: "color:#aaa; width:80px; border-radius:20px",
-    		focusStyle: "color:#06f",
-    		editingStyle: "color:#00f; background-color:#06f4",
-    		fastStyle: "color:#f00",
-    		slowStyle: "color:#0c0"
-    	};
-
-    	if (/*value4*/ ctx[3] !== void 0) {
-    		numberspinner3_props.value = /*value4*/ ctx[3];
-    	}
-
-    	numberspinner3 = new dist({ props: numberspinner3_props });
-    	binding_callbacks.push(() => bind(numberspinner3, "value", numberspinner3_value_binding));
-
-    	function numberspinner4_value_binding(value) {
-    		/*numberspinner4_value_binding*/ ctx[11].call(null, value);
-    	}
-
-    	let numberspinner4_props = {
-    		min: "0",
-    		max: "1",
-    		step: "0.001",
-    		decimals: "3",
-    		class: "number-spinner-custom"
-    	};
-
-    	if (/*value5*/ ctx[4] !== void 0) {
-    		numberspinner4_props.value = /*value5*/ ctx[4];
-    	}
-
-    	numberspinner4 = new dist({ props: numberspinner4_props });
-    	binding_callbacks.push(() => bind(numberspinner4, "value", numberspinner4_value_binding));
-
-    	numberspinner5 = new dist({
-    			props: { value: value6, min: "0", max: "100" }
+    	numberspinner = new dist({
+    			props: numberspinner_props,
+    			$$inline: true
     		});
 
-    	numberspinner5.$on("change", /*change_handler*/ ctx[12]);
-    	numberspinner5.$on("input", /*input_handler*/ ctx[13]);
+    	binding_callbacks.push(() => bind(numberspinner, "value", numberspinner_value_binding));
+    	numberspinner.$on("consoleLog", /*consoleLog_handler*/ ctx[3]);
+    	let each_value = /*logs*/ ctx[1];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
 
-    	return {
-    		c() {
-    			h2 = element("h2");
-    			h2.textContent = "Svelte Number Spinner Example";
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div0 = element("div");
+    			create_component(numberspinner.$$.fragment);
+    			t0 = space();
+    			hr = element("hr");
     			t1 = space();
-    			p = element("p");
+    			div1 = element("div");
 
-    			p.innerHTML = `Change the values of the number spinners through mousedrag and arrow keys.<br/>
-  Press <i>Alt</i> for smaller steps, <i>Alt+Shift</i> for larger steps. Double click to edit.`;
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
 
-    			t8 = space();
-    			table = element("table");
-    			tr0 = element("tr");
-    			td0 = element("td");
-    			td0.textContent = "Standard with no range limits and a step of 1";
-    			t10 = space();
-    			td1 = element("td");
-    			create_component(numberspinner0.$$.fragment);
-    			t11 = space();
-    			td2 = element("td");
-    			t12 = text("Current value is ");
-    			t13 = text(/*value1*/ ctx[0]);
-    			t14 = space();
-    			tr1 = element("tr");
-    			td3 = element("td");
-    			td3.textContent = "Range from 0 to 1000 and only horizontal dragging and arrow keys left/right will change the value";
-    			t16 = space();
-    			td4 = element("td");
-    			create_component(numberspinner1.$$.fragment);
-    			t17 = space();
-    			td5 = element("td");
-    			t18 = text("Current value is ");
-    			t19 = text(/*value2*/ ctx[1]);
-    			t20 = space();
-    			tr2 = element("tr");
-    			td6 = element("td");
-    			td6.textContent = "Steps 0.01 and shows the values with a precision of 2 decimals";
-    			t22 = space();
-    			td7 = element("td");
-    			create_component(numberspinner2.$$.fragment);
-    			t23 = space();
-    			td8 = element("td");
-    			t24 = text("Current value is ");
-    			t25 = text(/*value3*/ ctx[2]);
-    			t26 = space();
-    			tr3 = element("tr");
-    			td9 = element("td");
-    			td9.textContent = "Individual styling using props";
-    			t28 = space();
-    			td10 = element("td");
-    			create_component(numberspinner3.$$.fragment);
-    			t29 = space();
-    			td11 = element("td");
-    			t30 = text("Current value is ");
-    			t31 = text(/*value4*/ ctx[3]);
-    			t32 = space();
-    			tr4 = element("tr");
-    			td12 = element("td");
-    			td12.textContent = "Individual styling using custom class";
-    			t34 = space();
-    			td13 = element("td");
-    			create_component(numberspinner4.$$.fragment);
-    			t35 = space();
-    			td14 = element("td");
-    			t36 = text("Current value is ");
-    			t37 = text(/*value5*/ ctx[4]);
-    			t38 = space();
-    			tr5 = element("tr");
-    			td15 = element("td");
-    			td15.textContent = "Retreiving the value using the input and change events";
-    			t40 = space();
-    			td16 = element("td");
-    			create_component(numberspinner5.$$.fragment);
-    			t41 = space();
-    			td17 = element("td");
-    			t42 = text("Current input value is ");
-    			t43 = text(/*value6input*/ ctx[5]);
-    			br1 = element("br");
-    			t44 = text(" \n    Current change value is ");
-    			t45 = text(/*value6change*/ ctx[6]);
-    			attr(td0, "class", "svelte-1cb7yrb");
-    			attr(td1, "class", "svelte-1cb7yrb");
-    			attr(td2, "class", "svelte-1cb7yrb");
-    			attr(tr0, "class", "svelte-1cb7yrb");
-    			attr(td3, "class", "svelte-1cb7yrb");
-    			attr(td4, "class", "svelte-1cb7yrb");
-    			attr(td5, "class", "svelte-1cb7yrb");
-    			attr(tr1, "class", "svelte-1cb7yrb");
-    			attr(td6, "class", "svelte-1cb7yrb");
-    			attr(td7, "class", "svelte-1cb7yrb");
-    			attr(td8, "class", "svelte-1cb7yrb");
-    			attr(tr2, "class", "svelte-1cb7yrb");
-    			attr(td9, "class", "svelte-1cb7yrb");
-    			attr(td10, "class", "svelte-1cb7yrb");
-    			attr(td11, "class", "svelte-1cb7yrb");
-    			attr(tr3, "class", "svelte-1cb7yrb");
-    			attr(td12, "class", "svelte-1cb7yrb");
-    			attr(td13, "class", "svelte-1cb7yrb");
-    			attr(td14, "class", "svelte-1cb7yrb");
-    			attr(tr4, "class", "svelte-1cb7yrb");
-    			attr(td15, "class", "svelte-1cb7yrb");
-    			attr(td16, "class", "svelte-1cb7yrb");
-    			attr(td17, "class", "svelte-1cb7yrb");
-    			attr(tr5, "class", "svelte-1cb7yrb");
-    			attr(table, "class", "svelte-1cb7yrb");
+    			attr_dev(div0, "class", "row svelte-1ntkr60");
+    			add_location(div0, file, 10, 0, 159);
+    			attr_dev(hr, "class", "svelte-1ntkr60");
+    			add_location(hr, file, 14, 0, 275);
+    			attr_dev(div1, "class", "console svelte-1ntkr60");
+    			add_location(div1, file, 16, 0, 281);
     		},
-    		m(target, anchor) {
-    			insert(target, h2, anchor);
-    			insert(target, t1, anchor);
-    			insert(target, p, anchor);
-    			insert(target, t8, anchor);
-    			insert(target, table, anchor);
-    			append(table, tr0);
-    			append(tr0, td0);
-    			append(tr0, t10);
-    			append(tr0, td1);
-    			mount_component(numberspinner0, td1, null);
-    			append(tr0, t11);
-    			append(tr0, td2);
-    			append(td2, t12);
-    			append(td2, t13);
-    			append(table, t14);
-    			append(table, tr1);
-    			append(tr1, td3);
-    			append(tr1, t16);
-    			append(tr1, td4);
-    			mount_component(numberspinner1, td4, null);
-    			append(tr1, t17);
-    			append(tr1, td5);
-    			append(td5, t18);
-    			append(td5, t19);
-    			append(table, t20);
-    			append(table, tr2);
-    			append(tr2, td6);
-    			append(tr2, t22);
-    			append(tr2, td7);
-    			mount_component(numberspinner2, td7, null);
-    			append(tr2, t23);
-    			append(tr2, td8);
-    			append(td8, t24);
-    			append(td8, t25);
-    			append(table, t26);
-    			append(table, tr3);
-    			append(tr3, td9);
-    			append(tr3, t28);
-    			append(tr3, td10);
-    			mount_component(numberspinner3, td10, null);
-    			append(tr3, t29);
-    			append(tr3, td11);
-    			append(td11, t30);
-    			append(td11, t31);
-    			append(table, t32);
-    			append(table, tr4);
-    			append(tr4, td12);
-    			append(tr4, t34);
-    			append(tr4, td13);
-    			mount_component(numberspinner4, td13, null);
-    			append(tr4, t35);
-    			append(tr4, td14);
-    			append(td14, t36);
-    			append(td14, t37);
-    			append(table, t38);
-    			append(table, tr5);
-    			append(tr5, td15);
-    			append(tr5, t40);
-    			append(tr5, td16);
-    			mount_component(numberspinner5, td16, null);
-    			append(tr5, t41);
-    			append(tr5, td17);
-    			append(td17, t42);
-    			append(td17, t43);
-    			append(td17, br1);
-    			append(td17, t44);
-    			append(td17, t45);
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div0, anchor);
+    			mount_component(numberspinner, div0, null);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, hr, anchor);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, div1, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div1, null);
+    			}
+
     			current = true;
     		},
-    		p(ctx, [dirty]) {
-    			const numberspinner0_changes = {};
+    		p: function update(ctx, [dirty]) {
+    			const numberspinner_changes = {};
 
     			if (!updating_value && dirty & /*value1*/ 1) {
     				updating_value = true;
-    				numberspinner0_changes.value = /*value1*/ ctx[0];
+    				numberspinner_changes.value = /*value1*/ ctx[0];
     				add_flush_callback(() => updating_value = false);
     			}
 
-    			numberspinner0.$set(numberspinner0_changes);
-    			if (!current || dirty & /*value1*/ 1) set_data(t13, /*value1*/ ctx[0]);
-    			const numberspinner1_changes = {};
+    			numberspinner.$set(numberspinner_changes);
 
-    			if (!updating_value_1 && dirty & /*value2*/ 2) {
-    				updating_value_1 = true;
-    				numberspinner1_changes.value = /*value2*/ ctx[1];
-    				add_flush_callback(() => updating_value_1 = false);
+    			if (dirty & /*logs*/ 2) {
+    				each_value = /*logs*/ ctx[1];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div1, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
     			}
-
-    			numberspinner1.$set(numberspinner1_changes);
-    			if (!current || dirty & /*value2*/ 2) set_data(t19, /*value2*/ ctx[1]);
-    			const numberspinner2_changes = {};
-
-    			if (!updating_value_2 && dirty & /*value3*/ 4) {
-    				updating_value_2 = true;
-    				numberspinner2_changes.value = /*value3*/ ctx[2];
-    				add_flush_callback(() => updating_value_2 = false);
-    			}
-
-    			numberspinner2.$set(numberspinner2_changes);
-    			if (!current || dirty & /*value3*/ 4) set_data(t25, /*value3*/ ctx[2]);
-    			const numberspinner3_changes = {};
-
-    			if (!updating_value_3 && dirty & /*value4*/ 8) {
-    				updating_value_3 = true;
-    				numberspinner3_changes.value = /*value4*/ ctx[3];
-    				add_flush_callback(() => updating_value_3 = false);
-    			}
-
-    			numberspinner3.$set(numberspinner3_changes);
-    			if (!current || dirty & /*value4*/ 8) set_data(t31, /*value4*/ ctx[3]);
-    			const numberspinner4_changes = {};
-
-    			if (!updating_value_4 && dirty & /*value5*/ 16) {
-    				updating_value_4 = true;
-    				numberspinner4_changes.value = /*value5*/ ctx[4];
-    				add_flush_callback(() => updating_value_4 = false);
-    			}
-
-    			numberspinner4.$set(numberspinner4_changes);
-    			if (!current || dirty & /*value5*/ 16) set_data(t37, /*value5*/ ctx[4]);
-    			if (!current || dirty & /*value6input*/ 32) set_data(t43, /*value6input*/ ctx[5]);
-    			if (!current || dirty & /*value6change*/ 64) set_data(t45, /*value6change*/ ctx[6]);
     		},
-    		i(local) {
+    		i: function intro(local) {
     			if (current) return;
-    			transition_in(numberspinner0.$$.fragment, local);
-    			transition_in(numberspinner1.$$.fragment, local);
-    			transition_in(numberspinner2.$$.fragment, local);
-    			transition_in(numberspinner3.$$.fragment, local);
-    			transition_in(numberspinner4.$$.fragment, local);
-    			transition_in(numberspinner5.$$.fragment, local);
+    			transition_in(numberspinner.$$.fragment, local);
     			current = true;
     		},
-    		o(local) {
-    			transition_out(numberspinner0.$$.fragment, local);
-    			transition_out(numberspinner1.$$.fragment, local);
-    			transition_out(numberspinner2.$$.fragment, local);
-    			transition_out(numberspinner3.$$.fragment, local);
-    			transition_out(numberspinner4.$$.fragment, local);
-    			transition_out(numberspinner5.$$.fragment, local);
+    		o: function outro(local) {
+    			transition_out(numberspinner.$$.fragment, local);
     			current = false;
     		},
-    		d(detaching) {
-    			if (detaching) detach(h2);
-    			if (detaching) detach(t1);
-    			if (detaching) detach(p);
-    			if (detaching) detach(t8);
-    			if (detaching) detach(table);
-    			destroy_component(numberspinner0);
-    			destroy_component(numberspinner1);
-    			destroy_component(numberspinner2);
-    			destroy_component(numberspinner3);
-    			destroy_component(numberspinner4);
-    			destroy_component(numberspinner5);
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div0);
+    			destroy_component(numberspinner);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(hr);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(div1);
+    			destroy_each(each_blocks, detaching);
     		}
     	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
     }
 
-    let value6 = 50;
-
     function instance($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("App2", slots, []);
     	let value1 = 100;
-    	let value2 = 500;
-    	let value3 = 3.28;
-    	let value4 = 0.5;
-    	let value5 = 0.5;
-    	let value6input = value6;
-    	let value6change = value6;
+    	let logs = [];
+    	const writable_props = [];
 
-    	function numberspinner0_value_binding(value) {
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<App2> was created with unknown prop '${key}'`);
+    	});
+
+    	function numberspinner_value_binding(value) {
     		value1 = value;
     		$$invalidate(0, value1);
     	}
 
-    	function numberspinner1_value_binding(value) {
-    		value2 = value;
-    		$$invalidate(1, value2);
-    	}
+    	const consoleLog_handler = e => $$invalidate(1, logs = [...logs, e.detail]);
+    	$$self.$capture_state = () => ({ NumberSpinner: dist, value1, logs });
 
-    	function numberspinner2_value_binding(value) {
-    		value3 = value;
-    		$$invalidate(2, value3);
-    	}
-
-    	function numberspinner3_value_binding(value) {
-    		value4 = value;
-    		$$invalidate(3, value4);
-    	}
-
-    	function numberspinner4_value_binding(value) {
-    		value5 = value;
-    		$$invalidate(4, value5);
-    	}
-
-    	const change_handler = ev => {
-    		$$invalidate(6, value6change = ev.detail);
+    	$$self.$inject_state = $$props => {
+    		if ("value1" in $$props) $$invalidate(0, value1 = $$props.value1);
+    		if ("logs" in $$props) $$invalidate(1, logs = $$props.logs);
     	};
 
-    	const input_handler = ev => {
-    		$$invalidate(5, value6input = ev.detail);
-    	};
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
 
-    	return [
-    		value1,
-    		value2,
-    		value3,
-    		value4,
-    		value5,
-    		value6input,
-    		value6change,
-    		numberspinner0_value_binding,
-    		numberspinner1_value_binding,
-    		numberspinner2_value_binding,
-    		numberspinner3_value_binding,
-    		numberspinner4_value_binding,
-    		change_handler,
-    		input_handler
-    	];
+    	return [value1, logs, numberspinner_value_binding, consoleLog_handler];
     }
 
-    class App extends SvelteComponent {
+    class App2 extends SvelteComponentDev {
     	constructor(options) {
-    		super();
+    		super(options);
     		init(this, options, instance, create_fragment, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "App2",
+    			options,
+    			id: create_fragment.name
+    		});
     	}
     }
 
-    var app = new App({
+    var app = new App2({
     	target: document.body
     });
 
