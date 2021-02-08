@@ -43,6 +43,8 @@
   }
 
   function mousedownHandler(e) {
+    dispatch('consoleLog', 'mousedown');
+
     // console.log('down');
     if (editing) { 
       e.stopPropagation();
@@ -71,27 +73,37 @@
   }
   
   function mouseupHandler(e) {
+    dispatch('consoleLog', 'mouseup');
+
     // console.log('up');
     dragging = false;
     stepFactor = 1;
   }
 
   async function dblclickHandler(e) {
+    dispatch('consoleLog', 'dblclick');
+
     startEditing();
   }
 
   function windowdownHandler(e) {
+    dispatch('consoleLog', 'window mousedown');
+
     // console.log('window mousedown');
     stopEditing();
   }
 
   function focusHandler(e) {
+    dispatch('consoleLog', 'focus');
+
     // console.log(inputElement);
     focussed = true;
     stopEditing();
   }
 
   function blurHandler(e) {
+    dispatch('consoleLog', 'blur');
+
     // console.log('blur');
     focussed = false;
     stopEditing();
@@ -160,6 +172,7 @@
 
   $: if (inputElement) {
     inputElement.readOnly = !editing;
+    // inputElement.disabled = true;
   }
 
   $: {
@@ -244,11 +257,15 @@
     class:fast={stepFactor > 1 ? 'fast' : ''}
     class:slow={stepFactor < 1 ? 'slow' : ''}
     class:editing
-    contenteditable={editing ? 'true' : 'false'} 
+    contenteditable={editing ? 'true' : 'false'}
     tabindex=0
     bind:value={visibleValue}
     bind:this={inputElement}
     />
+
+
+<!--   -->
+
 
 
 <!-- CSS --------------------------------------------------------------->
