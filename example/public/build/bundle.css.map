@@ -5,8 +5,8 @@
     "App2.svelte"
   ],
   "sourcesContent": [
-    "<script>\n\timport NumberSpinner from \"../../dist/index.js\";\n\n  let value1 = 100;\n  let logs = [];\n  \n</script>\n\n<!-- ------------------------------------- -->\n\n<div class=\"row\">\n  <NumberSpinner bind:value={value1} on:consoleLog={(e) => logs = [...logs, e.detail]} />\n</div>\n\n<hr>\n\n<div class=\"console\">\n  {#each logs as log}\n    {log}<br>\n  {/each}\n</div>\n\n<!-- ------------------------------------- -->\n\n<style>\n\n  hr {\n    margin: 20px 0px;\n  }\n\n  div.row {\n    padding-top: 30px;\n    text-align: center;\n  }\n\n  div.console {\n    /*margin:0px 40px;*/\n    \n  }\n\n</style>"
+    "<script>\n\timport NumberSpinner from \"../../dist/index.js\";\n\n  let value1 = 100;\n  let value2 = 33;\n  let logs = [];\n  \n</script>\n\n<!-- ------------------------------------- -->\n\n<div class=\"row\">\n  <NumberSpinner bind:value={value1} on:consoleLog={(e) => logs = [{timestamp:Date.now(), msg:e.detail}, ...logs]} />\n</div>\n\n<hr>\n\n<div class=\"row\">\n  <NumberSpinner bind:value={value2} />\n</div>\n\n<hr>\n\n\n<div class=\"console\">\n  {#each logs as log, i}\n\n    {log.msg}<br>\n\n    {#if logs[i+1]?.timestamp < log.timestamp - 200}<br>{/if}\n    \n  {/each}\n</div>\n\n<!-- ------------------------------------- -->\n\n<style>\n\n  hr {\n    margin: 20px 0px;\n  }\n\n  div.row {\n    padding-top: 30px;\n    text-align: center;\n  }\n\n  div.console {\n    /*margin:0px 40px;*/\n    font-size: 9px;\n  }\n\n</style>"
   ],
   "names": [],
-  "mappings": "AA0BE,EAAE,eAAC,CAAC,AACF,MAAM,CAAE,IAAI,CAAC,GAAG,AAClB,CAAC,AAED,GAAG,IAAI,eAAC,CAAC,AACP,WAAW,CAAE,IAAI,CACjB,UAAU,CAAE,MAAM,AACpB,CAAC,AAED,GAAG,QAAQ,eAAC,CAAC,AAGb,CAAC"
+  "mappings": "AAsCE,EAAE,cAAC,CAAC,AACF,MAAM,CAAE,IAAI,CAAC,GAAG,AAClB,CAAC,AAED,GAAG,IAAI,cAAC,CAAC,AACP,WAAW,CAAE,IAAI,CACjB,UAAU,CAAE,MAAM,AACpB,CAAC,AAED,GAAG,QAAQ,cAAC,CAAC,AAEX,SAAS,CAAE,GAAG,AAChB,CAAC"
 }

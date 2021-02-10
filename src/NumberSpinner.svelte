@@ -26,6 +26,8 @@
   let preciseValue;
   let editing = false;
   let justStartedEditing = false;
+  let internalEditFocus = false;
+  let internalDragFocus = false;
   let altPressed = false;
   let shiftPressed = false;
   let style;
@@ -52,6 +54,7 @@
   function mousedownHandler(e) {
     dispatch('consoleLog', 'down ' + e.target.id);
     // console.log('down');
+
     if (editing) { 
       e.stopPropagation();
     } else {
@@ -103,6 +106,7 @@
   function windowdownHandler(e) {
     dispatch('consoleLog', 'down window');
     // console.log('window mousedown');
+    console.log('calling stopEditing() from windowdownHandler');
     stopEditing();
   }
 
@@ -121,9 +125,16 @@
     dispatch('consoleLog', 'blur ' + e.target.id);
     console.log('blur ' + e.target.id );
     dragFocussed = false;
-    // if (!justStartedEditing) {
-    //   stopEditing();      
+
+    // if (!editing) {
+    //   stopEditing();
     // }
+
+    if (!internalEditFocus) {
+      console.log('calling stopEditing() from dragBlurHandler');
+      stopEditing();      
+      internalEditFocus = false;
+    }
   }
   
   function editFocusHandler(e) {
@@ -142,10 +153,23 @@
     console.log('blur ' + e.target.id );
 
     editFocussed = false;
-    // if (!justStartedEditing) {
-    //   stopEditing();      
-    // }
+    console.log('calling stopEditing() from editBlurHandler');
+    stopEditing();      
+    internalDragFocus = false;
+
   }
+
+  // function focusFromOutside() {
+  //   dispatch('consoleLog', '-----> Focus from outside');    
+  // }
+  // function focusFromOutside() {
+  //   dispatch('consoleLog', '-----> Focus from outside');    
+  // }
+  // function focusFromOutside() {
+  //   dispatch('consoleLog', '-----> Focus from outside');    
+  // }
+
+
 
   function inputHandler(e) {
     // console.log(e);
@@ -161,6 +185,8 @@
   }
 
   function keydownHandler(e) {
+    dispatch('consoleLog', 'keydown: ' + e.key);
+
     // console.log(e);
     if (e.key == 'Shift') {
       shiftPressed = true;
@@ -171,36 +197,42 @@
   }
 
   function keyupHandler(e) {
+    dispatch('consoleLog', 'keyup: ' + e.key);
+
     // console.log(e)
     if (e.key == 'Shift') {
       shiftPressed = false;
     }
-    
     if (e.key == 'Alt') {
       altPressed = false;
     }
 
     if (dragFocussed) {
-      if (!editing) {
-        if (vertical && e.key == 'ArrowUp' || horizontal && e.key == 'ArrowRight') {
-          stepValue(10);
-        }     
-        if (vertical && e.key == 'ArrowDown' || horizontal && e.key == 'ArrowLeft') {
-          stepValue(-10);
-        } 
-      }
+      if (vertical && e.key == 'ArrowUp' || horizontal && e.key == 'ArrowRight') {
+        stepValue(10);
+      }     
+      if (vertical && e.key == 'ArrowDown' || horizontal && e.key == 'ArrowLeft') {
+        stepValue(-10);
+      } 
+    }
 
+    if (!editing) {
       if (e.key == 'Enter') {
-        if (!editing) {
-          startEditing();
-        } else {
-          stopEditing();
-        }
+        startEditing();
+      } 
+
+    } else {
+      if (e.key == 'Enter') {
+        console.log('calling stopEditing() from keyupHandler Enter');
+        stopEditing();
+        internalDragFocus = true;
+        dragElement.focus();
       } 
       if (e.key == 'Escape') {
-        if (editing) {
-          stopEditing();
-        }
+        console.log('calling stopEditing() from keyupHandler Escape');
+        stopEditing();
+        internalDragFocus = true; 
+        dragElement.focus();
       }     
     }
 
@@ -259,13 +291,17 @@
     dispatch('change', value);
   }
 
-  async function startEditing() {
+  function startEditing() {
+    console.log('startEditing');
+    dispatch('consoleLog', 'startEditing');
     // console.log('startEditing')
-    // justStartedEditing = true;
 
+    justStartedEditing = true;
     preciseValue = parseFloat(visibleValue);
     editing = true;
     editElement.setSelectionRange(0, 30);
+
+    internalEditFocus = true;
     editElement.focus();
 
     // window.setTimeout(() => {
@@ -287,7 +323,8 @@
     editing = false;
     editElement.setSelectionRange(0, 0);
     // dragElement.focus();
-    setValue(visibleValue);     
+    setValue(visibleValue); 
+    justStartedEditing = false;
   }
 
 </script>

@@ -48,6 +48,9 @@ var app = (function () {
     function space() {
         return text(' ');
     }
+    function empty() {
+        return text('');
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -873,11 +876,6 @@ var app = (function () {
         	};
         }
 
-        // window.setTimeout(() => {
-        //   console.log('timeout focus')
-        //   dragElement.focus();      
-        // }, Math.random() * 4000);
-        // handlers --------------------------------
         function mouseenterHandler(e) {
         	
         } // seems not to be very practical to have focus on rollover:
@@ -917,6 +915,7 @@ var app = (function () {
         	let visibleValue;
         	let preciseValue;
         	let editing = false;
+        	let internalEditFocus = false;
         	let altPressed = false;
         	let shiftPressed = false;
         	let style;
@@ -979,6 +978,8 @@ var app = (function () {
         		dispatch("consoleLog", "down window");
 
         		// console.log('window mousedown');
+        		console.log("calling stopEditing() from windowdownHandler");
+
         		stopEditing();
         	}
 
@@ -996,10 +997,17 @@ var app = (function () {
         		dispatch("consoleLog", "blur " + e.target.id);
         		console.log("blur " + e.target.id);
         		$$invalidate(32, dragFocussed = false);
-        	} // if (!justStartedEditing) {
-        	//   stopEditing();      
 
-        	// }
+        		// if (!editing) {
+        		//   stopEditing();
+        		// }
+        		if (!internalEditFocus) {
+        			console.log("calling stopEditing() from dragBlurHandler");
+        			stopEditing();
+        			internalEditFocus = false;
+        		}
+        	}
+
         	function editFocusHandler(e) {
         		dispatch("consoleLog", "focus " + e.target.id);
         	} // if (!justStartedEditing) {
@@ -1010,9 +1018,18 @@ var app = (function () {
         	function editBlurHandler(e) {
         		dispatch("consoleLog", "blur " + e.target.id);
         		console.log("blur " + e.target.id);
-        	} // if (!justStartedEditing) {
-        	//   stopEditing();      
+        		console.log("calling stopEditing() from editBlurHandler");
+        		stopEditing();
+        	}
 
+        	// function focusFromOutside() {
+        	//   dispatch('consoleLog', '-----> Focus from outside');    
+        	// }
+        	// function focusFromOutside() {
+        	//   dispatch('consoleLog', '-----> Focus from outside');    
+        	// }
+        	// function focusFromOutside() {
+        	//   dispatch('consoleLog', '-----> Focus from outside');    
         	// }
         	function inputHandler(e) {
         		// console.log(e);
@@ -1027,6 +1044,8 @@ var app = (function () {
         	}
 
         	function keydownHandler(e) {
+        		dispatch("consoleLog", "keydown: " + e.key);
+
         		// console.log(e);
         		if (e.key == "Shift") {
         			$$invalidate(34, shiftPressed = true);
@@ -1038,6 +1057,8 @@ var app = (function () {
         	}
 
         	function keyupHandler(e) {
+        		dispatch("consoleLog", "keyup: " + e.key);
+
         		// console.log(e)
         		if (e.key == "Shift") {
         			$$invalidate(34, shiftPressed = false);
@@ -1048,28 +1069,30 @@ var app = (function () {
         		}
 
         		if (dragFocussed) {
-        			if (!editing) {
-        				if (vertical && e.key == "ArrowUp" || horizontal && e.key == "ArrowRight") {
-        					stepValue(10);
-        				}
-
-        				if (vertical && e.key == "ArrowDown" || horizontal && e.key == "ArrowLeft") {
-        					stepValue(-10);
-        				}
+        			if (vertical && e.key == "ArrowUp" || horizontal && e.key == "ArrowRight") {
+        				stepValue(10);
         			}
 
+        			if (vertical && e.key == "ArrowDown" || horizontal && e.key == "ArrowLeft") {
+        				stepValue(-10);
+        			}
+        		}
+
+        		if (!editing) {
         			if (e.key == "Enter") {
-        				if (!editing) {
-        					startEditing();
-        				} else {
-        					stopEditing();
-        				}
+        				startEditing();
+        			}
+        		} else {
+        			if (e.key == "Enter") {
+        				console.log("calling stopEditing() from keyupHandler Enter");
+        				stopEditing();
+        				dragElement.focus();
         			}
 
         			if (e.key == "Escape") {
-        				if (editing) {
-        					stopEditing();
-        				}
+        				console.log("calling stopEditing() from keyupHandler Escape");
+        				stopEditing();
+        				dragElement.focus();
         			}
         		}
         	}
@@ -1096,13 +1119,14 @@ var app = (function () {
         		dispatch("change", value);
         	}
 
-        	async function startEditing() {
-        		// console.log('startEditing')
-        		// justStartedEditing = true;
-        		preciseValue = parseFloat(visibleValue);
+        	function startEditing() {
+        		console.log("startEditing");
+        		dispatch("consoleLog", "startEditing");
 
+        		preciseValue = parseFloat(visibleValue);
         		$$invalidate(4, editing = true);
         		editElement.setSelectionRange(0, 30);
+        		internalEditFocus = true;
         		editElement.focus();
         	} // window.setTimeout(() => {
         	//   console.log('timeout blur')
@@ -1292,32 +1316,84 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[4] = list[i];
+    	child_ctx[6] = list[i];
+    	child_ctx[8] = i;
     	return child_ctx;
     }
 
-    // (18:2) {#each logs as log}
-    function create_each_block(ctx) {
-    	let t_value = /*log*/ ctx[4] + "";
-    	let t;
+    // (30:4) {#if logs[i+1]?.timestamp < log.timestamp - 200}
+    function create_if_block(ctx) {
     	let br;
 
     	const block = {
     		c: function create() {
-    			t = text(t_value);
     			br = element("br");
-    			add_location(br, file, 18, 9, 334);
+    			add_location(br, file, 29, 52, 520);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, t, anchor);
     			insert_dev(target, br, anchor);
     		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(br);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(30:4) {#if logs[i+1]?.timestamp < log.timestamp - 200}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (26:2) {#each logs as log, i}
+    function create_each_block(ctx) {
+    	let t0_value = /*log*/ ctx[6].msg + "";
+    	let t0;
+    	let br;
+    	let t1;
+    	let if_block_anchor;
+    	let if_block = /*logs*/ ctx[2][/*i*/ ctx[8] + 1]?.timestamp < /*log*/ ctx[6].timestamp - 200 && create_if_block(ctx);
+
+    	const block = {
+    		c: function create() {
+    			t0 = text(t0_value);
+    			br = element("br");
+    			t1 = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    			add_location(br, file, 27, 13, 462);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, br, anchor);
+    			insert_dev(target, t1, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*logs*/ 2 && t_value !== (t_value = /*log*/ ctx[4] + "")) set_data_dev(t, t_value);
+    			if (dirty & /*logs*/ 4 && t0_value !== (t0_value = /*log*/ ctx[6].msg + "")) set_data_dev(t0, t0_value);
+
+    			if (/*logs*/ ctx[2][/*i*/ ctx[8] + 1]?.timestamp < /*log*/ ctx[6].timestamp - 200) {
+    				if (if_block) ; else {
+    					if_block = create_if_block(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(t0);
     			if (detaching) detach_dev(br);
+    			if (detaching) detach_dev(t1);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
     		}
     	};
 
@@ -1325,7 +1401,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(18:2) {#each logs as log}",
+    		source: "(26:2) {#each logs as log, i}",
     		ctx
     	});
 
@@ -1334,32 +1410,55 @@ var app = (function () {
 
     function create_fragment(ctx) {
     	let div0;
-    	let numberspinner;
+    	let numberspinner0;
     	let updating_value;
     	let t0;
-    	let hr;
+    	let hr0;
     	let t1;
     	let div1;
+    	let numberspinner1;
+    	let updating_value_1;
+    	let t2;
+    	let hr1;
+    	let t3;
+    	let div2;
     	let current;
 
-    	function numberspinner_value_binding(value) {
-    		/*numberspinner_value_binding*/ ctx[2].call(null, value);
+    	function numberspinner0_value_binding(value) {
+    		/*numberspinner0_value_binding*/ ctx[3].call(null, value);
     	}
 
-    	let numberspinner_props = {};
+    	let numberspinner0_props = {};
 
     	if (/*value1*/ ctx[0] !== void 0) {
-    		numberspinner_props.value = /*value1*/ ctx[0];
+    		numberspinner0_props.value = /*value1*/ ctx[0];
     	}
 
-    	numberspinner = new dist({
-    			props: numberspinner_props,
+    	numberspinner0 = new dist({
+    			props: numberspinner0_props,
     			$$inline: true
     		});
 
-    	binding_callbacks.push(() => bind(numberspinner, "value", numberspinner_value_binding));
-    	numberspinner.$on("consoleLog", /*consoleLog_handler*/ ctx[3]);
-    	let each_value = /*logs*/ ctx[1];
+    	binding_callbacks.push(() => bind(numberspinner0, "value", numberspinner0_value_binding));
+    	numberspinner0.$on("consoleLog", /*consoleLog_handler*/ ctx[4]);
+
+    	function numberspinner1_value_binding(value) {
+    		/*numberspinner1_value_binding*/ ctx[5].call(null, value);
+    	}
+
+    	let numberspinner1_props = {};
+
+    	if (/*value2*/ ctx[1] !== void 0) {
+    		numberspinner1_props.value = /*value2*/ ctx[1];
+    	}
+
+    	numberspinner1 = new dist({
+    			props: numberspinner1_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(numberspinner1, "value", numberspinner1_value_binding));
+    	let each_value = /*logs*/ ctx[2];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -1370,53 +1469,76 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			div0 = element("div");
-    			create_component(numberspinner.$$.fragment);
+    			create_component(numberspinner0.$$.fragment);
     			t0 = space();
-    			hr = element("hr");
+    			hr0 = element("hr");
     			t1 = space();
     			div1 = element("div");
+    			create_component(numberspinner1.$$.fragment);
+    			t2 = space();
+    			hr1 = element("hr");
+    			t3 = space();
+    			div2 = element("div");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(div0, "class", "row svelte-1ntkr60");
-    			add_location(div0, file, 10, 0, 159);
-    			attr_dev(hr, "class", "svelte-1ntkr60");
-    			add_location(hr, file, 14, 0, 275);
-    			attr_dev(div1, "class", "console svelte-1ntkr60");
-    			add_location(div1, file, 16, 0, 281);
+    			attr_dev(div0, "class", "row svelte-aarj1j");
+    			add_location(div0, file, 11, 0, 178);
+    			attr_dev(hr0, "class", "svelte-aarj1j");
+    			add_location(hr0, file, 15, 0, 322);
+    			attr_dev(div1, "class", "row svelte-aarj1j");
+    			add_location(div1, file, 17, 0, 328);
+    			attr_dev(hr1, "class", "svelte-aarj1j");
+    			add_location(hr1, file, 21, 0, 394);
+    			attr_dev(div2, "class", "console svelte-aarj1j");
+    			add_location(div2, file, 24, 0, 401);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
-    			mount_component(numberspinner, div0, null);
+    			mount_component(numberspinner0, div0, null);
     			insert_dev(target, t0, anchor);
-    			insert_dev(target, hr, anchor);
+    			insert_dev(target, hr0, anchor);
     			insert_dev(target, t1, anchor);
     			insert_dev(target, div1, anchor);
+    			mount_component(numberspinner1, div1, null);
+    			insert_dev(target, t2, anchor);
+    			insert_dev(target, hr1, anchor);
+    			insert_dev(target, t3, anchor);
+    			insert_dev(target, div2, anchor);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div1, null);
+    				each_blocks[i].m(div2, null);
     			}
 
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			const numberspinner_changes = {};
+    			const numberspinner0_changes = {};
 
     			if (!updating_value && dirty & /*value1*/ 1) {
     				updating_value = true;
-    				numberspinner_changes.value = /*value1*/ ctx[0];
+    				numberspinner0_changes.value = /*value1*/ ctx[0];
     				add_flush_callback(() => updating_value = false);
     			}
 
-    			numberspinner.$set(numberspinner_changes);
+    			numberspinner0.$set(numberspinner0_changes);
+    			const numberspinner1_changes = {};
 
-    			if (dirty & /*logs*/ 2) {
-    				each_value = /*logs*/ ctx[1];
+    			if (!updating_value_1 && dirty & /*value2*/ 2) {
+    				updating_value_1 = true;
+    				numberspinner1_changes.value = /*value2*/ ctx[1];
+    				add_flush_callback(() => updating_value_1 = false);
+    			}
+
+    			numberspinner1.$set(numberspinner1_changes);
+
+    			if (dirty & /*logs*/ 4) {
+    				each_value = /*logs*/ ctx[2];
     				validate_each_argument(each_value);
     				let i;
 
@@ -1428,7 +1550,7 @@ var app = (function () {
     					} else {
     						each_blocks[i] = create_each_block(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(div1, null);
+    						each_blocks[i].m(div2, null);
     					}
     				}
 
@@ -1441,20 +1563,27 @@ var app = (function () {
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(numberspinner.$$.fragment, local);
+    			transition_in(numberspinner0.$$.fragment, local);
+    			transition_in(numberspinner1.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(numberspinner.$$.fragment, local);
+    			transition_out(numberspinner0.$$.fragment, local);
+    			transition_out(numberspinner1.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div0);
-    			destroy_component(numberspinner);
+    			destroy_component(numberspinner0);
     			if (detaching) detach_dev(t0);
-    			if (detaching) detach_dev(hr);
+    			if (detaching) detach_dev(hr0);
     			if (detaching) detach_dev(t1);
     			if (detaching) detach_dev(div1);
+    			destroy_component(numberspinner1);
+    			if (detaching) detach_dev(t2);
+    			if (detaching) detach_dev(hr1);
+    			if (detaching) detach_dev(t3);
+    			if (detaching) detach_dev(div2);
     			destroy_each(each_blocks, detaching);
     		}
     	};
@@ -1474,6 +1603,7 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("App2", slots, []);
     	let value1 = 100;
+    	let value2 = 33;
     	let logs = [];
     	const writable_props = [];
 
@@ -1481,24 +1611,38 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<App2> was created with unknown prop '${key}'`);
     	});
 
-    	function numberspinner_value_binding(value) {
+    	function numberspinner0_value_binding(value) {
     		value1 = value;
     		$$invalidate(0, value1);
     	}
 
-    	const consoleLog_handler = e => $$invalidate(1, logs = [...logs, e.detail]);
-    	$$self.$capture_state = () => ({ NumberSpinner: dist, value1, logs });
+    	const consoleLog_handler = e => $$invalidate(2, logs = [{ timestamp: Date.now(), msg: e.detail }, ...logs]);
+
+    	function numberspinner1_value_binding(value) {
+    		value2 = value;
+    		$$invalidate(1, value2);
+    	}
+
+    	$$self.$capture_state = () => ({ NumberSpinner: dist, value1, value2, logs });
 
     	$$self.$inject_state = $$props => {
     		if ("value1" in $$props) $$invalidate(0, value1 = $$props.value1);
-    		if ("logs" in $$props) $$invalidate(1, logs = $$props.logs);
+    		if ("value2" in $$props) $$invalidate(1, value2 = $$props.value2);
+    		if ("logs" in $$props) $$invalidate(2, logs = $$props.logs);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [value1, logs, numberspinner_value_binding, consoleLog_handler];
+    	return [
+    		value1,
+    		value2,
+    		logs,
+    		numberspinner0_value_binding,
+    		consoleLog_handler,
+    		numberspinner1_value_binding
+    	];
     }
 
     class App2 extends SvelteComponentDev {
