@@ -170,9 +170,14 @@
 
   // updaters --------------------------------
 
+  $: {
+    if (!editing && !dragging) {
+      setValue(value);
+    }
+  }
+
   $: if (inputElement) {
     inputElement.readOnly = !editing;
-    // inputElement.disabled = true;
   }
 
   $: {
@@ -235,6 +240,7 @@
 
 <!-- DOM --------------------------------------------------------------->
 
+
 <svelte:window 
     on:mousemove={dragging ? mousemoveHandler : ''} 
     on:mouseup={dragging ? mouseupHandler : ''}
@@ -264,11 +270,8 @@
     />
 
 
-<!--   -->
-
-
-
 <!-- CSS --------------------------------------------------------------->
+
 
 <style>
 

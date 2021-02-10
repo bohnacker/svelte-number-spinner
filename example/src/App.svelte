@@ -1,5 +1,5 @@
 <script>
-	import NumberSpinner from "../../dist/index.js";
+  import NumberSpinner from "../../dist/index.js";
 
   let value1 = 100;
   let value2 = 500;
@@ -9,102 +9,131 @@
   let value6 = 50;
   let value6input = value6;
   let value6change = value6;
+  let value7 = 0;
 
+  let name = "hallo";
+  
 </script>
+
+
 
 <h2>Svelte Number Spinner Example</h2>
 
+<!-- <input bind:value={name} placeholder="enter your name"> -->
+
 <p>
-  Change the values of the number spinners through mousedrag and arrow keys.<br>
-  Press <i>Alt</i> for smaller steps, <i>Alt+Shift</i> for larger steps. Double click to edit.
+  Change the values of the number spinners through mousedrag and arrow keys. Press <i>Alt</i> for smaller steps, <i>Alt+Shift</i> for larger steps. Double click to edit.
 </p>
 
-<table>
-  <tr>
-    <td>Standard with no range limits and a step of 1</td> 
-    <td><NumberSpinner bind:value={value1} /></td> 
-    <td>Current value is {value1}</td> 
-  </tr>
+<hr>
 
-  <tr>
-    <td>Range from 0 to 1000 and only horizontal dragging and arrow keys left/right will change the value</td>  
-    <td><NumberSpinner bind:value={value2} min=0 max=1000 vertical={false} /></td> 
-    <td>Current value is {value2}</td> 
-  </tr>
+<div class="row">
+  <div class="explanation">Default: no range limits, step = 1<br>Current value is {value1}</div> 
+  <div class="right">
+    <NumberSpinner bind:value={value1} />
+  </div> 
+</div>
 
-  <tr>
-    <td>Steps 0.01 and shows the values with a precision of 2 decimals</td> 
-  	<td><NumberSpinner bind:value={value3} min=-5 max=5 step=0.01 decimals=2 /></td> 
-    <td>Current value is {value3}</td> 
-  </tr>
+<hr>
 
-  <tr>
-    <td>Individual styling using props</td> 
-    <td><NumberSpinner bind:value={value4} step=10 
-            mainStyle='color:#aaa; width:80px; border-radius:20px' 
-            focusStyle='color:#06f'
-            editingStyle='color:#00f; background-color:#06f4' 
-            fastStyle='color:#f00'
-            slowStyle='color:#0c0' 
-        />
-    </td> 
-    <td>Current value is {value4}</td> 
-  </tr>
+<div class="row">
+  <div class="explanation">Range: 0 - 1000, only horizontal dragging and arrow keys left/right will change the value.<br>Current value is {value2}</div> 
+  <div class="right">
+    <NumberSpinner bind:value={value2} min=0 max=1000 vertical={false} />
+  </div> 
+</div>
 
-  <tr>
-    <td>Individual styling using custom class</td> 
-    <td><NumberSpinner bind:value={value5} min=0 max=1 step=0.001 decimals=3 
-            class='number-spinner-custom' 
-        />
-    </td> 
-    <td>Current value is {value5}</td> 
-  </tr>
+<hr>
 
-  <tr>
-    <td>Retreiving the value using the input and change events</td> 
-    <td><NumberSpinner value={value6} min=0 max=100 
-            on:change={(ev) => {value6change = ev.detail}} 
-            on:input={(ev) => {value6input = ev.detail}} 
-        />
-    </td> 
-    <td>Current input value is {value6input}<br> 
-    Current change value is {value6change}</td> 
-  </tr>
+<div class="row">
+  <div class="explanation">Step = 0.01, precision = 2 decimals<br>Current value is {value3}</div> 
+  <div class="right">
+    <NumberSpinner bind:value={value3} min=-5 max=5 step=0.01 decimals=2 />
+  </div> 
+</div>
 
+<hr>
 
-</table>
+<div class="row">
+  <div class="explanation">Individual styling using props.<br>Current value is {value4}</div> 
+  <div class="right">
+    <NumberSpinner bind:value={value4} step=10 
+        mainStyle='color:#aaa; width:80px; border-radius:20px' 
+        focusStyle='color:#06f'
+        editingStyle='color:#00f; background-color:#06f4' 
+        fastStyle='color:#f00'
+        slowStyle='color:#0c0' 
+    />
+  </div> 
+</div>
 
+<hr>
+
+<div class="row">
+  <div class="explanation">Individual styling using custom class.<br>Current value is {value5}</div> 
+  <div class="right">
+    <NumberSpinner bind:value={value5} min=0 max=1 step=0.001 decimals=3 
+        class='number-spinner-custom' 
+    />
+  </div> 
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="explanation">
+    Get value through input and change events.<br>
+    Current input value is {value6input}<br> 
+    Current change value is {value6change}
+  </div> 
+  <div class="right">
+    <NumberSpinner value={value6} min=0 max=100 
+        on:change={(ev) => {value6change = ev.detail}} 
+        on:input={(ev) => {value6input = ev.detail}} 
+    />
+  </div> 
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="explanation">
+    Test correct updating of the value if changed from outside.<br>
+    Current input value is {value7}<br> 
+  </div> 
+  <div><button on:click={() => {value7--}}>–</button></div>
+  <div class="right">
+    <NumberSpinner bind:value={value7} min=0 />
+  </div> 
+  <div><button on:click={() => {value7++}}>+</button></div>
+</div>
+
+<hr>
+
+<!-- ---------------------------------------------------------------- -->
 
 <style>
 
-  table {
-    width: 700px;
-    margin-top: 30px;
-    padding: 0px;
-    table-layout: fixed;
-    overflow-x:auto;
-    border-collapse: collapse;
+  hr {
+    margin: 20px 0px;
   }
 
-  tr {
-    border-top: 1px solid #0006;
-    border-bottom: 1px solid #0006;
+  div {
+    display: flex;
+  }
+  div.row {
+    justify-content: space-between;
+    align-items: center;
+  }
+  div.explanation {
+    flex-grow: 6;
+  }
+  div.right {
+    margin:0px 40px;
   }
 
-  td {
-    margin: 0px;
-    padding: 10px 0px;
-  }
-
-  td:nth-child(1) {
-    width: 50%; 
-  }
-  td:nth-child(2) {
-    width: 20%; 
-    text-align: center;
-  }
-  td:nth-child(3) {
-    width: 30%; 
+  button {
+    margin: 5px;
   }
 
   /* custom class for the number spinner */
