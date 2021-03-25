@@ -7,7 +7,7 @@
     "build": "rollup -c",
     "prepublishOnly": "npm run build",
     "dev": "rollup -c -w",
-    "start": "sirv example/public"
+    "start": "sirv example/public --host"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^9.0.0",
