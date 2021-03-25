@@ -7,7 +7,7 @@
   export let step = 1;
   export let decimals = 0;
   export let horizontal = true;
-  export let vertical = true;
+  export let vertical = false;
   export let mainStyle = undefined;
   export let fastStyle = undefined;
   export let slowStyle = undefined;

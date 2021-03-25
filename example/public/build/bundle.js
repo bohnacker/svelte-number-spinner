@@ -803,7 +803,7 @@ var app = (function () {
         	let { step = 1 } = $$props;
         	let { decimals = 0 } = $$props;
         	let { horizontal = true } = $$props;
-        	let { vertical = true } = $$props;
+        	let { vertical = false } = $$props;
         	let { mainStyle = undefined } = $$props;
         	let { fastStyle = undefined } = $$props;
         	let { slowStyle = undefined } = $$props;
