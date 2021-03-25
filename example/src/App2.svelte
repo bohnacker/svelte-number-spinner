@@ -15,7 +15,7 @@
 <hr>
 
 <div class="row">
-  <NumberSpinner bind:value={value2} />
+  <NumberSpinner bind:value={value2} vertical={true} horizontal={false}/>
 </div>
 
 <hr>

@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import { addClass, removeClass } from './dom-helpers';
 
   export let value = 0;
   export let min = -Number.MAX_VALUE;
@@ -32,6 +33,8 @@
 
   visibleValue = setValue(value);
   preciseValue = setValue(value);
+
+  let htmlNode = document.querySelector('html');
 
   // handlers --------------------------------
 
@@ -211,6 +214,16 @@
     style += editing && editingStyle ? ';' + editingStyle : '';
   }
 
+  $: {
+    let cursorClass = horizontal ? (vertical ? 'move-cursor': 'horizontal-cursor'): 'vertical-cursor';
+    
+    if (dragging) {
+      addClass(htmlNode, cursorClass);
+    } else {
+      removeClass(htmlNode, cursorClass);
+    }
+  }
+
   function setValue(val) {
     preciseValue = parseFloat(val);
     preciseValue = Math.min(preciseValue, max);
@@ -261,6 +274,8 @@
   on:keyup={keyupHandler}
 />
 
+<svelte:body style="cursor: help;" />
+
 <input
   type="text"
   on:mouseenter={mouseenterHandler}
@@ -276,6 +291,9 @@
   class:default={!$$props.class ? true : false}
   class:fast={stepFactor > 1 ? 'fast' : ''}
   class:slow={stepFactor < 1 ? 'slow' : ''}
+  class:horizontal-cursor={horizontal && !vertical}
+  class:vertical-cursor={!horizontal && vertical}
+  class:move-cursor={horizontal && vertical}
   class:editing
   contenteditable={editing ? 'true' : 'false'}
   tabindex="0"
@@ -299,7 +317,6 @@
     border-radius: 5px;
     text-align: right;
     cursor: initial; /* get rid of the caret cursor in non-editing mode */
-    cursor: ew-resize;
   }
 
   .default:focus {
@@ -319,6 +336,27 @@
     border: 2px solid #06f;
     padding: 4px;
     cursor: default;
+  }
+
+  /* cursor styling is still a bit of a mess :-( */
+
+  .horizontal-cursor {
+    cursor: ew-resize;
+  }
+  .vertical-cursor {
+    cursor: ns-resize;
+  }
+  .move-cursor {
+    cursor: move;
+  }
+  :global(.horizontal-cursor) {
+    cursor: ew-resize;
+  }
+  :global(.vertical-cursor) {
+    cursor: ns-resize;
+  }
+  :global(.move-cursor) {
+    cursor: move;
   }
 
   /* mandatory css styles, not customizable */
