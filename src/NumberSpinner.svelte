@@ -214,8 +214,12 @@
   }
 
   $: {
-    let cursorClass = horizontal ? (vertical ? 'move-cursor': 'horizontal-cursor'): 'vertical-cursor';
-    
+    let cursorClass = horizontal
+      ? vertical
+        ? 'move-cursor'
+        : 'horizontal-cursor'
+      : 'vertical-cursor';
+
     if (dragging) {
       addClass(htmlNode, cursorClass);
     } else {
