@@ -286,7 +286,7 @@
   on:mouseenter={mouseenterHandler}
   on:mouseleave={mouseleaveHandler}
   on:mousedown|stopPropagation={mousedownHandler}
-  on:touchstart|stopPropagation={touchstartHandler}
+  on:touchstart|stopPropagation|preventDefault={touchstartHandler}
   on:dblclick|stopPropagation={dblclickHandler}
   on:focus={focusHandler}
   on:blur={blurHandler}
