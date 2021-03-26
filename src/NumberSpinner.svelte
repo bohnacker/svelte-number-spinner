@@ -22,6 +22,7 @@
   let stepFactor = 1;
   let dragging = false;
   let clickX, clickY;
+  let hasMoved = 0;
   let visibleValue;
   let preciseValue;
   let editing = false;
@@ -59,6 +60,7 @@
     if (editing) {
       e.stopPropagation();
     } else {
+      hasMoved = 0;
       clickX = isTouchDevice ? e.touches[0].clientX : e.clientX;
       clickY = isTouchDevice ? e.touches[0].clientY : e.clientY;
       dragging = true;
@@ -81,6 +83,8 @@
 
     clickX = actX;
     clickY = actY;
+
+    hasMoved++;
   }
 
   function mouseupHandler(e) {
@@ -88,12 +92,16 @@
 
     // console.log('up');
     dragging = false;
+
+    if (hasMoved < 2) {
+      startEditing();
+    }
   }
 
-  async function dblclickHandler(e) {
+  function dblclickHandler(e) {
     dispatch('consoleLog', 'dblclick');
 
-    startEditing();
+    // startEditing();
   }
 
   function windowdownHandler(e) {
