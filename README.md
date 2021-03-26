@@ -36,7 +36,8 @@ npm install --save svelte-number-spinner
 | step           | Number  | 1           | Step                                        |
 | decimals       | Number  | 0           | Number of decimals                          | 
 | horizontal     | Boolean | true        | Change value by dragging horizontally       |
-| vertical       | Boolean | true        | Change value by dragging vertically         |
+| vertical       | Boolean | false       | Change value by dragging vertically         |
+| cursor         | String  | undefined   | Individual cursor                           |
 | class          | String  | undefined   | Custom component class name                 |
 | mainStyle      | String  | undefined   | Custom inline style for general appearance  |
 | focusStyle     | String  | undefined   | Custom inline style when focussed           |
@@ -54,41 +55,45 @@ You can style the component by overriding the default styles by giving a custom 
 It's recomended to keep the order for `:focus` and `.fast`/`.slow` selectors. Default styles are:
 
 ```css
- .default {
+  .default {
     display: inline-block;
     box-sizing: border-box;
     font-variant-numeric: tabular-nums;
     background-color: white;
     color: black;
-    width: 60px;
-    height: 25px;
+    width: 4em;
+    height: 1.4em;
     margin: 0px;
-    padding: 5px;
-    border: 1px solid #0004;
-    border-radius: 5px;
+    padding: 0.3em;
+    border: 0.05em solid #0004;
+    border-radius: 0.15em;
     text-align: right;
-    cursor: initial;            /* get rid of the caret cursor in non-editing mode */
+    vertical-align: baseline;
+    cursor: initial; /* get rid of the caret cursor in non-editing mode */
   }
 
   .default:focus {
-    border: 1px solid #06f;
-    outline:none;               /* removes the standard focus border */
+    border: 0.05em solid #06f;
+    outline: none; /* removes the standard focus border */
   }
 
   .default.fast {
-    color: tomato;
+    /* color: tomato; */
+    border-top-width: 0.1em;
+    padding-top: 0.25em;
   }
 
   .default.slow {
-    color: green;
+    /* color: green; */
+    border-bottom-width: 0.1em;
+    padding-bottom: 0.25em;
   }
 
   .default.editing {
-    border: 2px solid #06f;
-    padding: 4px;
+    border: 0.1em solid #06f;
+    padding: 0.25em;
     cursor: default;
   }
-
 ```
 
 ### Styling with props
