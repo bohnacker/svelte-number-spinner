@@ -973,11 +973,11 @@ var app = (function () {
 
         		if (focussed) {
         			if (!editing) {
-        				if (vertical && e.key == "ArrowUp" || horizontal && e.key == "ArrowRight") {
+        				if (e.key == "ArrowUp" || e.key == "ArrowRight") {
         					stepValue(10);
         				}
 
-        				if (vertical && e.key == "ArrowDown" || horizontal && e.key == "ArrowLeft") {
+        				if (e.key == "ArrowDown" || e.key == "ArrowLeft") {
         					stepValue(-10);
         				}
         			}
