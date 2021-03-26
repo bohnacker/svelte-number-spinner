@@ -697,8 +697,8 @@ var app = (function () {
 
         function add_css() {
         	var style = element("style");
-        	style.id = "svelte-2oo51x-style";
-        	style.textContent = ".default.svelte-2oo51x{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:4em;height:1.4em;margin:0px;padding:0.3em;border:0.05em solid #0004;border-radius:0.15em;text-align:right;vertical-align:baseline;cursor:initial}.default.svelte-2oo51x:focus{border:0.05em solid #06f;outline:none}.default.fast.svelte-2oo51x{border-top-width:0.1em;padding-top:0.25em}.default.slow.svelte-2oo51x{border-bottom-width:0.1em;padding-bottom:0.25em}.default.editing.svelte-2oo51x{border:0.1em solid #06f;padding:0.25em;cursor:default}input.svelte-2oo51x{user-select:none}input.svelte-2oo51x:not(.editing)::selection{background:#0000}input.editing.svelte-2oo51x{user-select:text}";
+        	style.id = "svelte-1dc5u64-style";
+        	style.textContent = ".default.svelte-1dc5u64{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:4em;height:1.6em;margin:0px;padding:0.25em;border:0.075em solid #0004;border-radius:0.15em;text-align:right;vertical-align:baseline;cursor:initial}.default.svelte-1dc5u64:focus{border:0.075em solid #06f;outline:none}.default.fast.svelte-1dc5u64{border-top-width:0.15em;padding-top:0.175em}.default.slow.svelte-1dc5u64{border-bottom-width:0.15em;padding-bottom:0.175em}.default.dragging.svelte-1dc5u64{border-color:#06f}.default.editing.svelte-1dc5u64{border:0.15em solid #06f;padding:0.175em;cursor:default}input.svelte-1dc5u64{user-select:none}input.svelte-1dc5u64:not(.editing)::selection{background:#0000}input.editing.svelte-1dc5u64{user-select:text}";
         	append(document_1.head, style);
         }
 
@@ -714,18 +714,19 @@ var app = (function () {
         			input = element("input");
         			attr(input, "type", "text");
         			attr(input, "style", /*style*/ ctx[5]);
-        			attr(input, "class", input_class_value = "" + (null_to_empty(/*$$props*/ ctx[17].class) + " svelte-2oo51x"));
+        			attr(input, "class", input_class_value = "" + (null_to_empty(/*$$props*/ ctx[17].class) + " svelte-1dc5u64"));
         			attr(input, "contenteditable", input_contenteditable_value = /*editing*/ ctx[3] ? "true" : "false");
         			attr(input, "tabindex", "0");
         			toggle_class(input, "default", !/*$$props*/ ctx[17].class ? true : false);
         			toggle_class(input, "fast", /*stepFactor*/ ctx[1] > 1 ? "fast" : "");
         			toggle_class(input, "slow", /*stepFactor*/ ctx[1] < 1 ? "slow" : "");
+        			toggle_class(input, "dragging", /*dragging*/ ctx[2]);
         			toggle_class(input, "editing", /*editing*/ ctx[3]);
         		},
         		m(target, anchor) {
         			insert(target, input, anchor);
         			set_input_value(input, /*visibleValue*/ ctx[4]);
-        			/*input_binding*/ ctx[36](input);
+        			/*input_binding*/ ctx[38](input);
 
         			if (!mounted) {
         				dispose = [
@@ -757,7 +758,7 @@ var app = (function () {
         					listen(input, "focus", /*focusHandler*/ ctx[12]),
         					listen(input, "blur", /*blurHandler*/ ctx[13]),
         					listen(input, "input", /*inputHandler*/ ctx[14]),
-        					listen(input, "input", /*input_input_handler*/ ctx[35])
+        					listen(input, "input", /*input_input_handler*/ ctx[37])
         				];
 
         				mounted = true;
@@ -770,7 +771,7 @@ var app = (function () {
         				attr(input, "style", /*style*/ ctx[5]);
         			}
 
-        			if (dirty[0] & /*$$props*/ 131072 && input_class_value !== (input_class_value = "" + (null_to_empty(/*$$props*/ ctx[17].class) + " svelte-2oo51x"))) {
+        			if (dirty[0] & /*$$props*/ 131072 && input_class_value !== (input_class_value = "" + (null_to_empty(/*$$props*/ ctx[17].class) + " svelte-1dc5u64"))) {
         				attr(input, "class", input_class_value);
         			}
 
@@ -794,6 +795,10 @@ var app = (function () {
         				toggle_class(input, "slow", /*stepFactor*/ ctx[1] < 1 ? "slow" : "");
         			}
 
+        			if (dirty[0] & /*$$props, dragging*/ 131076) {
+        				toggle_class(input, "dragging", /*dragging*/ ctx[2]);
+        			}
+
         			if (dirty[0] & /*$$props, editing*/ 131080) {
         				toggle_class(input, "editing", /*editing*/ ctx[3]);
         			}
@@ -802,7 +807,7 @@ var app = (function () {
         		o: noop,
         		d(detaching) {
         			if (detaching) detach(input);
-        			/*input_binding*/ ctx[36](null);
+        			/*input_binding*/ ctx[38](null);
         			mounted = false;
         			run_all(dispose);
         		}
@@ -827,10 +832,12 @@ var app = (function () {
         	let { decimals = 0 } = $$props;
         	let { horizontal = true } = $$props;
         	let { vertical = false } = $$props;
+        	let { editOnClick = false } = $$props;
         	let { mainStyle = undefined } = $$props;
         	let { fastStyle = undefined } = $$props;
         	let { slowStyle = undefined } = $$props;
         	let { focusStyle = undefined } = $$props;
+        	let { draggingStyle = undefined } = $$props;
         	let { editingStyle = undefined } = $$props;
         	let { cursor = undefined } = $$props;
         	let inputElement;
@@ -838,6 +845,7 @@ var app = (function () {
         	let stepFactor = 1;
         	let dragging = false;
         	let clickX, clickY;
+        	let hasMoved = 0;
         	let visibleValue;
         	let preciseValue;
         	let editing = false;
@@ -864,6 +872,7 @@ var app = (function () {
         		if (editing) {
         			e.stopPropagation();
         		} else {
+        			hasMoved = 0;
         			clickX = isTouchDevice ? e.touches[0].clientX : e.clientX;
         			clickY = isTouchDevice ? e.touches[0].clientY : e.clientY;
         			$$invalidate(2, dragging = true);
@@ -882,6 +891,7 @@ var app = (function () {
         		stepValue(stepNum);
         		clickX = actX;
         		clickY = actY;
+        		hasMoved++;
         	}
 
         	function mouseupHandler(e) {
@@ -889,11 +899,18 @@ var app = (function () {
 
         		// console.log('up');
         		$$invalidate(2, dragging = false);
+
+        		if (editOnClick && hasMoved < 2) {
+        			startEditing();
+        		}
         	}
 
-        	async function dblclickHandler(e) {
+        	function dblclickHandler(e) {
         		dispatch("consoleLog", "dblclick");
-        		startEditing();
+
+        		if (!editOnClick) {
+        			startEditing();
+        		}
         	}
 
         	function windowdownHandler(e) {
@@ -907,7 +924,7 @@ var app = (function () {
         		dispatch("consoleLog", "focus");
 
         		// console.log(inputElement);
-        		$$invalidate(31, focussed = true);
+        		$$invalidate(33, focussed = true);
 
         		stopEditing();
         	}
@@ -916,7 +933,7 @@ var app = (function () {
         		dispatch("consoleLog", "blur");
 
         		// console.log('blur');
-        		$$invalidate(31, focussed = false);
+        		$$invalidate(33, focussed = false);
 
         		stopEditing();
         	}
@@ -936,22 +953,22 @@ var app = (function () {
         	function keydownHandler(e) {
         		// console.log(e);
         		if (e.key == "Shift") {
-        			$$invalidate(33, shiftPressed = true);
+        			$$invalidate(35, shiftPressed = true);
         		}
 
         		if (e.key == "Alt") {
-        			$$invalidate(32, altPressed = true);
+        			$$invalidate(34, altPressed = true);
         		}
         	}
 
         	function keyupHandler(e) {
         		// console.log(e)
         		if (e.key == "Shift") {
-        			$$invalidate(33, shiftPressed = false);
+        			$$invalidate(35, shiftPressed = false);
         		}
 
         		if (e.key == "Alt") {
-        			$$invalidate(32, altPressed = false);
+        			$$invalidate(34, altPressed = false);
         		}
 
         		if (focussed) {
@@ -1038,12 +1055,14 @@ var app = (function () {
         		if ("decimals" in $$new_props) $$invalidate(22, decimals = $$new_props.decimals);
         		if ("horizontal" in $$new_props) $$invalidate(23, horizontal = $$new_props.horizontal);
         		if ("vertical" in $$new_props) $$invalidate(24, vertical = $$new_props.vertical);
-        		if ("mainStyle" in $$new_props) $$invalidate(25, mainStyle = $$new_props.mainStyle);
-        		if ("fastStyle" in $$new_props) $$invalidate(26, fastStyle = $$new_props.fastStyle);
-        		if ("slowStyle" in $$new_props) $$invalidate(27, slowStyle = $$new_props.slowStyle);
-        		if ("focusStyle" in $$new_props) $$invalidate(28, focusStyle = $$new_props.focusStyle);
-        		if ("editingStyle" in $$new_props) $$invalidate(29, editingStyle = $$new_props.editingStyle);
-        		if ("cursor" in $$new_props) $$invalidate(30, cursor = $$new_props.cursor);
+        		if ("editOnClick" in $$new_props) $$invalidate(25, editOnClick = $$new_props.editOnClick);
+        		if ("mainStyle" in $$new_props) $$invalidate(26, mainStyle = $$new_props.mainStyle);
+        		if ("fastStyle" in $$new_props) $$invalidate(27, fastStyle = $$new_props.fastStyle);
+        		if ("slowStyle" in $$new_props) $$invalidate(28, slowStyle = $$new_props.slowStyle);
+        		if ("focusStyle" in $$new_props) $$invalidate(29, focusStyle = $$new_props.focusStyle);
+        		if ("draggingStyle" in $$new_props) $$invalidate(30, draggingStyle = $$new_props.draggingStyle);
+        		if ("editingStyle" in $$new_props) $$invalidate(31, editingStyle = $$new_props.editingStyle);
+        		if ("cursor" in $$new_props) $$invalidate(32, cursor = $$new_props.cursor);
         	};
 
         	$$self.$$.update = () => {
@@ -1062,7 +1081,7 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*editing*/ 8 | $$self.$$.dirty[1] & /*focussed, altPressed, shiftPressed*/ 7) {
+        		if ($$self.$$.dirty[0] & /*editing*/ 8 | $$self.$$.dirty[1] & /*focussed, altPressed, shiftPressed*/ 28) {
         			 {
         				$$invalidate(1, stepFactor = 1);
 
@@ -1076,14 +1095,14 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*horizontal, vertical, dragging, cursor*/ 1098907652 | $$self.$$.dirty[1] & /*defaultCursor*/ 8) {
+        		if ($$self.$$.dirty[0] & /*horizontal, vertical, dragging*/ 25165828 | $$self.$$.dirty[1] & /*cursor, defaultCursor*/ 34) {
         			 {
         				// let cursorClass = horizontal
         				//   ? vertical
         				//     ? 'move-cursor'
         				//     : 'horizontal-cursor'
         				//   : 'vertical-cursor';
-        				$$invalidate(34, defaultCursor = horizontal
+        				$$invalidate(36, defaultCursor = horizontal
         				? vertical ? "move" : "ew-resize"
         				: "ns-resize");
 
@@ -1095,7 +1114,7 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*mainStyle, style, focusStyle, editing, stepFactor, fastStyle, slowStyle, editingStyle, cursor*/ 2113929258 | $$self.$$.dirty[1] & /*focussed, defaultCursor*/ 9) {
+        		if ($$self.$$.dirty[0] & /*mainStyle, style, focusStyle, editing, stepFactor, fastStyle, slowStyle, dragging, draggingStyle*/ 2080374830 | $$self.$$.dirty[1] & /*focussed, editingStyle, cursor, defaultCursor*/ 39) {
         			 {
         				$$invalidate(5, style = mainStyle ?? "");
         				$$invalidate(5, style += focussed && focusStyle ? ";" + focusStyle : "");
@@ -1108,6 +1127,7 @@ var app = (function () {
         				? ";" + slowStyle
         				: "");
 
+        				$$invalidate(5, style += dragging && draggingStyle ? ";" + draggingStyle : "");
         				$$invalidate(5, style += editing && editingStyle ? ";" + editingStyle : "");
         				$$invalidate(5, style += !editing ? ";cursor:" + (cursor ?? defaultCursor) : "");
         			}
@@ -1142,10 +1162,12 @@ var app = (function () {
         		decimals,
         		horizontal,
         		vertical,
+        		editOnClick,
         		mainStyle,
         		fastStyle,
         		slowStyle,
         		focusStyle,
+        		draggingStyle,
         		editingStyle,
         		cursor,
         		focussed,
@@ -1160,7 +1182,7 @@ var app = (function () {
         class NumberSpinner extends SvelteComponent {
         	constructor(options) {
         		super();
-        		if (!document_1.getElementById("svelte-2oo51x-style")) add_css();
+        		if (!document_1.getElementById("svelte-1dc5u64-style")) add_css();
 
         		init(
         			this,
@@ -1176,12 +1198,14 @@ var app = (function () {
         				decimals: 22,
         				horizontal: 23,
         				vertical: 24,
-        				mainStyle: 25,
-        				fastStyle: 26,
-        				slowStyle: 27,
-        				focusStyle: 28,
-        				editingStyle: 29,
-        				cursor: 30
+        				editOnClick: 25,
+        				mainStyle: 26,
+        				fastStyle: 27,
+        				slowStyle: 28,
+        				focusStyle: 29,
+        				draggingStyle: 30,
+        				editingStyle: 31,
+        				cursor: 32
         			},
         			[-1, -1]
         		);
@@ -1353,7 +1377,8 @@ var app = (function () {
     		min: "-5",
     		max: "5",
     		step: "0.01",
-    		decimals: "2"
+    		decimals: "2",
+    		editOnClick: true
     	};
 
     	if (/*value3*/ ctx[2] !== void 0) {
@@ -1375,6 +1400,7 @@ var app = (function () {
     		step: "10",
     		mainStyle: "color:#aaa; width:80px; border-radius:20px",
     		focusStyle: "color:#06f",
+    		draggingStyle: "border-color:#f00",
     		editingStyle: "color:#00f; background-color:#06f4",
     		fastStyle: "color:#f00",
     		slowStyle: "color:#0c0",
@@ -1486,7 +1512,7 @@ var app = (function () {
     			t20 = space();
     			div8 = element("div");
     			div6 = element("div");
-    			t21 = text("Step = 0.01, precision = 2 decimals");
+    			t21 = text("Step = 0.01, precision = 2 decimals, editOnClick = true");
     			br2 = element("br");
     			t22 = text("Current value is ");
     			t23 = text(/*value3*/ ctx[2]);
@@ -1579,61 +1605,61 @@ var app = (function () {
     			add_location(div5, file, 38, 0, 791);
     			attr_dev(hr2, "class", "svelte-nyfz93");
     			add_location(hr2, file, 45, 0, 1071);
-    			add_location(br2, file, 48, 62, 1157);
+    			add_location(br2, file, 48, 82, 1177);
     			attr_dev(div6, "class", "explanation svelte-nyfz93");
     			add_location(div6, file, 48, 2, 1097);
     			attr_dev(div7, "class", "right svelte-nyfz93");
-    			add_location(div7, file, 49, 2, 1196);
+    			add_location(div7, file, 49, 2, 1216);
     			attr_dev(div8, "class", "row svelte-nyfz93");
     			add_location(div8, file, 47, 0, 1077);
     			attr_dev(hr3, "class", "svelte-nyfz93");
-    			add_location(hr3, file, 54, 0, 1310);
-    			add_location(br3, file, 57, 58, 1392);
+    			add_location(hr3, file, 54, 0, 1348);
+    			add_location(br3, file, 57, 58, 1430);
     			attr_dev(div9, "class", "explanation svelte-nyfz93");
-    			add_location(div9, file, 57, 2, 1336);
+    			add_location(div9, file, 57, 2, 1374);
     			attr_dev(div10, "class", "right svelte-nyfz93");
-    			add_location(div10, file, 58, 2, 1431);
+    			add_location(div10, file, 58, 2, 1469);
     			attr_dev(div11, "class", "row svelte-nyfz93");
-    			add_location(div11, file, 56, 0, 1316);
+    			add_location(div11, file, 56, 0, 1354);
     			attr_dev(hr4, "class", "svelte-nyfz93");
-    			add_location(hr4, file, 70, 0, 1792);
-    			add_location(br4, file, 73, 65, 1881);
+    			add_location(hr4, file, 71, 0, 1873);
+    			add_location(br4, file, 74, 65, 1962);
     			attr_dev(div12, "class", "explanation svelte-nyfz93");
-    			add_location(div12, file, 73, 2, 1818);
+    			add_location(div12, file, 74, 2, 1899);
     			attr_dev(div13, "class", "right svelte-nyfz93");
-    			add_location(div13, file, 74, 2, 1920);
+    			add_location(div13, file, 75, 2, 2001);
     			attr_dev(div14, "class", "row svelte-nyfz93");
-    			add_location(div14, file, 72, 0, 1798);
+    			add_location(div14, file, 73, 0, 1879);
     			attr_dev(hr5, "class", "svelte-nyfz93");
-    			add_location(hr5, file, 81, 0, 2078);
-    			add_location(br5, file, 85, 46, 2176);
-    			add_location(br6, file, 86, 40, 2221);
+    			add_location(hr5, file, 82, 0, 2159);
+    			add_location(br5, file, 86, 46, 2257);
+    			add_location(br6, file, 87, 40, 2302);
     			attr_dev(div15, "class", "explanation svelte-nyfz93");
-    			add_location(div15, file, 84, 2, 2104);
+    			add_location(div15, file, 85, 2, 2185);
     			attr_dev(div16, "class", "right svelte-nyfz93");
-    			add_location(div16, file, 89, 2, 2282);
+    			add_location(div16, file, 90, 2, 2363);
     			attr_dev(div17, "class", "row svelte-nyfz93");
-    			add_location(div17, file, 83, 0, 2084);
+    			add_location(div17, file, 84, 0, 2165);
     			attr_dev(hr6, "class", "svelte-nyfz93");
-    			add_location(hr6, file, 97, 0, 2486);
-    			add_location(br7, file, 101, 63, 2601);
-    			add_location(br8, file, 102, 35, 2641);
+    			add_location(hr6, file, 98, 0, 2567);
+    			add_location(br7, file, 102, 63, 2682);
+    			add_location(br8, file, 103, 35, 2722);
     			attr_dev(div18, "class", "explanation svelte-nyfz93");
-    			add_location(div18, file, 100, 2, 2512);
+    			add_location(div18, file, 101, 2, 2593);
     			attr_dev(button0, "class", "svelte-nyfz93");
-    			add_location(button0, file, 104, 7, 2664);
+    			add_location(button0, file, 105, 7, 2745);
     			attr_dev(div19, "class", "svelte-nyfz93");
-    			add_location(div19, file, 104, 2, 2659);
+    			add_location(div19, file, 105, 2, 2740);
     			attr_dev(div20, "class", "right small-margin svelte-nyfz93");
-    			add_location(div20, file, 105, 2, 2719);
+    			add_location(div20, file, 106, 2, 2800);
     			attr_dev(button1, "class", "svelte-nyfz93");
-    			add_location(button1, file, 108, 7, 2817);
+    			add_location(button1, file, 109, 7, 2898);
     			attr_dev(div21, "class", "svelte-nyfz93");
-    			add_location(div21, file, 108, 2, 2812);
+    			add_location(div21, file, 109, 2, 2893);
     			attr_dev(div22, "class", "row svelte-nyfz93");
-    			add_location(div22, file, 99, 0, 2492);
+    			add_location(div22, file, 100, 0, 2573);
     			attr_dev(hr7, "class", "svelte-nyfz93");
-    			add_location(hr7, file, 111, 0, 2878);
+    			add_location(hr7, file, 112, 0, 2959);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");

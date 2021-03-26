@@ -10,10 +10,12 @@
   export let decimals = 0;
   export let horizontal = true;
   export let vertical = false;
+  export let editOnClick = false;
   export let mainStyle = undefined;
   export let fastStyle = undefined;
   export let slowStyle = undefined;
   export let focusStyle = undefined;
+  export let draggingStyle = undefined;
   export let editingStyle = undefined;
   export let cursor = undefined;
 
@@ -93,7 +95,7 @@
     // console.log('up');
     dragging = false;
 
-    if (hasMoved < 2) {
+    if (editOnClick && hasMoved < 2) {
       startEditing();
     }
   }
@@ -101,7 +103,9 @@
   function dblclickHandler(e) {
     dispatch('consoleLog', 'dblclick');
 
-    // startEditing();
+    if (!editOnClick) {
+      startEditing();
+    }
   }
 
   function windowdownHandler(e) {
@@ -219,6 +223,7 @@
     style += focussed && focusStyle ? ';' + focusStyle : '';
     style += !editing && stepFactor > 1 && fastStyle ? ';' + fastStyle : '';
     style += !editing && stepFactor < 1 && slowStyle ? ';' + slowStyle : '';
+    style += dragging && draggingStyle ? ';' + draggingStyle : '';
     style += editing && editingStyle ? ';' + editingStyle : '';
     style += !editing ? ';cursor:' + (cursor ?? defaultCursor) : '';
   }
@@ -312,6 +317,7 @@
   class:default={!$$props.class ? true : false}
   class:fast={stepFactor > 1 ? 'fast' : ''}
   class:slow={stepFactor < 1 ? 'slow' : ''}
+  class:dragging
   class:editing
   contenteditable={editing ? 'true' : 'false'}
   tabindex="0"
@@ -332,10 +338,10 @@ class:move-cursor={horizontal && vertical} -->
     background-color: white;
     color: black;
     width: 4em;
-    height: 1.4em;
+    height: 1.6em;
     margin: 0px;
-    padding: 0.3em;
-    border: 0.05em solid #0004;
+    padding: 0.25em;
+    border: 0.075em solid #0004;
     border-radius: 0.15em;
     text-align: right;
     vertical-align: baseline;
@@ -343,48 +349,29 @@ class:move-cursor={horizontal && vertical} -->
   }
 
   .default:focus {
-    border: 0.05em solid #06f;
+    border: 0.075em solid #06f;
     outline: none; /* removes the standard focus border */
   }
 
   .default.fast {
-    /* color: tomato; */
-    border-top-width: 0.1em;
-    padding-top: 0.25em;
+    border-top-width: 0.15em;
+    padding-top: 0.175em;
   }
 
   .default.slow {
-    /* color: green; */
-    border-bottom-width: 0.1em;
-    padding-bottom: 0.25em;
+    border-bottom-width: 0.15em;
+    padding-bottom: 0.175em;
+  }
+
+  .default.dragging {
+    border-color: #06f;
   }
 
   .default.editing {
-    border: 0.1em solid #06f;
-    padding: 0.25em;
+    border: 0.15em solid #06f;
+    padding: 0.175em;
     cursor: default;
   }
-
-  /* cursor styling is still a bit of a mess :-( */
-
-  /* .horizontal-cursor {
-    cursor: ew-resize;
-  }
-  .vertical-cursor {
-    cursor: ns-resize;
-  }
-  .move-cursor {
-    cursor: move;
-  }
-  :global(.horizontal-cursor) {
-    cursor: ew-resize;
-  }
-  :global(.vertical-cursor) {
-    cursor: ns-resize;
-  }
-  :global(.move-cursor) {
-    cursor: move;
-  } */
 
   /* mandatory css styles, not customizable */
 

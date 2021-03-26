@@ -46,9 +46,9 @@
 <hr>
 
 <div class="row">
-  <div class="explanation">Step = 0.01, precision = 2 decimals<br>Current value is {value3}</div> 
+  <div class="explanation">Step = 0.01, precision = 2 decimals, editOnClick = true<br>Current value is {value3}</div> 
   <div class="right">
-    <NumberSpinner bind:value={value3} min=-5 max=5 step=0.01 decimals=2 />
+    <NumberSpinner bind:value={value3} min=-5 max=5 step=0.01 decimals=2 editOnClick={true}/>
   </div> 
 </div>
 
@@ -60,6 +60,7 @@
     <NumberSpinner bind:value={value4} step=10 
         mainStyle='color:#aaa; width:80px; border-radius:20px' 
         focusStyle='color:#06f'
+        draggingStyle='border-color:#f00' 
         editingStyle='color:#00f; background-color:#06f4' 
         fastStyle='color:#f00'
         slowStyle='color:#0c0'

@@ -37,10 +37,12 @@ npm install --save svelte-number-spinner
 | decimals       | Number  | 0           | Number of decimals                          | 
 | horizontal     | Boolean | true        | Change value by dragging horizontally       |
 | vertical       | Boolean | false       | Change value by dragging vertically         |
+| editOnClick    | Boolean | false       | Enter edit mode on click instead dblClick   |
 | cursor         | String  | undefined   | Individual cursor                           |
 | class          | String  | undefined   | Custom component class name                 |
 | mainStyle      | String  | undefined   | Custom inline style for general appearance  |
 | focusStyle     | String  | undefined   | Custom inline style when focussed           |
+| draggingStyle  | String  | undefined   | Custom inline style when dragging           |
 | editingStyle   | String  | undefined   | Custom inline style when editing            |
 | fastStyle      | String  | undefined   | Custom inline style for fast mode           |
 | slowStyle      | String  | undefined   | Custom inline style for slow mode           |
