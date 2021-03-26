@@ -311,18 +311,18 @@
     font-variant-numeric: tabular-nums;
     background-color: white;
     color: black;
-    width: 60px;
-    height: 25px;
+    width: 4em;
+    height: 1.4em;
     margin: 0px;
-    padding: 5px;
-    border: 1px solid #0004;
-    border-radius: 5px;
+    padding: 0.3em;
+    border: 0.05em solid #0004;
+    border-radius: 0.3em;
     text-align: right;
     cursor: initial; /* get rid of the caret cursor in non-editing mode */
   }
 
   .default:focus {
-    border: 1px solid #06f;
+    border: 0.05em solid #06f;
     outline: none; /* removes the standard focus border */
   }
 
@@ -335,8 +335,8 @@
   }
 
   .default.editing {
-    border: 2px solid #06f;
-    padding: 4px;
+    border: 0.1em solid #06f;
+    padding: 0.25em;
     cursor: default;
   }
 
