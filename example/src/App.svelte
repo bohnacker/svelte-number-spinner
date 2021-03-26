@@ -62,7 +62,8 @@
         focusStyle='color:#06f'
         editingStyle='color:#00f; background-color:#06f4' 
         fastStyle='color:#f00'
-        slowStyle='color:#0c0' 
+        slowStyle='color:#0c0'
+        cursor='url(customcursor.png) 16 16, auto'
     />
   </div> 
 </div>

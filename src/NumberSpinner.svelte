@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { addClass, removeClass } from './dom-helpers';
+
+  const dispatch = createEventDispatcher();
 
   export let value = 0;
   export let min = -Number.MAX_VALUE;
@@ -14,8 +15,7 @@
   export let slowStyle = undefined;
   export let focusStyle = undefined;
   export let editingStyle = undefined;
-
-  const dispatch = createEventDispatcher();
+  export let cursor = undefined;
 
   let inputElement;
   let focussed = false;
@@ -28,13 +28,14 @@
   let altPressed = false;
   let shiftPressed = false;
   let style;
-
   let isTouchDevice = false;
 
   visibleValue = setValue(value);
   preciseValue = setValue(value);
 
   let htmlNode = document.querySelector('html');
+  let htmlNodeOriginalCursor = htmlNode.style.cursor;
+  let defaultCursor;
 
   // handlers --------------------------------
 
@@ -211,19 +212,28 @@
     style += !editing && stepFactor > 1 && fastStyle ? ';' + fastStyle : '';
     style += !editing && stepFactor < 1 && slowStyle ? ';' + slowStyle : '';
     style += editing && editingStyle ? ';' + editingStyle : '';
+    style += !editing ? ';cursor:' + (cursor ?? defaultCursor) : '';
   }
 
   $: {
-    let cursorClass = horizontal
+    // let cursorClass = horizontal
+    //   ? vertical
+    //     ? 'move-cursor'
+    //     : 'horizontal-cursor'
+    //   : 'vertical-cursor';
+
+    defaultCursor = horizontal
       ? vertical
-        ? 'move-cursor'
-        : 'horizontal-cursor'
-      : 'vertical-cursor';
+        ? 'move'
+        : 'ew-resize'
+      : 'ns-resize';
 
     if (dragging) {
-      addClass(htmlNode, cursorClass);
+      htmlNode.style.cursor = cursor ?? defaultCursor;
+      // addClass(htmlNode, cursorClass);
     } else {
-      removeClass(htmlNode, cursorClass);
+      htmlNode.style.cursor = htmlNodeOriginalCursor;
+      // removeClass(htmlNode, cursorClass);
     }
   }
 
@@ -279,8 +289,6 @@
   on:keyup={keyupHandler}
 />
 
-<svelte:body style="cursor: help;" />
-
 <input
   type="text"
   on:mouseenter={mouseenterHandler}
@@ -296,15 +304,16 @@
   class:default={!$$props.class ? true : false}
   class:fast={stepFactor > 1 ? 'fast' : ''}
   class:slow={stepFactor < 1 ? 'slow' : ''}
-  class:horizontal-cursor={horizontal && !vertical}
-  class:vertical-cursor={!horizontal && vertical}
-  class:move-cursor={horizontal && vertical}
   class:editing
   contenteditable={editing ? 'true' : 'false'}
   tabindex="0"
   bind:value={visibleValue}
   bind:this={inputElement}
 />
+
+<!-- class:horizontal-cursor={horizontal && !vertical}
+class:vertical-cursor={!horizontal && vertical}
+class:move-cursor={horizontal && vertical} -->
 
 <!-- CSS --------------------------------------------------------------->
 <style>
@@ -350,7 +359,7 @@
 
   /* cursor styling is still a bit of a mess :-( */
 
-  .horizontal-cursor {
+  /* .horizontal-cursor {
     cursor: ew-resize;
   }
   .vertical-cursor {
@@ -367,7 +376,7 @@
   }
   :global(.move-cursor) {
     cursor: move;
-  }
+  } */
 
   /* mandatory css styles, not customizable */
 
@@ -375,6 +384,7 @@
     user-select: none;
   }
 
+  /* remove text selection background in non-editing mode */
   input:not(.editing)::selection {
     background: #0000;
   }
