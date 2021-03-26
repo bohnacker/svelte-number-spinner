@@ -319,8 +319,9 @@
     margin: 0px;
     padding: 0.3em;
     border: 0.05em solid #0004;
-    border-radius: 0.3em;
+    border-radius: 0.15em;
     text-align: right;
+    vertical-align: baseline;
     cursor: initial; /* get rid of the caret cursor in non-editing mode */
   }
 
@@ -330,11 +331,15 @@
   }
 
   .default.fast {
-    color: tomato;
+    /* color: tomato; */
+    border-top-width: 0.1em;
+    padding-top: 0.25em;
   }
 
   .default.slow {
-    color: green;
+    /* color: green; */
+    border-bottom-width: 0.1em;
+    padding-bottom: 0.25em;
   }
 
   .default.editing {
