@@ -248,12 +248,14 @@
   }
 
   function startEditing() {
+    if (isTouchDevice) return;
     preciseValue = parseFloat(visibleValue);
     editing = true;
     inputElement?.setSelectionRange(0, 30);
   }
 
   function stopEditing() {
+    if (isTouchDevice) return;
     editing = false;
     inputElement?.setSelectionRange(0, 0);
     preciseValue = parseFloat(visibleValue);
