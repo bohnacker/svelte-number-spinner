@@ -37,9 +37,9 @@
 <hr>
 
 <div class="row">
-  <div class="explanation">Range: 0 - 1000, only horizontal dragging and arrow keys left/right will change the value.<br>Current value is {value2}</div> 
+  <div class="explanation">Range: 0 - 1000, vertical dragging and arrow keys up/down will also change the value.<br>Current value is {value2}</div> 
   <div class="right">
-    <NumberSpinner bind:value={value2} min=0 max=1000 vertical={false} />
+    <NumberSpinner bind:value={value2} min=0 max=1000 vertical={true} />
   </div> 
 </div>
 
@@ -102,7 +102,7 @@
     Current input value is {value7}<br> 
   </div> 
   <div><button on:click={() => {value7--}}>–</button></div>
-  <div class="right">
+  <div class="right small-margin">
     <NumberSpinner bind:value={value7} min=0 />
   </div> 
   <div><button on:click={() => {value7++}}>+</button></div>
@@ -130,6 +130,9 @@
   }
   div.right {
     margin:0px 40px;
+  }
+  div.small-margin {
+    margin:0px 10px;
   }
 
   button {
