@@ -44,5 +44,6 @@
   div.console {
     /*margin:0px 40px;*/
     font-size: 9px;
+    line-height: 1.2em;
   }
 </style>
