@@ -87,7 +87,6 @@
 
     // console.log('up');
     dragging = false;
-    stepFactor = 1;
   }
 
   async function dblclickHandler(e) {
