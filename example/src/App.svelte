@@ -10,11 +10,7 @@
   let value6input = value6;
   let value6change = value6;
   let value7 = 0;
-
-  let name = "hallo";
-  
 </script>
-
 
 
 <h2>Svelte Number Spinner Example</h2>

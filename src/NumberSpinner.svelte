@@ -139,7 +139,7 @@
       preciseValue = Math.min(preciseValue, max);
       preciseValue = Math.max(preciseValue, min);
 
-      dispatch('input', preciseValue.toFixed(decimals));
+      dispatch('input', parseFloat(preciseValue.toFixed(decimals)));
     }
   }
 
@@ -249,9 +249,9 @@
     preciseValue = Math.max(preciseValue, min);
 
     visibleValue = preciseValue.toFixed(decimals);
-    value = preciseValue.toFixed(decimals);
-    dispatch('input', value);
-    dispatch('change', value);
+    value = parseFloat(preciseValue.toFixed(decimals));
+    dispatch('input', parseFloat(value));
+    dispatch('change', parseFloat(value));
   }
 
   function stepValue(numSteps) {
@@ -261,9 +261,9 @@
     preciseValue = Math.max(preciseValue, min);
 
     visibleValue = preciseValue.toFixed(decimals);
-    value = preciseValue.toFixed(decimals);
-    dispatch('input', value);
-    dispatch('change', value);
+    value = parseFloat(preciseValue.toFixed(decimals));
+    dispatch('input', parseFloat(value));
+    dispatch('change', parseFloat(value));
   }
 
   function startEditing() {
