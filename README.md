@@ -28,24 +28,26 @@ npm install --save svelte-number-spinner
 
 ## Props
 
-| Prop           | Type    | Default     | Description                                 |
-| -------------- | ------- | ----------- | ------------------------------------------- |
-| value          | Number  | 0           | Input value                                 |
-| min            | Number  | -MAX_VALUE  | Minimum value                               |
-| max            | Number  | +MAX_VALUE  | Maximum value                               |
-| step           | Number  | 1           | Step                                        |
-| decimals       | Number  | 0           | Number of decimals                          | 
-| horizontal     | Boolean | true        | Change value by dragging horizontally       |
-| vertical       | Boolean | false       | Change value by dragging vertically         |
-| editOnClick    | Boolean | false       | Enter edit mode on click instead dblClick   |
-| cursor         | String  | undefined   | Individual cursor                           |
-| class          | String  | undefined   | Custom component class name                 |
-| mainStyle      | String  | undefined   | Custom inline style for general appearance  |
-| focusStyle     | String  | undefined   | Custom inline style when focussed           |
-| draggingStyle  | String  | undefined   | Custom inline style when dragging           |
-| editingStyle   | String  | undefined   | Custom inline style when editing            |
-| fastStyle      | String  | undefined   | Custom inline style for fast mode           |
-| slowStyle      | String  | undefined   | Custom inline style for slow mode           |
+| Prop           | Type    | Default     | Description                                         |
+| -------------- | ------- | ----------- | --------------------------------------------------- |
+| value          | Number  | 0           | Input value                                         |
+| min            | Number  | -MAX_VALUE  | Minimum value                                       |
+| max            | Number  | +MAX_VALUE  | Maximum value                                       |
+| step           | Number  | 1           | Step                                                |
+| precision      | Number  | = step      | Precision of value (should be a fraction of step)   |
+| decimals       | Number  | 0           | Number of decimals                                  | 
+| horizontal     | Boolean | true        | Change value by dragging horizontally               |
+| vertical       | Boolean | false       | Change value by dragging vertically                 |
+| circular       | Boolean | false       | Enable circular range (good for angles, hours, ...) |
+| editOnClick    | Boolean | false       | Enter edit mode on click instead dblClick           |
+| cursor         | String  | undefined   | Individual cursor                                   |
+| class          | String  | undefined   | Custom component class name                         |
+| mainStyle      | String  | undefined   | Custom inline style for general appearance          |
+| focusStyle     | String  | undefined   | Custom inline style when focussed                   |
+| draggingStyle  | String  | undefined   | Custom inline style when dragging                   |
+| editingStyle   | String  | undefined   | Custom inline style when editing                    |
+| fastStyle      | String  | undefined   | Custom inline style for fast mode                   |
+| slowStyle      | String  | undefined   | Custom inline style for slow mode                   |
 
 
 ## Styling
