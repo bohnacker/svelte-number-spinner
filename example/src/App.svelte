@@ -33,18 +33,18 @@
 <hr>
 
 <div class="row">
-  <div class="explanation">Range: 0 - 1000, vertical dragging and arrow keys up/down will also change the value.<br>Current value is {value2}</div> 
+  <div class="explanation">Range: 0 - 360, vertical = true (dragging and arrow keys up/down will also change the value), circular = true <br>Current value is {value2}</div> 
   <div class="right">
-    <NumberSpinner bind:value={value2} min=0 max=1000 vertical={true} />
+    <NumberSpinner bind:value={value2} min=0 max=360 vertical={true} circular={true} />
   </div> 
 </div>
 
 <hr>
 
 <div class="row">
-  <div class="explanation">Step = 0.01, precision = 2 decimals, editOnClick = true<br>Current value is {value3}</div> 
+  <div class="explanation">step = 0.01, decimals = 2, precision = 0.001, editOnClick = true<br>Current value is {value3}</div> 
   <div class="right">
-    <NumberSpinner bind:value={value3} min=-5 max=5 step=0.01 decimals=2 editOnClick={true}/>
+    <NumberSpinner bind:value={value3} min=-5 max=5 step=0.01 decimals=2 precision=0.001 editOnClick={true}/>
   </div> 
 </div>
 

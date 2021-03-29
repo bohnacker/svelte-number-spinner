@@ -726,7 +726,7 @@ var app = (function () {
         		m(target, anchor) {
         			insert(target, input, anchor);
         			set_input_value(input, /*visibleValue*/ ctx[4]);
-        			/*input_binding*/ ctx[38](input);
+        			/*input_binding*/ ctx[40](input);
 
         			if (!mounted) {
         				dispose = [
@@ -758,7 +758,7 @@ var app = (function () {
         					listen(input, "focus", /*focusHandler*/ ctx[12]),
         					listen(input, "blur", /*blurHandler*/ ctx[13]),
         					listen(input, "input", /*inputHandler*/ ctx[14]),
-        					listen(input, "input", /*input_input_handler*/ ctx[37])
+        					listen(input, "input", /*input_input_handler*/ ctx[39])
         				];
 
         				mounted = true;
@@ -807,7 +807,7 @@ var app = (function () {
         		o: noop,
         		d(detaching) {
         			if (detaching) detach(input);
-        			/*input_binding*/ ctx[38](null);
+        			/*input_binding*/ ctx[40](null);
         			mounted = false;
         			run_all(dispose);
         		}
@@ -829,9 +829,12 @@ var app = (function () {
         	let { min = -Number.MAX_VALUE } = $$props;
         	let { max = Number.MAX_VALUE } = $$props;
         	let { step = 1 } = $$props;
+        	let { precision = undefined } = $$props;
+        	precision = precision ?? step;
         	let { decimals = 0 } = $$props;
         	let { horizontal = true } = $$props;
         	let { vertical = false } = $$props;
+        	let { circular = false } = $$props;
         	let { editOnClick = false } = $$props;
         	let { mainStyle = undefined } = $$props;
         	let { fastStyle = undefined } = $$props;
@@ -924,7 +927,7 @@ var app = (function () {
         		dispatch("consoleLog", "focus");
 
         		// console.log(inputElement);
-        		$$invalidate(33, focussed = true);
+        		$$invalidate(35, focussed = true);
 
         		stopEditing();
         	}
@@ -933,7 +936,7 @@ var app = (function () {
         		dispatch("consoleLog", "blur");
 
         		// console.log('blur');
-        		$$invalidate(33, focussed = false);
+        		$$invalidate(35, focussed = false);
 
         		stopEditing();
         	}
@@ -944,31 +947,30 @@ var app = (function () {
 
         		if (!isNaN(checkValue)) {
         			preciseValue = checkValue;
-        			preciseValue = Math.min(preciseValue, max);
-        			preciseValue = Math.max(preciseValue, min);
-        			dispatch("input", parseFloat(preciseValue.toFixed(decimals)));
+        			preciseValue = keepInRange(preciseValue);
+        			dispatch("input", parseFloat(roundToPrecision(preciseValue)));
         		}
         	}
 
         	function keydownHandler(e) {
         		// console.log(e);
         		if (e.key == "Shift") {
-        			$$invalidate(35, shiftPressed = true);
+        			$$invalidate(37, shiftPressed = true);
         		}
 
         		if (e.key == "Alt") {
-        			$$invalidate(34, altPressed = true);
+        			$$invalidate(36, altPressed = true);
         		}
         	}
 
         	function keyupHandler(e) {
         		// console.log(e)
         		if (e.key == "Shift") {
-        			$$invalidate(35, shiftPressed = false);
+        			$$invalidate(37, shiftPressed = false);
         		}
 
         		if (e.key == "Alt") {
-        			$$invalidate(34, altPressed = false);
+        			$$invalidate(36, altPressed = false);
         		}
 
         		if (focussed) {
@@ -1000,10 +1002,9 @@ var app = (function () {
 
         	function setValue(val) {
         		preciseValue = parseFloat(val);
-        		preciseValue = Math.min(preciseValue, max);
-        		preciseValue = Math.max(preciseValue, min);
+        		preciseValue = keepInRange(preciseValue);
         		$$invalidate(4, visibleValue = preciseValue.toFixed(decimals));
-        		$$invalidate(18, value = parseFloat(preciseValue.toFixed(decimals)));
+        		$$invalidate(18, value = roundToPrecision(preciseValue));
         		dispatch("input", parseFloat(value));
         		dispatch("change", parseFloat(value));
         	}
@@ -1011,12 +1012,33 @@ var app = (function () {
         	function stepValue(numSteps) {
         		preciseValue = preciseValue ?? parseFloat(visibleValue);
         		preciseValue += numSteps * step * stepFactor;
-        		preciseValue = Math.min(preciseValue, max);
-        		preciseValue = Math.max(preciseValue, min);
+        		preciseValue = keepInRange(preciseValue);
         		$$invalidate(4, visibleValue = preciseValue.toFixed(decimals));
-        		$$invalidate(18, value = parseFloat(preciseValue.toFixed(decimals)));
+        		$$invalidate(18, value = roundToPrecision(preciseValue));
         		dispatch("input", parseFloat(value));
         		dispatch("change", parseFloat(value));
+        	}
+
+        	function keepInRange(val) {
+        		$$invalidate(19, min = parseFloat(min));
+        		$$invalidate(20, max = parseFloat(max));
+
+        		if (circular) {
+        			let range = max - min;
+        			if (range === 0) return min;
+        			let fac = val < min ? Math.ceil((min - val) / range) : 0;
+        			val = (val - min + range * fac) % range + min;
+        		} else {
+        			val = Math.min(Math.max(val, min), max);
+        		}
+
+        		return val;
+        	}
+
+        	function roundToPrecision(val) {
+        		val = Math.round(parseFloat(val) / precision) * precision;
+        		let dec = precision < 1 ? Math.ceil(-Math.log10(precision)) : 0;
+        		return parseFloat(val.toFixed(dec));
         	}
 
         	function startEditing() {
@@ -1051,18 +1073,20 @@ var app = (function () {
         		if ("value" in $$new_props) $$invalidate(18, value = $$new_props.value);
         		if ("min" in $$new_props) $$invalidate(19, min = $$new_props.min);
         		if ("max" in $$new_props) $$invalidate(20, max = $$new_props.max);
-        		if ("step" in $$new_props) $$invalidate(21, step = $$new_props.step);
-        		if ("decimals" in $$new_props) $$invalidate(22, decimals = $$new_props.decimals);
-        		if ("horizontal" in $$new_props) $$invalidate(23, horizontal = $$new_props.horizontal);
-        		if ("vertical" in $$new_props) $$invalidate(24, vertical = $$new_props.vertical);
-        		if ("editOnClick" in $$new_props) $$invalidate(25, editOnClick = $$new_props.editOnClick);
-        		if ("mainStyle" in $$new_props) $$invalidate(26, mainStyle = $$new_props.mainStyle);
-        		if ("fastStyle" in $$new_props) $$invalidate(27, fastStyle = $$new_props.fastStyle);
-        		if ("slowStyle" in $$new_props) $$invalidate(28, slowStyle = $$new_props.slowStyle);
-        		if ("focusStyle" in $$new_props) $$invalidate(29, focusStyle = $$new_props.focusStyle);
-        		if ("draggingStyle" in $$new_props) $$invalidate(30, draggingStyle = $$new_props.draggingStyle);
-        		if ("editingStyle" in $$new_props) $$invalidate(31, editingStyle = $$new_props.editingStyle);
-        		if ("cursor" in $$new_props) $$invalidate(32, cursor = $$new_props.cursor);
+        		if ("step" in $$new_props) $$invalidate(22, step = $$new_props.step);
+        		if ("precision" in $$new_props) $$invalidate(21, precision = $$new_props.precision);
+        		if ("decimals" in $$new_props) $$invalidate(23, decimals = $$new_props.decimals);
+        		if ("horizontal" in $$new_props) $$invalidate(24, horizontal = $$new_props.horizontal);
+        		if ("vertical" in $$new_props) $$invalidate(25, vertical = $$new_props.vertical);
+        		if ("circular" in $$new_props) $$invalidate(26, circular = $$new_props.circular);
+        		if ("editOnClick" in $$new_props) $$invalidate(27, editOnClick = $$new_props.editOnClick);
+        		if ("mainStyle" in $$new_props) $$invalidate(28, mainStyle = $$new_props.mainStyle);
+        		if ("fastStyle" in $$new_props) $$invalidate(29, fastStyle = $$new_props.fastStyle);
+        		if ("slowStyle" in $$new_props) $$invalidate(30, slowStyle = $$new_props.slowStyle);
+        		if ("focusStyle" in $$new_props) $$invalidate(31, focusStyle = $$new_props.focusStyle);
+        		if ("draggingStyle" in $$new_props) $$invalidate(32, draggingStyle = $$new_props.draggingStyle);
+        		if ("editingStyle" in $$new_props) $$invalidate(33, editingStyle = $$new_props.editingStyle);
+        		if ("cursor" in $$new_props) $$invalidate(34, cursor = $$new_props.cursor);
         	};
 
         	$$self.$$.update = () => {
@@ -1081,7 +1105,7 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*editing*/ 8 | $$self.$$.dirty[1] & /*focussed, altPressed, shiftPressed*/ 28) {
+        		if ($$self.$$.dirty[0] & /*editing*/ 8 | $$self.$$.dirty[1] & /*focussed, altPressed, shiftPressed*/ 112) {
         			 {
         				$$invalidate(1, stepFactor = 1);
 
@@ -1095,14 +1119,14 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*horizontal, vertical, dragging*/ 25165828 | $$self.$$.dirty[1] & /*cursor, defaultCursor*/ 34) {
+        		if ($$self.$$.dirty[0] & /*horizontal, vertical, dragging*/ 50331652 | $$self.$$.dirty[1] & /*cursor, defaultCursor*/ 136) {
         			 {
         				// let cursorClass = horizontal
         				//   ? vertical
         				//     ? 'move-cursor'
         				//     : 'horizontal-cursor'
         				//   : 'vertical-cursor';
-        				$$invalidate(36, defaultCursor = horizontal
+        				$$invalidate(38, defaultCursor = horizontal
         				? vertical ? "move" : "ew-resize"
         				: "ns-resize");
 
@@ -1114,7 +1138,7 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*mainStyle, style, focusStyle, editing, stepFactor, fastStyle, slowStyle, dragging, draggingStyle*/ 2080374830 | $$self.$$.dirty[1] & /*focussed, editingStyle, cursor, defaultCursor*/ 39) {
+        		if ($$self.$$.dirty[0] & /*mainStyle, style, editing, stepFactor, fastStyle, slowStyle, dragging*/ 1879048238 | $$self.$$.dirty[1] & /*focussed, focusStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 159) {
         			 {
         				$$invalidate(5, style = mainStyle ?? "");
         				$$invalidate(5, style += focussed && focusStyle ? ";" + focusStyle : "");
@@ -1158,10 +1182,12 @@ var app = (function () {
         		value,
         		min,
         		max,
+        		precision,
         		step,
         		decimals,
         		horizontal,
         		vertical,
+        		circular,
         		editOnClick,
         		mainStyle,
         		fastStyle,
@@ -1194,18 +1220,20 @@ var app = (function () {
         				value: 18,
         				min: 19,
         				max: 20,
-        				step: 21,
-        				decimals: 22,
-        				horizontal: 23,
-        				vertical: 24,
-        				editOnClick: 25,
-        				mainStyle: 26,
-        				fastStyle: 27,
-        				slowStyle: 28,
-        				focusStyle: 29,
-        				draggingStyle: 30,
-        				editingStyle: 31,
-        				cursor: 32
+        				step: 22,
+        				precision: 21,
+        				decimals: 23,
+        				horizontal: 24,
+        				vertical: 25,
+        				circular: 26,
+        				editOnClick: 27,
+        				mainStyle: 28,
+        				fastStyle: 29,
+        				slowStyle: 30,
+        				focusStyle: 31,
+        				draggingStyle: 32,
+        				editingStyle: 33,
+        				cursor: 34
         			},
         			[-1, -1]
         		);
@@ -1356,7 +1384,12 @@ var app = (function () {
     		/*numberspinner1_value_binding*/ ctx[10].call(null, value);
     	}
 
-    	let numberspinner1_props = { min: "0", max: "1000", vertical: true };
+    	let numberspinner1_props = {
+    		min: "0",
+    		max: "360",
+    		vertical: true,
+    		circular: true
+    	};
 
     	if (/*value2*/ ctx[1] !== void 0) {
     		numberspinner1_props.value = /*value2*/ ctx[1];
@@ -1378,6 +1411,7 @@ var app = (function () {
     		max: "5",
     		step: "0.01",
     		decimals: "2",
+    		precision: "0.001",
     		editOnClick: true
     	};
 
@@ -1500,7 +1534,7 @@ var app = (function () {
     			t14 = space();
     			div5 = element("div");
     			div3 = element("div");
-    			t15 = text("Range: 0 - 1000, vertical dragging and arrow keys up/down will also change the value.");
+    			t15 = text("Range: 0 - 360, vertical = true (dragging and arrow keys up/down will also change the value), circular = true ");
     			br1 = element("br");
     			t16 = text("Current value is ");
     			t17 = text(/*value2*/ ctx[1]);
@@ -1512,7 +1546,7 @@ var app = (function () {
     			t20 = space();
     			div8 = element("div");
     			div6 = element("div");
-    			t21 = text("Step = 0.01, precision = 2 decimals, editOnClick = true");
+    			t21 = text("step = 0.01, decimals = 2, precision = 0.001, editOnClick = true");
     			br2 = element("br");
     			t22 = text("Current value is ");
     			t23 = text(/*value3*/ ctx[2]);
@@ -1596,70 +1630,70 @@ var app = (function () {
     			add_location(div2, file, 25, 0, 560);
     			attr_dev(hr1, "class", "svelte-nyfz93");
     			add_location(hr1, file, 32, 0, 758);
-    			add_location(br1, file, 35, 112, 894);
+    			add_location(br1, file, 35, 137, 919);
     			attr_dev(div3, "class", "explanation svelte-nyfz93");
     			add_location(div3, file, 35, 2, 784);
     			attr_dev(div4, "class", "right svelte-nyfz93");
-    			add_location(div4, file, 36, 2, 933);
+    			add_location(div4, file, 36, 2, 958);
     			attr_dev(div5, "class", "row svelte-nyfz93");
     			add_location(div5, file, 34, 0, 764);
     			attr_dev(hr2, "class", "svelte-nyfz93");
-    			add_location(hr2, file, 41, 0, 1044);
-    			add_location(br2, file, 44, 82, 1150);
+    			add_location(hr2, file, 41, 0, 1084);
+    			add_location(br2, file, 44, 91, 1199);
     			attr_dev(div6, "class", "explanation svelte-nyfz93");
-    			add_location(div6, file, 44, 2, 1070);
+    			add_location(div6, file, 44, 2, 1110);
     			attr_dev(div7, "class", "right svelte-nyfz93");
-    			add_location(div7, file, 45, 2, 1189);
+    			add_location(div7, file, 45, 2, 1238);
     			attr_dev(div8, "class", "row svelte-nyfz93");
-    			add_location(div8, file, 43, 0, 1050);
+    			add_location(div8, file, 43, 0, 1090);
     			attr_dev(hr3, "class", "svelte-nyfz93");
-    			add_location(hr3, file, 50, 0, 1321);
-    			add_location(br3, file, 53, 58, 1403);
+    			add_location(hr3, file, 50, 0, 1386);
+    			add_location(br3, file, 53, 58, 1468);
     			attr_dev(div9, "class", "explanation svelte-nyfz93");
-    			add_location(div9, file, 53, 2, 1347);
+    			add_location(div9, file, 53, 2, 1412);
     			attr_dev(div10, "class", "right svelte-nyfz93");
-    			add_location(div10, file, 54, 2, 1442);
+    			add_location(div10, file, 54, 2, 1507);
     			attr_dev(div11, "class", "row svelte-nyfz93");
-    			add_location(div11, file, 52, 0, 1327);
+    			add_location(div11, file, 52, 0, 1392);
     			attr_dev(hr4, "class", "svelte-nyfz93");
-    			add_location(hr4, file, 67, 0, 1846);
-    			add_location(br4, file, 70, 65, 1935);
+    			add_location(hr4, file, 67, 0, 1911);
+    			add_location(br4, file, 70, 65, 2000);
     			attr_dev(div12, "class", "explanation svelte-nyfz93");
-    			add_location(div12, file, 70, 2, 1872);
+    			add_location(div12, file, 70, 2, 1937);
     			attr_dev(div13, "class", "right svelte-nyfz93");
-    			add_location(div13, file, 71, 2, 1974);
+    			add_location(div13, file, 71, 2, 2039);
     			attr_dev(div14, "class", "row svelte-nyfz93");
-    			add_location(div14, file, 69, 0, 1852);
+    			add_location(div14, file, 69, 0, 1917);
     			attr_dev(hr5, "class", "svelte-nyfz93");
-    			add_location(hr5, file, 78, 0, 2132);
-    			add_location(br5, file, 82, 46, 2230);
-    			add_location(br6, file, 83, 40, 2275);
+    			add_location(hr5, file, 78, 0, 2197);
+    			add_location(br5, file, 82, 46, 2295);
+    			add_location(br6, file, 83, 40, 2340);
     			attr_dev(div15, "class", "explanation svelte-nyfz93");
-    			add_location(div15, file, 81, 2, 2158);
+    			add_location(div15, file, 81, 2, 2223);
     			attr_dev(div16, "class", "right svelte-nyfz93");
-    			add_location(div16, file, 86, 2, 2336);
+    			add_location(div16, file, 86, 2, 2401);
     			attr_dev(div17, "class", "row svelte-nyfz93");
-    			add_location(div17, file, 80, 0, 2138);
+    			add_location(div17, file, 80, 0, 2203);
     			attr_dev(hr6, "class", "svelte-nyfz93");
-    			add_location(hr6, file, 94, 0, 2540);
-    			add_location(br7, file, 98, 63, 2655);
-    			add_location(br8, file, 99, 35, 2695);
+    			add_location(hr6, file, 94, 0, 2605);
+    			add_location(br7, file, 98, 63, 2720);
+    			add_location(br8, file, 99, 35, 2760);
     			attr_dev(div18, "class", "explanation svelte-nyfz93");
-    			add_location(div18, file, 97, 2, 2566);
+    			add_location(div18, file, 97, 2, 2631);
     			attr_dev(button0, "class", "svelte-nyfz93");
-    			add_location(button0, file, 101, 7, 2718);
+    			add_location(button0, file, 101, 7, 2783);
     			attr_dev(div19, "class", "svelte-nyfz93");
-    			add_location(div19, file, 101, 2, 2713);
+    			add_location(div19, file, 101, 2, 2778);
     			attr_dev(div20, "class", "right small-margin svelte-nyfz93");
-    			add_location(div20, file, 102, 2, 2773);
+    			add_location(div20, file, 102, 2, 2838);
     			attr_dev(button1, "class", "svelte-nyfz93");
-    			add_location(button1, file, 105, 7, 2871);
+    			add_location(button1, file, 105, 7, 2936);
     			attr_dev(div21, "class", "svelte-nyfz93");
-    			add_location(div21, file, 105, 2, 2866);
+    			add_location(div21, file, 105, 2, 2931);
     			attr_dev(div22, "class", "row svelte-nyfz93");
-    			add_location(div22, file, 96, 0, 2546);
+    			add_location(div22, file, 96, 0, 2611);
     			attr_dev(hr7, "class", "svelte-nyfz93");
-    			add_location(hr7, file, 108, 0, 2932);
+    			add_location(hr7, file, 108, 0, 2997);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");

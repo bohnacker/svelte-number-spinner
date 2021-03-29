@@ -6,9 +6,12 @@
   export let min = -Number.MAX_VALUE;
   export let max = Number.MAX_VALUE;
   export let step = 1;
+  export let precision = undefined;
+  precision = precision ?? step;
   export let decimals = 0;
   export let horizontal = true;
   export let vertical = false;
+  export let circular = false;
   export let editOnClick = false;
   export let mainStyle = undefined;
   export let fastStyle = undefined;
@@ -136,10 +139,9 @@
 
     if (!isNaN(checkValue)) {
       preciseValue = checkValue;
-      preciseValue = Math.min(preciseValue, max);
-      preciseValue = Math.max(preciseValue, min);
+      preciseValue = keepInRange(preciseValue);
 
-      dispatch('input', parseFloat(preciseValue.toFixed(decimals)));
+      dispatch('input', parseFloat(roundToPrecision(preciseValue)));
     }
   }
 
@@ -228,11 +230,7 @@
     //     : 'horizontal-cursor'
     //   : 'vertical-cursor';
 
-    defaultCursor = horizontal
-      ? vertical
-        ? 'move'
-        : 'ew-resize'
-      : 'ns-resize';
+    defaultCursor = horizontal ? (vertical ? 'move' : 'ew-resize') : 'ns-resize';
 
     if (dragging) {
       htmlNode.style.cursor = cursor ?? defaultCursor;
@@ -245,11 +243,10 @@
 
   function setValue(val) {
     preciseValue = parseFloat(val);
-    preciseValue = Math.min(preciseValue, max);
-    preciseValue = Math.max(preciseValue, min);
+    preciseValue = keepInRange(preciseValue);
 
     visibleValue = preciseValue.toFixed(decimals);
-    value = parseFloat(preciseValue.toFixed(decimals));
+    value = roundToPrecision(preciseValue);
     dispatch('input', parseFloat(value));
     dispatch('change', parseFloat(value));
   }
@@ -257,13 +254,32 @@
   function stepValue(numSteps) {
     preciseValue = preciseValue ?? parseFloat(visibleValue);
     preciseValue += numSteps * step * stepFactor;
-    preciseValue = Math.min(preciseValue, max);
-    preciseValue = Math.max(preciseValue, min);
+    preciseValue = keepInRange(preciseValue);
 
     visibleValue = preciseValue.toFixed(decimals);
-    value = parseFloat(preciseValue.toFixed(decimals));
+    value = roundToPrecision(preciseValue);
     dispatch('input', parseFloat(value));
     dispatch('change', parseFloat(value));
+  }
+
+  function keepInRange(val) {
+    min = parseFloat(min);
+    max = parseFloat(max);
+    if (circular) {
+      let range = max - min;
+      if (range === 0) return min;
+      let fac = val < min ? Math.ceil((min - val) / range) : 0;
+      val = ((val - min + range * fac) % range) + min;
+    } else {
+      val = Math.min(Math.max(val, min), max);
+    }
+    return val;
+  }
+
+  function roundToPrecision(val) {
+    val = Math.round(parseFloat(val) / precision) * precision;
+    let dec = precision < 1 ? Math.ceil(-Math.log10(precision)) : 0;
+    return parseFloat(val.toFixed(dec));
   }
 
   function startEditing() {
