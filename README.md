@@ -66,36 +66,38 @@ It's recomended to keep the order for `:focus` and `.fast`/`.slow` selectors. De
     background-color: white;
     color: black;
     width: 4em;
-    height: 1.4em;
+    height: 1.6em;
     margin: 0px;
-    padding: 0.3em;
-    border: 0.05em solid #0004;
+    padding: 0.25em;
+    border: 0.075em solid #0004;
     border-radius: 0.15em;
     text-align: right;
     vertical-align: baseline;
-    cursor: initial; /* get rid of the caret cursor in non-editing mode */
+    cursor: initial;
   }
 
   .default:focus {
-    border: 0.05em solid #06f;
-    outline: none; /* removes the standard focus border */
+    border: 0.075em solid #06f;
+    outline: none;
   }
 
   .default.fast {
-    /* color: tomato; */
-    border-top-width: 0.1em;
-    padding-top: 0.25em;
+    border-top-width: 0.15em;
+    padding-top: 0.175em;
   }
 
   .default.slow {
-    /* color: green; */
-    border-bottom-width: 0.1em;
-    padding-bottom: 0.25em;
+    border-bottom-width: 0.15em;
+    padding-bottom: 0.175em;
+  }
+
+  .default.dragging {
+    border-color: #06f;
   }
 
   .default.editing {
-    border: 0.1em solid #06f;
-    padding: 0.25em;
+    border: 0.15em solid #06f;
+    padding: 0.175em;
     cursor: default;
   }
 ```
