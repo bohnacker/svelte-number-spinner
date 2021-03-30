@@ -10,6 +10,8 @@
   let value6input = value6;
   let value6change = value6;
   let value7 = 0;
+  let value8 = -2;
+  let options = {min:-5, max:5, step:0.5, decimals:1};
 </script>
 
 
@@ -108,6 +110,15 @@
 
 <hr>
 
+<div class="row">
+  <div class="explanation">Giving some of the prop through options object<br>Current value is {value8}</div> 
+  <div class="right">
+    <NumberSpinner bind:value={value8} {options}/>
+  </div> 
+</div>
+
+<hr>
+
 <!-- ---------------------------------------------------------------- -->
 
 <style>
@@ -135,6 +146,8 @@
 
   button {
     margin: 5px;
+		height: 1.6em;
+		padding: 0 0.4em;
   }
 
   /* custom class for the number spinner */

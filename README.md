@@ -48,6 +48,26 @@ npm install --save svelte-number-spinner
 | editingStyle   | String  | undefined   | Custom inline style when editing                    |
 | fastStyle      | String  | undefined   | Custom inline style for fast mode                   |
 | slowStyle      | String  | undefined   | Custom inline style for slow mode                   |
+| options        | Object  | {}          | Set any of the above props through this object      |
+
+### Prop `options`
+
+If you have many number spinners that should have the same props you might want to use the `options` object. This sets all of the given props to the respective value. Changing the options later won't update the props of the number spinner.
+
+Example:
+
+```html
+<script>
+  import NumberSpinner from "svelte-number-spinner";
+
+  let value1 = 50;
+  let value2 = 10;
+  let options = {horizontal:false, vertical:true, editOnClick:true}
+</script>
+
+<NumberSpinner bind:value={value1} min=0 max=100 {options} />
+<NumberSpinner bind:value={value2} min=-30 max=30 {options} />
+```
 
 
 ## Styling

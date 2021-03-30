@@ -2,24 +2,28 @@
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
 
-  export let value = 0;
-  export let min = -Number.MAX_VALUE;
-  export let max = Number.MAX_VALUE;
-  export let step = 1;
-  export let precision = undefined;
+  // set any of the props with properties of this options object
+  // changing one of the options later will not update the prop!
+  export let options = {};
+
+  export let value = options.value ?? 0;
+  export let min = options.min ?? -Number.MAX_VALUE;
+  export let max = options.max ?? Number.MAX_VALUE;
+  export let step = options.step ?? 1;
+  export let precision = options.precision ?? undefined;
   precision = precision ?? step;
-  export let decimals = 0;
-  export let horizontal = true;
-  export let vertical = false;
-  export let circular = false;
-  export let editOnClick = false;
-  export let mainStyle = undefined;
-  export let fastStyle = undefined;
-  export let slowStyle = undefined;
-  export let focusStyle = undefined;
-  export let draggingStyle = undefined;
-  export let editingStyle = undefined;
-  export let cursor = undefined;
+  export let decimals = options.decimals ?? 0;
+  export let horizontal = options.horizontal ?? true;
+  export let vertical = options.vertical ?? false;
+  export let circular = options.circular ?? false;
+  export let editOnClick = options.editOnClick ?? false;
+  export let mainStyle = options.mainStyle ?? undefined;
+  export let fastStyle = options.fastStyle ?? undefined;
+  export let slowStyle = options.slowStyle ?? undefined;
+  export let focusStyle = options.focusStyle ?? undefined;
+  export let draggingStyle = options.draggingStyle ?? undefined;
+  export let editingStyle = options.editingStyle ?? undefined;
+  export let cursor = options.cursor ?? undefined;
 
   let inputElement;
   let focussed = false;
