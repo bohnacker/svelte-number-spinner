@@ -97,11 +97,11 @@
 <div class="row">
   <div class="explanation">
     Test correct updating of the value if changed from outside.<br>
-    Current input value is {value7}<br> 
+    Current value is {value7}<br> 
   </div> 
   <div><button on:click={() => {value7--}}>–</button></div>
   <div class="right small-margin">
-    <NumberSpinner bind:value={value7} min=0 />
+    <NumberSpinner bind:value={value7} min=0 max=12 circular={true} />
   </div> 
   <div><button on:click={() => {value7++}}>+</button></div>
 </div>
