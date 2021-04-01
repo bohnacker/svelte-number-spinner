@@ -172,13 +172,14 @@
 
     if (focussed) {
       if (!editing) {
-        let incSteps = speed < 0.1 ? 1 / speed : Math.round(10 * speed) / speed;
-        console.log(incSteps);
+        // increment should at least be step
+        let increment = Math.max(step, step * Math.round(10 * speed));
+
         if (e.key == 'ArrowUp' || e.key == 'ArrowRight') {
-          stepValue(incSteps);
+          addToValue(increment);
         }
         if (e.key == 'ArrowDown' || e.key == 'ArrowLeft') {
-          stepValue(-incSteps);
+          addToValue(-increment);
         }
       }
 
@@ -251,6 +252,12 @@
   function stepValue(numSteps) {
     preciseValue = preciseValue ?? parseFloat(visibleValue);
     preciseValue += numSteps * step * stepFactor * speed;
+    setValue(preciseValue);
+  }
+
+  function addToValue(increment) {
+    preciseValue = preciseValue ?? parseFloat(visibleValue);
+    preciseValue += increment * stepFactor;
     setValue(preciseValue);
   }
 

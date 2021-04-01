@@ -11,7 +11,7 @@
   let value6change = value6;
   let value7 = 0;
   let value8 = -2;
-  let options = {min:-5, max:5, step:0.5, decimals:1, speed:0.1};
+  let options = {min:-5, max:5, step:0.5, decimals:1, speed:0.04};
 </script>
 
 

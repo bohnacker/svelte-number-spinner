@@ -977,15 +977,15 @@ var app = (function () {
 
         		if (focussed) {
         			if (!editing) {
-        				let incSteps = speed < 0.1 ? 1 / speed : Math.round(10 * speed) / speed;
-        				console.log(incSteps);
+        				// increment should at least be step
+        				let increment = Math.max(step, step * Math.round(10 * speed));
 
         				if (e.key == "ArrowUp" || e.key == "ArrowRight") {
-        					stepValue(incSteps);
+        					addToValue(increment);
         				}
 
         				if (e.key == "ArrowDown" || e.key == "ArrowLeft") {
-        					stepValue(-incSteps);
+        					addToValue(-increment);
         				}
         			}
 
@@ -1008,6 +1008,12 @@ var app = (function () {
         	function stepValue(numSteps) {
         		preciseValue = preciseValue ?? parseFloat(visibleValue);
         		preciseValue += numSteps * step * stepFactor * speed;
+        		setValue(preciseValue);
+        	}
+
+        	function addToValue(increment) {
+        		preciseValue = preciseValue ?? parseFloat(visibleValue);
+        		preciseValue += increment * stepFactor;
         		setValue(preciseValue);
         	}
 
@@ -1665,94 +1671,94 @@ var app = (function () {
     			create_component(numberspinner7.$$.fragment);
     			t61 = space();
     			hr8 = element("hr");
-    			add_location(h2, file, 17, 0, 353);
-    			add_location(i0, file, 22, 83, 546);
-    			add_location(i1, file, 22, 113, 576);
-    			add_location(p, file, 21, 0, 459);
+    			add_location(h2, file, 17, 0, 354);
+    			add_location(i0, file, 22, 83, 547);
+    			add_location(i1, file, 22, 113, 577);
+    			add_location(p, file, 21, 0, 460);
     			attr_dev(hr0, "class", "svelte-1sfytbq");
-    			add_location(hr0, file, 25, 0, 639);
-    			add_location(br0, file, 28, 61, 724);
+    			add_location(hr0, file, 25, 0, 640);
+    			add_location(br0, file, 28, 61, 725);
     			attr_dev(div0, "class", "explanation svelte-1sfytbq");
-    			add_location(div0, file, 28, 2, 665);
+    			add_location(div0, file, 28, 2, 666);
     			attr_dev(div1, "class", "right svelte-1sfytbq");
-    			add_location(div1, file, 29, 2, 763);
+    			add_location(div1, file, 29, 2, 764);
     			attr_dev(div2, "class", "row svelte-1sfytbq");
-    			add_location(div2, file, 27, 0, 645);
+    			add_location(div2, file, 27, 0, 646);
     			attr_dev(hr1, "class", "svelte-1sfytbq");
-    			add_location(hr1, file, 34, 0, 843);
-    			add_location(br1, file, 37, 137, 1004);
+    			add_location(hr1, file, 34, 0, 844);
+    			add_location(br1, file, 37, 137, 1005);
     			attr_dev(div3, "class", "explanation svelte-1sfytbq");
-    			add_location(div3, file, 37, 2, 869);
+    			add_location(div3, file, 37, 2, 870);
     			attr_dev(div4, "class", "right svelte-1sfytbq");
-    			add_location(div4, file, 38, 2, 1043);
+    			add_location(div4, file, 38, 2, 1044);
     			attr_dev(div5, "class", "row svelte-1sfytbq");
-    			add_location(div5, file, 36, 0, 849);
+    			add_location(div5, file, 36, 0, 850);
     			attr_dev(hr2, "class", "svelte-1sfytbq");
-    			add_location(hr2, file, 43, 0, 1169);
-    			add_location(br2, file, 46, 91, 1284);
+    			add_location(hr2, file, 43, 0, 1170);
+    			add_location(br2, file, 46, 91, 1285);
     			attr_dev(div6, "class", "explanation svelte-1sfytbq");
-    			add_location(div6, file, 46, 2, 1195);
+    			add_location(div6, file, 46, 2, 1196);
     			attr_dev(div7, "class", "right svelte-1sfytbq");
-    			add_location(div7, file, 47, 2, 1323);
+    			add_location(div7, file, 47, 2, 1324);
     			attr_dev(div8, "class", "row svelte-1sfytbq");
-    			add_location(div8, file, 45, 0, 1175);
+    			add_location(div8, file, 45, 0, 1176);
     			attr_dev(hr3, "class", "svelte-1sfytbq");
-    			add_location(hr3, file, 52, 0, 1471);
-    			add_location(br3, file, 55, 58, 1553);
+    			add_location(hr3, file, 52, 0, 1472);
+    			add_location(br3, file, 55, 58, 1554);
     			attr_dev(div9, "class", "explanation svelte-1sfytbq");
-    			add_location(div9, file, 55, 2, 1497);
+    			add_location(div9, file, 55, 2, 1498);
     			attr_dev(div10, "class", "right svelte-1sfytbq");
-    			add_location(div10, file, 56, 2, 1592);
+    			add_location(div10, file, 56, 2, 1593);
     			attr_dev(div11, "class", "row svelte-1sfytbq");
-    			add_location(div11, file, 54, 0, 1477);
+    			add_location(div11, file, 54, 0, 1478);
     			attr_dev(hr4, "class", "svelte-1sfytbq");
-    			add_location(hr4, file, 69, 0, 1996);
-    			add_location(br4, file, 72, 65, 2085);
+    			add_location(hr4, file, 69, 0, 1997);
+    			add_location(br4, file, 72, 65, 2086);
     			attr_dev(div12, "class", "explanation svelte-1sfytbq");
-    			add_location(div12, file, 72, 2, 2022);
+    			add_location(div12, file, 72, 2, 2023);
     			attr_dev(div13, "class", "right svelte-1sfytbq");
-    			add_location(div13, file, 73, 2, 2124);
+    			add_location(div13, file, 73, 2, 2125);
     			attr_dev(div14, "class", "row svelte-1sfytbq");
-    			add_location(div14, file, 71, 0, 2002);
+    			add_location(div14, file, 71, 0, 2003);
     			attr_dev(hr5, "class", "svelte-1sfytbq");
-    			add_location(hr5, file, 80, 0, 2282);
-    			add_location(br5, file, 84, 46, 2380);
-    			add_location(br6, file, 85, 40, 2425);
+    			add_location(hr5, file, 80, 0, 2283);
+    			add_location(br5, file, 84, 46, 2381);
+    			add_location(br6, file, 85, 40, 2426);
     			attr_dev(div15, "class", "explanation svelte-1sfytbq");
-    			add_location(div15, file, 83, 2, 2308);
+    			add_location(div15, file, 83, 2, 2309);
     			attr_dev(div16, "class", "right svelte-1sfytbq");
-    			add_location(div16, file, 88, 2, 2486);
+    			add_location(div16, file, 88, 2, 2487);
     			attr_dev(div17, "class", "row svelte-1sfytbq");
-    			add_location(div17, file, 82, 0, 2288);
+    			add_location(div17, file, 82, 0, 2289);
     			attr_dev(hr6, "class", "svelte-1sfytbq");
-    			add_location(hr6, file, 96, 0, 2690);
-    			add_location(br7, file, 100, 63, 2805);
-    			add_location(br8, file, 101, 29, 2839);
+    			add_location(hr6, file, 96, 0, 2691);
+    			add_location(br7, file, 100, 63, 2806);
+    			add_location(br8, file, 101, 29, 2840);
     			attr_dev(div18, "class", "explanation svelte-1sfytbq");
-    			add_location(div18, file, 99, 2, 2716);
+    			add_location(div18, file, 99, 2, 2717);
     			attr_dev(button0, "class", "svelte-1sfytbq");
-    			add_location(button0, file, 103, 7, 2862);
+    			add_location(button0, file, 103, 7, 2863);
     			attr_dev(div19, "class", "svelte-1sfytbq");
-    			add_location(div19, file, 103, 2, 2857);
+    			add_location(div19, file, 103, 2, 2858);
     			attr_dev(div20, "class", "right small-margin svelte-1sfytbq");
-    			add_location(div20, file, 104, 2, 2917);
+    			add_location(div20, file, 104, 2, 2918);
     			attr_dev(button1, "class", "svelte-1sfytbq");
-    			add_location(button1, file, 107, 7, 3038);
+    			add_location(button1, file, 107, 7, 3039);
     			attr_dev(div21, "class", "svelte-1sfytbq");
-    			add_location(div21, file, 107, 2, 3033);
+    			add_location(div21, file, 107, 2, 3034);
     			attr_dev(div22, "class", "row svelte-1sfytbq");
-    			add_location(div22, file, 98, 0, 2696);
+    			add_location(div22, file, 98, 0, 2697);
     			attr_dev(hr7, "class", "svelte-1sfytbq");
-    			add_location(hr7, file, 110, 0, 3099);
-    			add_location(br9, file, 113, 69, 3192);
+    			add_location(hr7, file, 110, 0, 3100);
+    			add_location(br9, file, 113, 69, 3193);
     			attr_dev(div23, "class", "explanation svelte-1sfytbq");
-    			add_location(div23, file, 113, 2, 3125);
+    			add_location(div23, file, 113, 2, 3126);
     			attr_dev(div24, "class", "right svelte-1sfytbq");
-    			add_location(div24, file, 114, 2, 3231);
+    			add_location(div24, file, 114, 2, 3232);
     			attr_dev(div25, "class", "row svelte-1sfytbq");
-    			add_location(div25, file, 112, 0, 3105);
+    			add_location(div25, file, 112, 0, 3106);
     			attr_dev(hr8, "class", "svelte-1sfytbq");
-    			add_location(hr8, file, 119, 0, 3320);
+    			add_location(hr8, file, 119, 0, 3321);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2063,7 +2069,7 @@ var app = (function () {
     		max: 5,
     		step: 0.5,
     		decimals: 1,
-    		speed: 0.1
+    		speed: 0.04
     	};
 
     	const writable_props = [];
