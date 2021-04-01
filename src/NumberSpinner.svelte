@@ -13,6 +13,7 @@
   export let precision = options.precision ?? undefined;
   precision = precision ?? step;
   export let decimals = options.decimals ?? 0;
+  export let speed = options.speed ?? 1;
   export let horizontal = options.horizontal ?? true;
   export let vertical = options.vertical ?? false;
   export let circular = options.circular ?? false;
@@ -171,11 +172,13 @@
 
     if (focussed) {
       if (!editing) {
+        let incSteps = speed < 0.1 ? 1 / speed : Math.round(10 * speed) / speed;
+        console.log(incSteps);
         if (e.key == 'ArrowUp' || e.key == 'ArrowRight') {
-          stepValue(10);
+          stepValue(incSteps);
         }
         if (e.key == 'ArrowDown' || e.key == 'ArrowLeft') {
-          stepValue(-10);
+          stepValue(-incSteps);
         }
       }
 
@@ -245,23 +248,21 @@
     }
   }
 
+  function stepValue(numSteps) {
+    preciseValue = preciseValue ?? parseFloat(visibleValue);
+    preciseValue += numSteps * step * stepFactor * speed;
+    setValue(preciseValue);
+  }
+
   function setValue(val) {
     preciseValue = parseFloat(val);
     preciseValue = keepInRange(preciseValue);
 
-    visibleValue = preciseValue.toFixed(decimals);
+    visibleValue = Math.round(preciseValue / step) * step;
+    visibleValue = visibleValue.toFixed(decimals);
+    
     value = roundToPrecision(preciseValue);
-    dispatch('input', parseFloat(value));
-    dispatch('change', parseFloat(value));
-  }
 
-  function stepValue(numSteps) {
-    preciseValue = preciseValue ?? parseFloat(visibleValue);
-    preciseValue += numSteps * step * stepFactor;
-    preciseValue = keepInRange(preciseValue);
-
-    visibleValue = preciseValue.toFixed(decimals);
-    value = roundToPrecision(preciseValue);
     dispatch('input', parseFloat(value));
     dispatch('change', parseFloat(value));
   }
@@ -334,8 +335,8 @@
   class:editing
   contenteditable={editing ? 'true' : 'false'}
   tabindex="0"
-  bind:value={visibleValue}
   bind:this={inputElement}
+  bind:value={visibleValue}
 />
 
 <!-- class:horizontal-cursor={horizontal && !vertical}

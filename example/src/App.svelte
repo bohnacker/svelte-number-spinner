@@ -11,7 +11,7 @@
   let value6change = value6;
   let value7 = 0;
   let value8 = -2;
-  let options = {min:-5, max:5, step:0.5, decimals:1};
+  let options = {min:-5, max:5, step:0.5, decimals:1, speed:0.1};
 </script>
 
 
@@ -111,7 +111,7 @@
 <hr>
 
 <div class="row">
-  <div class="explanation">Giving some of the prop through options object<br>Current value is {value8}</div> 
+  <div class="explanation">Giving some of the props by options object<br>Current value is {value8}</div> 
   <div class="right">
     <NumberSpinner bind:value={value8} {options}/>
   </div> 

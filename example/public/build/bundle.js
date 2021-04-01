@@ -725,8 +725,8 @@ var app = (function () {
         		},
         		m(target, anchor) {
         			insert(target, input, anchor);
-        			set_input_value(input, /*visibleValue*/ ctx[4]);
         			/*input_binding*/ ctx[41](input);
+        			set_input_value(input, /*visibleValue*/ ctx[4]);
 
         			if (!mounted) {
         				dispose = [
@@ -758,7 +758,7 @@ var app = (function () {
         					listen(input, "focus", /*focusHandler*/ ctx[12]),
         					listen(input, "blur", /*blurHandler*/ ctx[13]),
         					listen(input, "input", /*inputHandler*/ ctx[14]),
-        					listen(input, "input", /*input_input_handler*/ ctx[40])
+        					listen(input, "input", /*input_input_handler*/ ctx[42])
         				];
 
         				mounted = true;
@@ -833,6 +833,7 @@ var app = (function () {
         	let { precision = options.precision ?? undefined } = $$props;
         	precision = precision ?? step;
         	let { decimals = options.decimals ?? 0 } = $$props;
+        	let { speed = options.speed ?? 1 } = $$props;
         	let { horizontal = options.horizontal ?? true } = $$props;
         	let { vertical = options.vertical ?? false } = $$props;
         	let { circular = options.circular ?? false } = $$props;
@@ -928,7 +929,7 @@ var app = (function () {
         		dispatch("consoleLog", "focus");
 
         		// console.log(inputElement);
-        		$$invalidate(36, focussed = true);
+        		$$invalidate(37, focussed = true);
 
         		stopEditing();
         	}
@@ -937,7 +938,7 @@ var app = (function () {
         		dispatch("consoleLog", "blur");
 
         		// console.log('blur');
-        		$$invalidate(36, focussed = false);
+        		$$invalidate(37, focussed = false);
 
         		stopEditing();
         	}
@@ -956,32 +957,35 @@ var app = (function () {
         	function keydownHandler(e) {
         		// console.log(e);
         		if (e.key == "Shift") {
-        			$$invalidate(38, shiftPressed = true);
+        			$$invalidate(39, shiftPressed = true);
         		}
 
         		if (e.key == "Alt") {
-        			$$invalidate(37, altPressed = true);
+        			$$invalidate(38, altPressed = true);
         		}
         	}
 
         	function keyupHandler(e) {
         		// console.log(e)
         		if (e.key == "Shift") {
-        			$$invalidate(38, shiftPressed = false);
+        			$$invalidate(39, shiftPressed = false);
         		}
 
         		if (e.key == "Alt") {
-        			$$invalidate(37, altPressed = false);
+        			$$invalidate(38, altPressed = false);
         		}
 
         		if (focussed) {
         			if (!editing) {
+        				let incSteps = speed < 0.1 ? 1 / speed : Math.round(10 * speed) / speed;
+        				console.log(incSteps);
+
         				if (e.key == "ArrowUp" || e.key == "ArrowRight") {
-        					stepValue(10);
+        					stepValue(incSteps);
         				}
 
         				if (e.key == "ArrowDown" || e.key == "ArrowLeft") {
-        					stepValue(-10);
+        					stepValue(-incSteps);
         				}
         			}
 
@@ -1001,20 +1005,17 @@ var app = (function () {
         		}
         	}
 
+        	function stepValue(numSteps) {
+        		preciseValue = preciseValue ?? parseFloat(visibleValue);
+        		preciseValue += numSteps * step * stepFactor * speed;
+        		setValue(preciseValue);
+        	}
+
         	function setValue(val) {
         		preciseValue = parseFloat(val);
         		preciseValue = keepInRange(preciseValue);
-        		$$invalidate(4, visibleValue = preciseValue.toFixed(decimals));
-        		$$invalidate(18, value = roundToPrecision(preciseValue));
-        		dispatch("input", parseFloat(value));
-        		dispatch("change", parseFloat(value));
-        	}
-
-        	function stepValue(numSteps) {
-        		preciseValue = preciseValue ?? parseFloat(visibleValue);
-        		preciseValue += numSteps * step * stepFactor;
-        		preciseValue = keepInRange(preciseValue);
-        		$$invalidate(4, visibleValue = preciseValue.toFixed(decimals));
+        		$$invalidate(4, visibleValue = Math.round(preciseValue / step) * step);
+        		$$invalidate(4, visibleValue = visibleValue.toFixed(decimals));
         		$$invalidate(18, value = roundToPrecision(preciseValue));
         		dispatch("input", parseFloat(value));
         		dispatch("change", parseFloat(value));
@@ -1057,16 +1058,16 @@ var app = (function () {
         		setValue(preciseValue);
         	}
 
-        	function input_input_handler() {
-        		visibleValue = this.value;
-        		$$invalidate(4, visibleValue);
-        	}
-
         	function input_binding($$value) {
         		binding_callbacks[$$value ? "unshift" : "push"](() => {
         			inputElement = $$value;
         			($$invalidate(0, inputElement), $$invalidate(3, editing));
         		});
+        	}
+
+        	function input_input_handler() {
+        		visibleValue = this.value;
+        		$$invalidate(4, visibleValue);
         	}
 
         	$$self.$$set = $$new_props => {
@@ -1078,17 +1079,18 @@ var app = (function () {
         		if ("step" in $$new_props) $$invalidate(23, step = $$new_props.step);
         		if ("precision" in $$new_props) $$invalidate(21, precision = $$new_props.precision);
         		if ("decimals" in $$new_props) $$invalidate(24, decimals = $$new_props.decimals);
-        		if ("horizontal" in $$new_props) $$invalidate(25, horizontal = $$new_props.horizontal);
-        		if ("vertical" in $$new_props) $$invalidate(26, vertical = $$new_props.vertical);
-        		if ("circular" in $$new_props) $$invalidate(27, circular = $$new_props.circular);
-        		if ("editOnClick" in $$new_props) $$invalidate(28, editOnClick = $$new_props.editOnClick);
-        		if ("mainStyle" in $$new_props) $$invalidate(29, mainStyle = $$new_props.mainStyle);
-        		if ("fastStyle" in $$new_props) $$invalidate(30, fastStyle = $$new_props.fastStyle);
-        		if ("slowStyle" in $$new_props) $$invalidate(31, slowStyle = $$new_props.slowStyle);
-        		if ("focusStyle" in $$new_props) $$invalidate(32, focusStyle = $$new_props.focusStyle);
-        		if ("draggingStyle" in $$new_props) $$invalidate(33, draggingStyle = $$new_props.draggingStyle);
-        		if ("editingStyle" in $$new_props) $$invalidate(34, editingStyle = $$new_props.editingStyle);
-        		if ("cursor" in $$new_props) $$invalidate(35, cursor = $$new_props.cursor);
+        		if ("speed" in $$new_props) $$invalidate(25, speed = $$new_props.speed);
+        		if ("horizontal" in $$new_props) $$invalidate(26, horizontal = $$new_props.horizontal);
+        		if ("vertical" in $$new_props) $$invalidate(27, vertical = $$new_props.vertical);
+        		if ("circular" in $$new_props) $$invalidate(28, circular = $$new_props.circular);
+        		if ("editOnClick" in $$new_props) $$invalidate(29, editOnClick = $$new_props.editOnClick);
+        		if ("mainStyle" in $$new_props) $$invalidate(30, mainStyle = $$new_props.mainStyle);
+        		if ("fastStyle" in $$new_props) $$invalidate(31, fastStyle = $$new_props.fastStyle);
+        		if ("slowStyle" in $$new_props) $$invalidate(32, slowStyle = $$new_props.slowStyle);
+        		if ("focusStyle" in $$new_props) $$invalidate(33, focusStyle = $$new_props.focusStyle);
+        		if ("draggingStyle" in $$new_props) $$invalidate(34, draggingStyle = $$new_props.draggingStyle);
+        		if ("editingStyle" in $$new_props) $$invalidate(35, editingStyle = $$new_props.editingStyle);
+        		if ("cursor" in $$new_props) $$invalidate(36, cursor = $$new_props.cursor);
         	};
 
         	$$self.$$.update = () => {
@@ -1107,7 +1109,7 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*editing*/ 8 | $$self.$$.dirty[1] & /*focussed, altPressed, shiftPressed*/ 224) {
+        		if ($$self.$$.dirty[0] & /*editing*/ 8 | $$self.$$.dirty[1] & /*focussed, altPressed, shiftPressed*/ 448) {
         			 {
         				$$invalidate(1, stepFactor = 1);
 
@@ -1121,14 +1123,14 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*horizontal, vertical, dragging*/ 100663300 | $$self.$$.dirty[1] & /*cursor, defaultCursor*/ 272) {
+        		if ($$self.$$.dirty[0] & /*horizontal, vertical, dragging*/ 201326596 | $$self.$$.dirty[1] & /*cursor, defaultCursor*/ 544) {
         			 {
         				// let cursorClass = horizontal
         				//   ? vertical
         				//     ? 'move-cursor'
         				//     : 'horizontal-cursor'
         				//   : 'vertical-cursor';
-        				$$invalidate(39, defaultCursor = horizontal
+        				$$invalidate(40, defaultCursor = horizontal
         				? vertical ? "move" : "ew-resize"
         				: "ns-resize");
 
@@ -1140,7 +1142,7 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*mainStyle, style, editing, stepFactor, fastStyle, dragging*/ 1610612782 | $$self.$$.dirty[1] & /*focussed, focusStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 319) {
+        		if ($$self.$$.dirty[0] & /*mainStyle, style, editing, stepFactor, dragging*/ 1073741870 | $$self.$$.dirty[1] & /*focussed, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 639) {
         			 {
         				$$invalidate(5, style = mainStyle ?? "");
         				$$invalidate(5, style += focussed && focusStyle ? ";" + focusStyle : "");
@@ -1188,6 +1190,7 @@ var app = (function () {
         		options,
         		step,
         		decimals,
+        		speed,
         		horizontal,
         		vertical,
         		circular,
@@ -1203,8 +1206,8 @@ var app = (function () {
         		altPressed,
         		shiftPressed,
         		defaultCursor,
-        		input_input_handler,
-        		input_binding
+        		input_binding,
+        		input_input_handler
         	];
         }
 
@@ -1227,17 +1230,18 @@ var app = (function () {
         				step: 23,
         				precision: 21,
         				decimals: 24,
-        				horizontal: 25,
-        				vertical: 26,
-        				circular: 27,
-        				editOnClick: 28,
-        				mainStyle: 29,
-        				fastStyle: 30,
-        				slowStyle: 31,
-        				focusStyle: 32,
-        				draggingStyle: 33,
-        				editingStyle: 34,
-        				cursor: 35
+        				speed: 25,
+        				horizontal: 26,
+        				vertical: 27,
+        				circular: 28,
+        				editOnClick: 29,
+        				mainStyle: 30,
+        				fastStyle: 31,
+        				slowStyle: 32,
+        				focusStyle: 33,
+        				draggingStyle: 34,
+        				editingStyle: 35,
+        				cursor: 36
         			},
         			[-1, -1]
         		);
@@ -1652,7 +1656,7 @@ var app = (function () {
     			t56 = space();
     			div25 = element("div");
     			div23 = element("div");
-    			t57 = text("Giving some of the prop through options object");
+    			t57 = text("Giving some of the props by options object");
     			br9 = element("br");
     			t58 = text("Current value is ");
     			t59 = text(/*value8*/ ctx[8]);
@@ -1661,94 +1665,94 @@ var app = (function () {
     			create_component(numberspinner7.$$.fragment);
     			t61 = space();
     			hr8 = element("hr");
-    			add_location(h2, file, 17, 0, 342);
-    			add_location(i0, file, 22, 83, 535);
-    			add_location(i1, file, 22, 113, 565);
-    			add_location(p, file, 21, 0, 448);
+    			add_location(h2, file, 17, 0, 353);
+    			add_location(i0, file, 22, 83, 546);
+    			add_location(i1, file, 22, 113, 576);
+    			add_location(p, file, 21, 0, 459);
     			attr_dev(hr0, "class", "svelte-1sfytbq");
-    			add_location(hr0, file, 25, 0, 628);
-    			add_location(br0, file, 28, 61, 713);
+    			add_location(hr0, file, 25, 0, 639);
+    			add_location(br0, file, 28, 61, 724);
     			attr_dev(div0, "class", "explanation svelte-1sfytbq");
-    			add_location(div0, file, 28, 2, 654);
+    			add_location(div0, file, 28, 2, 665);
     			attr_dev(div1, "class", "right svelte-1sfytbq");
-    			add_location(div1, file, 29, 2, 752);
+    			add_location(div1, file, 29, 2, 763);
     			attr_dev(div2, "class", "row svelte-1sfytbq");
-    			add_location(div2, file, 27, 0, 634);
+    			add_location(div2, file, 27, 0, 645);
     			attr_dev(hr1, "class", "svelte-1sfytbq");
-    			add_location(hr1, file, 34, 0, 832);
-    			add_location(br1, file, 37, 137, 993);
+    			add_location(hr1, file, 34, 0, 843);
+    			add_location(br1, file, 37, 137, 1004);
     			attr_dev(div3, "class", "explanation svelte-1sfytbq");
-    			add_location(div3, file, 37, 2, 858);
+    			add_location(div3, file, 37, 2, 869);
     			attr_dev(div4, "class", "right svelte-1sfytbq");
-    			add_location(div4, file, 38, 2, 1032);
+    			add_location(div4, file, 38, 2, 1043);
     			attr_dev(div5, "class", "row svelte-1sfytbq");
-    			add_location(div5, file, 36, 0, 838);
+    			add_location(div5, file, 36, 0, 849);
     			attr_dev(hr2, "class", "svelte-1sfytbq");
-    			add_location(hr2, file, 43, 0, 1158);
-    			add_location(br2, file, 46, 91, 1273);
+    			add_location(hr2, file, 43, 0, 1169);
+    			add_location(br2, file, 46, 91, 1284);
     			attr_dev(div6, "class", "explanation svelte-1sfytbq");
-    			add_location(div6, file, 46, 2, 1184);
+    			add_location(div6, file, 46, 2, 1195);
     			attr_dev(div7, "class", "right svelte-1sfytbq");
-    			add_location(div7, file, 47, 2, 1312);
+    			add_location(div7, file, 47, 2, 1323);
     			attr_dev(div8, "class", "row svelte-1sfytbq");
-    			add_location(div8, file, 45, 0, 1164);
+    			add_location(div8, file, 45, 0, 1175);
     			attr_dev(hr3, "class", "svelte-1sfytbq");
-    			add_location(hr3, file, 52, 0, 1460);
-    			add_location(br3, file, 55, 58, 1542);
+    			add_location(hr3, file, 52, 0, 1471);
+    			add_location(br3, file, 55, 58, 1553);
     			attr_dev(div9, "class", "explanation svelte-1sfytbq");
-    			add_location(div9, file, 55, 2, 1486);
+    			add_location(div9, file, 55, 2, 1497);
     			attr_dev(div10, "class", "right svelte-1sfytbq");
-    			add_location(div10, file, 56, 2, 1581);
+    			add_location(div10, file, 56, 2, 1592);
     			attr_dev(div11, "class", "row svelte-1sfytbq");
-    			add_location(div11, file, 54, 0, 1466);
+    			add_location(div11, file, 54, 0, 1477);
     			attr_dev(hr4, "class", "svelte-1sfytbq");
-    			add_location(hr4, file, 69, 0, 1985);
-    			add_location(br4, file, 72, 65, 2074);
+    			add_location(hr4, file, 69, 0, 1996);
+    			add_location(br4, file, 72, 65, 2085);
     			attr_dev(div12, "class", "explanation svelte-1sfytbq");
-    			add_location(div12, file, 72, 2, 2011);
+    			add_location(div12, file, 72, 2, 2022);
     			attr_dev(div13, "class", "right svelte-1sfytbq");
-    			add_location(div13, file, 73, 2, 2113);
+    			add_location(div13, file, 73, 2, 2124);
     			attr_dev(div14, "class", "row svelte-1sfytbq");
-    			add_location(div14, file, 71, 0, 1991);
+    			add_location(div14, file, 71, 0, 2002);
     			attr_dev(hr5, "class", "svelte-1sfytbq");
-    			add_location(hr5, file, 80, 0, 2271);
-    			add_location(br5, file, 84, 46, 2369);
-    			add_location(br6, file, 85, 40, 2414);
+    			add_location(hr5, file, 80, 0, 2282);
+    			add_location(br5, file, 84, 46, 2380);
+    			add_location(br6, file, 85, 40, 2425);
     			attr_dev(div15, "class", "explanation svelte-1sfytbq");
-    			add_location(div15, file, 83, 2, 2297);
+    			add_location(div15, file, 83, 2, 2308);
     			attr_dev(div16, "class", "right svelte-1sfytbq");
-    			add_location(div16, file, 88, 2, 2475);
+    			add_location(div16, file, 88, 2, 2486);
     			attr_dev(div17, "class", "row svelte-1sfytbq");
-    			add_location(div17, file, 82, 0, 2277);
+    			add_location(div17, file, 82, 0, 2288);
     			attr_dev(hr6, "class", "svelte-1sfytbq");
-    			add_location(hr6, file, 96, 0, 2679);
-    			add_location(br7, file, 100, 63, 2794);
-    			add_location(br8, file, 101, 29, 2828);
+    			add_location(hr6, file, 96, 0, 2690);
+    			add_location(br7, file, 100, 63, 2805);
+    			add_location(br8, file, 101, 29, 2839);
     			attr_dev(div18, "class", "explanation svelte-1sfytbq");
-    			add_location(div18, file, 99, 2, 2705);
+    			add_location(div18, file, 99, 2, 2716);
     			attr_dev(button0, "class", "svelte-1sfytbq");
-    			add_location(button0, file, 103, 7, 2851);
+    			add_location(button0, file, 103, 7, 2862);
     			attr_dev(div19, "class", "svelte-1sfytbq");
-    			add_location(div19, file, 103, 2, 2846);
+    			add_location(div19, file, 103, 2, 2857);
     			attr_dev(div20, "class", "right small-margin svelte-1sfytbq");
-    			add_location(div20, file, 104, 2, 2906);
+    			add_location(div20, file, 104, 2, 2917);
     			attr_dev(button1, "class", "svelte-1sfytbq");
-    			add_location(button1, file, 107, 7, 3027);
+    			add_location(button1, file, 107, 7, 3038);
     			attr_dev(div21, "class", "svelte-1sfytbq");
-    			add_location(div21, file, 107, 2, 3022);
+    			add_location(div21, file, 107, 2, 3033);
     			attr_dev(div22, "class", "row svelte-1sfytbq");
-    			add_location(div22, file, 98, 0, 2685);
+    			add_location(div22, file, 98, 0, 2696);
     			attr_dev(hr7, "class", "svelte-1sfytbq");
-    			add_location(hr7, file, 110, 0, 3088);
-    			add_location(br9, file, 113, 73, 3185);
+    			add_location(hr7, file, 110, 0, 3099);
+    			add_location(br9, file, 113, 69, 3192);
     			attr_dev(div23, "class", "explanation svelte-1sfytbq");
-    			add_location(div23, file, 113, 2, 3114);
+    			add_location(div23, file, 113, 2, 3125);
     			attr_dev(div24, "class", "right svelte-1sfytbq");
-    			add_location(div24, file, 114, 2, 3224);
+    			add_location(div24, file, 114, 2, 3231);
     			attr_dev(div25, "class", "row svelte-1sfytbq");
-    			add_location(div25, file, 112, 0, 3094);
+    			add_location(div25, file, 112, 0, 3105);
     			attr_dev(hr8, "class", "svelte-1sfytbq");
-    			add_location(hr8, file, 119, 0, 3313);
+    			add_location(hr8, file, 119, 0, 3320);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2053,7 +2057,15 @@ var app = (function () {
     	let value6change = value6;
     	let value7 = 0;
     	let value8 = -2;
-    	let options = { min: -5, max: 5, step: 0.5, decimals: 1 };
+
+    	let options = {
+    		min: -5,
+    		max: 5,
+    		step: 0.5,
+    		decimals: 1,
+    		speed: 0.1
+    	};
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
