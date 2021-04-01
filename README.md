@@ -36,6 +36,7 @@ npm install --save svelte-number-spinner
 | step           | Number  | 1           | Step                                                |
 | precision      | Number  | = step      | Precision of value (should be a fraction of step)   |
 | decimals       | Number  | 0           | Number of decimals                                  | 
+| speed          | Number  | 1           | Speed of value change on mouse drag or key press    |
 | horizontal     | Boolean | true        | Change value by dragging horizontally               |
 | vertical       | Boolean | false       | Change value by dragging vertically                 |
 | circular       | Boolean | false       | Enable circular range (good for angles, hours, ...) |
@@ -50,7 +51,8 @@ npm install --save svelte-number-spinner
 | slowStyle      | String  | undefined   | Custom inline style for slow mode                   |
 | options        | Object  | {}          | Set any of the above props through this object      |
 
-### Prop `options`
+
+#### Prop `options`
 
 If you have many number spinners that should have the same props you might want to use the `options` object. This sets all of the given props to the respective value. Changing the options later won't update the props of the number spinner.
 
