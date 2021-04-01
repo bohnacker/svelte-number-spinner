@@ -17,8 +17,6 @@
 
 <h2>Svelte Number Spinner Example</h2>
 
-<!-- <input bind:value={name} placeholder="enter your name"> -->
-
 <p>
   Change the values of the number spinners through mousedrag and arrow keys. Press <i>Alt</i> for smaller steps, <i>Alt+Shift</i> for larger steps. Double click to edit.
 </p>
@@ -185,6 +183,5 @@
     background-color: #f00;
     cursor: default;
   }
-
 
 </style>
