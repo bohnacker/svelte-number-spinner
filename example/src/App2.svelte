@@ -24,7 +24,7 @@
 <div class="console">
   {#each logs as log, i}
 
-    {log.msg}<br>
+    {(new Date(log.timestamp)).toLocaleTimeString("de-DE")}.{(log.timestamp % 1000).toString().padStart(3, '0')} – {log.msg}<br>
 
     {#if logs[i+1]?.timestamp < log.timestamp - 200}<br>{/if}
     
