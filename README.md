@@ -56,7 +56,9 @@ npm install --save svelte-number-spinner
 
 #### Prop `options`
 
-If you have many number spinners that should have the same props you might want to use the `options` object. This sets all of the given props to the respective value. Changing the options later won't update the props of the number spinner.
+If you have many number spinners that should have the same props you might want to use the `options` object. This sets all of the given props to the respective value. 
+
+The props in the options object are applied when mounting the component. So, changing the options later won't update the props of the number spinner. Plus, the props in the options object will not be modified by the number spinner component. So, `value` should typically not be part of the options. 
 
 Example:
 
