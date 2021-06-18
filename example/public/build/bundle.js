@@ -172,22 +172,24 @@ var app = (function () {
     function create_component(block) {
         block && block.c();
     }
-    function mount_component(component, target, anchor) {
+    function mount_component(component, target, anchor, customElement) {
         const { fragment, on_mount, on_destroy, after_update } = component.$$;
         fragment && fragment.m(target, anchor);
-        // onMount happens before the initial afterUpdate
-        add_render_callback(() => {
-            const new_on_destroy = on_mount.map(run).filter(is_function);
-            if (on_destroy) {
-                on_destroy.push(...new_on_destroy);
-            }
-            else {
-                // Edge case - component was destroyed immediately,
-                // most likely as a result of a binding initialising
-                run_all(new_on_destroy);
-            }
-            component.$$.on_mount = [];
-        });
+        if (!customElement) {
+            // onMount happens before the initial afterUpdate
+            add_render_callback(() => {
+                const new_on_destroy = on_mount.map(run).filter(is_function);
+                if (on_destroy) {
+                    on_destroy.push(...new_on_destroy);
+                }
+                else {
+                    // Edge case - component was destroyed immediately,
+                    // most likely as a result of a binding initialising
+                    run_all(new_on_destroy);
+                }
+                component.$$.on_mount = [];
+            });
+        }
         after_update.forEach(add_render_callback);
     }
     function destroy_component(component, detaching) {
@@ -212,7 +214,6 @@ var app = (function () {
     function init(component, options, instance, create_fragment, not_equal, props, dirty = [-1]) {
         const parent_component = current_component;
         set_current_component(component);
-        const prop_values = options.props || {};
         const $$ = component.$$ = {
             fragment: null,
             ctx: null,
@@ -224,9 +225,10 @@ var app = (function () {
             // lifecycle
             on_mount: [],
             on_destroy: [],
+            on_disconnect: [],
             before_update: [],
             after_update: [],
-            context: new Map(parent_component ? parent_component.$$.context : []),
+            context: new Map(parent_component ? parent_component.$$.context : options.context || []),
             // everything else
             callbacks: blank_object(),
             dirty,
@@ -234,7 +236,7 @@ var app = (function () {
         };
         let ready = false;
         $$.ctx = instance
-            ? instance(component, prop_values, (i, ret, ...rest) => {
+            ? instance(component, options.props || {}, (i, ret, ...rest) => {
                 const value = rest.length ? rest[0] : ret;
                 if ($$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value)) {
                     if (!$$.skip_bound && $$.bound[i])
@@ -263,7 +265,7 @@ var app = (function () {
             }
             if (options.intro)
                 transition_in(component.$$.fragment);
-            mount_component(component, options.target, options.anchor);
+            mount_component(component, options.target, options.anchor, options.customElement);
             flush();
         }
         set_current_component(parent_component);
@@ -295,7 +297,7 @@ var app = (function () {
     }
 
     function dispatch_dev(type, detail) {
-        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.31.2' }, detail)));
+        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.38.2' }, detail)));
     }
     function insert_dev(target, node, anchor) {
         dispatch_dev('SvelteDOMInsert', { target, node, anchor });
@@ -373,7 +375,7 @@ var app = (function () {
 
     var dist = createCommonjsModule(function (module, exports) {
     (function (global, factory) {
-         module.exports = factory() ;
+        module.exports = factory() ;
     }(commonjsGlobal, (function () {
         function noop() { }
         function assign(tar, src) {
@@ -555,22 +557,24 @@ var app = (function () {
                 block.i(local);
             }
         }
-        function mount_component(component, target, anchor) {
+        function mount_component(component, target, anchor, customElement) {
             const { fragment, on_mount, on_destroy, after_update } = component.$$;
             fragment && fragment.m(target, anchor);
-            // onMount happens before the initial afterUpdate
-            add_render_callback(() => {
-                const new_on_destroy = on_mount.map(run).filter(is_function);
-                if (on_destroy) {
-                    on_destroy.push(...new_on_destroy);
-                }
-                else {
-                    // Edge case - component was destroyed immediately,
-                    // most likely as a result of a binding initialising
-                    run_all(new_on_destroy);
-                }
-                component.$$.on_mount = [];
-            });
+            if (!customElement) {
+                // onMount happens before the initial afterUpdate
+                add_render_callback(() => {
+                    const new_on_destroy = on_mount.map(run).filter(is_function);
+                    if (on_destroy) {
+                        on_destroy.push(...new_on_destroy);
+                    }
+                    else {
+                        // Edge case - component was destroyed immediately,
+                        // most likely as a result of a binding initialising
+                        run_all(new_on_destroy);
+                    }
+                    component.$$.on_mount = [];
+                });
+            }
             after_update.forEach(add_render_callback);
         }
         function destroy_component(component, detaching) {
@@ -595,7 +599,6 @@ var app = (function () {
         function init(component, options, instance, create_fragment, not_equal, props, dirty = [-1]) {
             const parent_component = current_component;
             set_current_component(component);
-            const prop_values = options.props || {};
             const $$ = component.$$ = {
                 fragment: null,
                 ctx: null,
@@ -607,9 +610,10 @@ var app = (function () {
                 // lifecycle
                 on_mount: [],
                 on_destroy: [],
+                on_disconnect: [],
                 before_update: [],
                 after_update: [],
-                context: new Map(parent_component ? parent_component.$$.context : []),
+                context: new Map(parent_component ? parent_component.$$.context : options.context || []),
                 // everything else
                 callbacks: blank_object(),
                 dirty,
@@ -617,7 +621,7 @@ var app = (function () {
             };
             let ready = false;
             $$.ctx = instance
-                ? instance(component, prop_values, (i, ret, ...rest) => {
+                ? instance(component, options.props || {}, (i, ret, ...rest) => {
                     const value = rest.length ? rest[0] : ret;
                     if ($$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value)) {
                         if (!$$.skip_bound && $$.bound[i])
@@ -646,7 +650,7 @@ var app = (function () {
                 }
                 if (options.intro)
                     transition_in(component.$$.fragment);
-                mount_component(component, options.target, options.anchor);
+                mount_component(component, options.target, options.anchor, options.customElement);
                 flush();
             }
             set_current_component(parent_component);
@@ -677,7 +681,7 @@ var app = (function () {
             }
         }
 
-        /* src/NumberSpinner.svelte generated by Svelte v3.31.2 */
+        /* src/NumberSpinner.svelte generated by Svelte v3.38.2 */
 
         function add_css() {
         	var style = element("style");
@@ -1191,7 +1195,7 @@ var app = (function () {
         		if ($$self.$$.dirty[0] & /*dragElement*/ 4) {
         			// updaters --------------------------------
         			// update readonly state of input element
-        			 if (dragElement) {
+        			if (dragElement) {
         				// dragElement.readOnly = !editing;
         				$$invalidate(2, dragElement.readOnly = true, dragElement);
         			}
@@ -1199,7 +1203,7 @@ var app = (function () {
 
         		if ($$self.$$.dirty[0] & /*editing*/ 16 | $$self.$$.dirty[1] & /*dragFocussed, altPressed, shiftPressed*/ 14) {
         			// update stepFactor
-        			 {
+        			{
         				$$invalidate(3, stepFactor = 1);
 
         				if (dragFocussed && !editing) {
@@ -1214,7 +1218,7 @@ var app = (function () {
 
         		if ($$self.$$.dirty[0] & /*mainStyle, style, focusStyle, editing, stepFactor, fastStyle, slowStyle*/ 2013266200 | $$self.$$.dirty[1] & /*dragFocussed, editingStyle*/ 3) {
         			// update inline style string
-        			 {
+        			{
         				$$invalidate(8, style = mainStyle ?? "");
         				$$invalidate(8, style += dragFocussed && focusStyle ? ";" + focusStyle : "");
 
@@ -1311,7 +1315,7 @@ var app = (function () {
     })));
     });
 
-    /* example/src/App2.svelte generated by Svelte v3.31.2 */
+    /* example/src/App2.svelte generated by Svelte v3.38.2 */
     const file = "example/src/App2.svelte";
 
     function get_each_context(ctx, list, i) {
@@ -1321,14 +1325,14 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (30:4) {#if logs[i+1]?.timestamp < log.timestamp - 200}
+    // (27:4) {#if logs[i + 1]?.timestamp < log.timestamp - 200}
     function create_if_block(ctx) {
     	let br;
 
     	const block = {
     		c: function create() {
     			br = element("br");
-    			add_location(br, file, 29, 52, 520);
+    			add_location(br, file, 26, 54, 639);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, br, anchor);
@@ -1342,40 +1346,56 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(30:4) {#if logs[i+1]?.timestamp < log.timestamp - 200}",
+    		source: "(27:4) {#if logs[i + 1]?.timestamp < log.timestamp - 200}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (26:2) {#each logs as log, i}
+    // (24:2) {#each logs as log, i}
     function create_each_block(ctx) {
-    	let t0_value = /*log*/ ctx[6].msg + "";
+    	let t0_value = new Date(/*log*/ ctx[6].timestamp).toLocaleTimeString("de-DE") + "";
     	let t0;
-    	let br;
     	let t1;
+    	let t2_value = (/*log*/ ctx[6].timestamp % 1000).toString().padStart(3, "0") + "";
+    	let t2;
+    	let t3;
+    	let t4_value = /*log*/ ctx[6].msg + "";
+    	let t4;
+    	let br;
+    	let t5;
     	let if_block_anchor;
     	let if_block = /*logs*/ ctx[2][/*i*/ ctx[8] + 1]?.timestamp < /*log*/ ctx[6].timestamp - 200 && create_if_block(ctx);
 
     	const block = {
     		c: function create() {
     			t0 = text(t0_value);
+    			t1 = text(".");
+    			t2 = text(t2_value);
+    			t3 = text(" – ");
+    			t4 = text(t4_value);
     			br = element("br");
-    			t1 = space();
+    			t5 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			add_location(br, file, 27, 13, 462);
+    			add_location(br, file, 24, 122, 577);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, t0, anchor);
-    			insert_dev(target, br, anchor);
     			insert_dev(target, t1, anchor);
+    			insert_dev(target, t2, anchor);
+    			insert_dev(target, t3, anchor);
+    			insert_dev(target, t4, anchor);
+    			insert_dev(target, br, anchor);
+    			insert_dev(target, t5, anchor);
     			if (if_block) if_block.m(target, anchor);
     			insert_dev(target, if_block_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*logs*/ 4 && t0_value !== (t0_value = /*log*/ ctx[6].msg + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*logs*/ 4 && t0_value !== (t0_value = new Date(/*log*/ ctx[6].timestamp).toLocaleTimeString("de-DE") + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*logs*/ 4 && t2_value !== (t2_value = (/*log*/ ctx[6].timestamp % 1000).toString().padStart(3, "0") + "")) set_data_dev(t2, t2_value);
+    			if (dirty & /*logs*/ 4 && t4_value !== (t4_value = /*log*/ ctx[6].msg + "")) set_data_dev(t4, t4_value);
 
     			if (/*logs*/ ctx[2][/*i*/ ctx[8] + 1]?.timestamp < /*log*/ ctx[6].timestamp - 200) {
     				if (if_block) ; else {
@@ -1390,8 +1410,12 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(t0);
-    			if (detaching) detach_dev(br);
     			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(t2);
+    			if (detaching) detach_dev(t3);
+    			if (detaching) detach_dev(t4);
+    			if (detaching) detach_dev(br);
+    			if (detaching) detach_dev(t5);
     			if (if_block) if_block.d(detaching);
     			if (detaching) detach_dev(if_block_anchor);
     		}
@@ -1401,7 +1425,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(26:2) {#each logs as log, i}",
+    		source: "(24:2) {#each logs as log, i}",
     		ctx
     	});
 
@@ -1425,7 +1449,7 @@ var app = (function () {
     	let current;
 
     	function numberspinner0_value_binding(value) {
-    		/*numberspinner0_value_binding*/ ctx[3].call(null, value);
+    		/*numberspinner0_value_binding*/ ctx[3](value);
     	}
 
     	let numberspinner0_props = {};
@@ -1443,7 +1467,7 @@ var app = (function () {
     	numberspinner0.$on("consoleLog", /*consoleLog_handler*/ ctx[4]);
 
     	function numberspinner1_value_binding(value) {
-    		/*numberspinner1_value_binding*/ ctx[5].call(null, value);
+    		/*numberspinner1_value_binding*/ ctx[5](value);
     	}
 
     	let numberspinner1_props = {};
@@ -1484,16 +1508,16 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(div0, "class", "row svelte-aarj1j");
-    			add_location(div0, file, 11, 0, 178);
-    			attr_dev(hr0, "class", "svelte-aarj1j");
-    			add_location(hr0, file, 15, 0, 322);
-    			attr_dev(div1, "class", "row svelte-aarj1j");
-    			add_location(div1, file, 17, 0, 328);
-    			attr_dev(hr1, "class", "svelte-aarj1j");
-    			add_location(hr1, file, 21, 0, 394);
-    			attr_dev(div2, "class", "console svelte-aarj1j");
-    			add_location(div2, file, 24, 0, 401);
+    			attr_dev(div0, "class", "row svelte-4egbjz");
+    			add_location(div0, file, 10, 0, 176);
+    			attr_dev(hr0, "class", "svelte-4egbjz");
+    			add_location(hr0, file, 14, 0, 326);
+    			attr_dev(div1, "class", "row svelte-4egbjz");
+    			add_location(div1, file, 16, 0, 334);
+    			attr_dev(hr1, "class", "svelte-4egbjz");
+    			add_location(hr1, file, 20, 0, 400);
+    			attr_dev(div2, "class", "console svelte-4egbjz");
+    			add_location(div2, file, 22, 0, 408);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1537,7 +1561,7 @@ var app = (function () {
 
     			numberspinner1.$set(numberspinner1_changes);
 
-    			if (dirty & /*logs*/ 4) {
+    			if (dirty & /*logs, Date*/ 4) {
     				each_value = /*logs*/ ctx[2];
     				validate_each_argument(each_value);
     				let i;
