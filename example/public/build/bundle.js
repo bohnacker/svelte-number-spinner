@@ -378,12 +378,6 @@ var app = (function () {
         module.exports = factory() ;
     }(commonjsGlobal, (function () {
         function noop() { }
-        function assign(tar, src) {
-            // @ts-ignore
-            for (const k in src)
-                tar[k] = src[k];
-            return tar;
-        }
         function run(fn) {
             return fn();
         }
@@ -401,16 +395,6 @@ var app = (function () {
         }
         function is_empty(obj) {
             return Object.keys(obj).length === 0;
-        }
-        function exclude_internal_props(props) {
-            const result = {};
-            for (const k in props)
-                if (k[0] !== '$')
-                    result[k] = props[k];
-            return result;
-        }
-        function null_to_empty(value) {
-            return value == null ? '' : value;
         }
 
         function append(target, node) {
@@ -435,13 +419,6 @@ var app = (function () {
             node.addEventListener(event, handler, options);
             return () => node.removeEventListener(event, handler, options);
         }
-        function stop_propagation(fn) {
-            return function (event) {
-                event.stopPropagation();
-                // @ts-ignore
-                return fn.call(this, event);
-            };
-        }
         function attr(node, attribute, value) {
             if (value == null)
                 node.removeAttribute(attribute);
@@ -454,37 +431,10 @@ var app = (function () {
         function set_input_value(input, value) {
             input.value = value == null ? '' : value;
         }
-        function toggle_class(element, name, toggle) {
-            element.classList[toggle ? 'add' : 'remove'](name);
-        }
-        function custom_event(type, detail) {
-            const e = document.createEvent('CustomEvent');
-            e.initCustomEvent(type, false, false, detail);
-            return e;
-        }
 
         let current_component;
         function set_current_component(component) {
             current_component = component;
-        }
-        function get_current_component() {
-            if (!current_component)
-                throw new Error('Function called outside component initialization');
-            return current_component;
-        }
-        function createEventDispatcher() {
-            const component = get_current_component();
-            return (type, detail) => {
-                const callbacks = component.$$.callbacks[type];
-                if (callbacks) {
-                    // TODO are there situations where events could be dispatched
-                    // in a server (non-DOM) environment?
-                    const event = custom_event(type, detail);
-                    callbacks.slice().forEach(fn => {
-                        fn.call(component, event);
-                    });
-                }
-            };
         }
 
         const dirty_components = [];
@@ -685,628 +635,95 @@ var app = (function () {
 
         function add_css() {
         	var style = element("style");
-        	style.id = "svelte-17pi914-style";
-        	style.textContent = ".default.svelte-17pi914{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:4em;height:1.6em;margin:0px;padding:5px;border:1 solid #0004;border-radius:4px;text-align:right;cursor:initial}.default.svelte-17pi914:focus{border:1px solid #06f;outline:none}.default.fast.svelte-17pi914{color:tomato}.default.slow.svelte-17pi914{color:green}.default.editing.svelte-17pi914{border:2px solid #06f;padding:3px;cursor:default}input.svelte-17pi914{user-select:none}input.svelte-17pi914:not(.editing)::selection{background:#0000}input.editing.svelte-17pi914{user-select:text}input.hide.svelte-17pi914{opacity:0.2}";
+        	style.id = "svelte-hst1lk-style";
+        	style.textContent = "input#drag.svelte-hst1lk{user-select:none}input.svelte-hst1lk:not(.editing)::selection{background:#0000}input#edit.svelte-hst1lk{user-select:text}";
         	append(document.head, style);
         }
 
         function create_fragment(ctx) {
-        	let t0;
         	let input0;
-        	let input0_pattern_value;
-        	let input0_class_value;
-        	let t1;
+        	let t;
         	let input1;
-        	let input1_class_value;
         	let mounted;
         	let dispose;
 
         	return {
         		c() {
-        			t0 = space();
         			input0 = element("input");
-        			t1 = space();
+        			t = space();
         			input1 = element("input");
         			attr(input0, "id", "edit");
         			attr(input0, "type", "text");
-
-        			attr(input0, "pattern", input0_pattern_value = /*min*/ ctx[0] >= 0 && /*step*/ ctx[1] == Math.round(/*step*/ ctx[1])
-        			? "[0-9]+"
-        			: undefined);
-
-        			attr(input0, "style", /*style*/ ctx[8]);
-        			attr(input0, "class", input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[21].class) + " svelte-17pi914"));
-        			attr(input0, "tabindex", -1);
-        			toggle_class(input0, "default", !/*$$props*/ ctx[21].class ? true : false);
-        			toggle_class(input0, "fast", /*stepFactor*/ ctx[3] > 1 ? "fast" : "");
-        			toggle_class(input0, "slow", /*stepFactor*/ ctx[3] < 1 ? "slow" : "");
-        			toggle_class(input0, "editing", /*editing*/ ctx[4]);
-        			toggle_class(input0, "edit", true);
-        			toggle_class(input0, "hide", !/*editing*/ ctx[4]);
+        			attr(input0, "tabindex", "-1");
+        			attr(input0, "class", "svelte-hst1lk");
         			attr(input1, "id", "drag");
         			attr(input1, "type", "text");
-        			attr(input1, "style", /*style*/ ctx[8]);
-        			attr(input1, "class", input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[21].class) + " svelte-17pi914"));
-        			attr(input1, "contenteditable", false);
-        			input1.readOnly = "";
+        			attr(input1, "contenteditable", "false");
         			attr(input1, "tabindex", "0");
-        			toggle_class(input1, "default", !/*$$props*/ ctx[21].class ? true : false);
-        			toggle_class(input1, "fast", /*stepFactor*/ ctx[3] > 1 ? "fast" : "");
-        			toggle_class(input1, "slow", /*stepFactor*/ ctx[3] < 1 ? "slow" : "");
-        			toggle_class(input1, "drag", true);
-        			toggle_class(input1, "hide", /*editing*/ ctx[4]);
+        			attr(input1, "class", "svelte-hst1lk");
         		},
         		m(target, anchor) {
-        			insert(target, t0, anchor);
         			insert(target, input0, anchor);
-        			set_input_value(input0, /*visibleValue*/ ctx[7]);
-        			/*input0_binding*/ ctx[36](input0);
-        			insert(target, t1, anchor);
+        			set_input_value(input0, /*value*/ ctx[0]);
+        			insert(target, t, anchor);
         			insert(target, input1, anchor);
-        			set_input_value(input1, /*visibleValue*/ ctx[7]);
-        			/*input1_binding*/ ctx[38](input1);
+        			set_input_value(input1, /*value*/ ctx[0]);
 
         			if (!mounted) {
         				dispose = [
-        					listen(window, "mousemove", function () {
-        						if (is_function(/*dragging*/ ctx[6] ? /*mousemoveHandler*/ ctx[10] : "")) (/*dragging*/ ctx[6] ? /*mousemoveHandler*/ ctx[10] : "").apply(this, arguments);
-        					}),
-        					listen(window, "touchmove", function () {
-        						if (is_function(/*dragging*/ ctx[6] ? /*mousemoveHandler*/ ctx[10] : "")) (/*dragging*/ ctx[6] ? /*mousemoveHandler*/ ctx[10] : "").apply(this, arguments);
-        					}),
-        					listen(window, "mouseup", function () {
-        						if (is_function(/*dragging*/ ctx[6] ? /*mouseupHandler*/ ctx[11] : "")) (/*dragging*/ ctx[6] ? /*mouseupHandler*/ ctx[11] : "").apply(this, arguments);
-        					}),
-        					listen(window, "touchend", function () {
-        						if (is_function(/*dragging*/ ctx[6] ? /*mouseupHandler*/ ctx[11] : "")) (/*dragging*/ ctx[6] ? /*mouseupHandler*/ ctx[11] : "").apply(this, arguments);
-        					}),
-        					listen(window, "mousedown", function () {
-        						if (is_function(/*editing*/ ctx[4] ? /*windowdownHandler*/ ctx[13] : "")) (/*editing*/ ctx[4] ? /*windowdownHandler*/ ctx[13] : "").apply(this, arguments);
-        					}),
-        					listen(window, "touchstart", function () {
-        						if (is_function(/*editing*/ ctx[4] ? /*windowdownHandler*/ ctx[13] : "")) (/*editing*/ ctx[4] ? /*windowdownHandler*/ ctx[13] : "").apply(this, arguments);
-        					}),
-        					listen(window, "keydown", /*keydownHandler*/ ctx[19]),
-        					listen(window, "keyup", /*keyupHandler*/ ctx[20]),
-        					listen(input0, "mousedown", stop_propagation(mousedown_handler)),
-        					listen(input0, "touchstart", stop_propagation(touchstart_handler), { passive: true }),
-        					listen(input0, "input", /*inputHandler*/ ctx[18]),
-        					listen(input0, "focus", /*editFocusHandler*/ ctx[16]),
-        					listen(input0, "blur", /*editBlurHandler*/ ctx[17]),
-        					listen(input0, "input", /*input0_input_handler*/ ctx[35]),
-        					listen(input1, "mouseenter", mouseenterHandler),
-        					listen(input1, "mouseleave", mouseleaveHandler),
-        					listen(input1, "mousedown", stop_propagation(/*mousedownHandler*/ ctx[9])),
-        					listen(input1, "touchstart", stop_propagation(/*mousedownHandler*/ ctx[9])),
-        					listen(input1, "dblclick", stop_propagation(/*dblclickHandler*/ ctx[12])),
-        					listen(input1, "focus", /*dragFocusHandler*/ ctx[14]),
-        					listen(input1, "blur", /*dragBlurHandler*/ ctx[15]),
-        					listen(input1, "input", /*inputHandler*/ ctx[18]),
-        					listen(input1, "input", /*input1_input_handler*/ ctx[37])
+        					listen(input0, "input", /*input0_input_handler*/ ctx[1]),
+        					listen(input1, "input", /*input1_input_handler*/ ctx[2])
         				];
 
         				mounted = true;
         			}
         		},
-        		p(new_ctx, dirty) {
-        			ctx = new_ctx;
-
-        			if (dirty[0] & /*min, step*/ 3 && input0_pattern_value !== (input0_pattern_value = /*min*/ ctx[0] >= 0 && /*step*/ ctx[1] == Math.round(/*step*/ ctx[1])
-        			? "[0-9]+"
-        			: undefined)) {
-        				attr(input0, "pattern", input0_pattern_value);
+        		p(ctx, [dirty]) {
+        			if (dirty & /*value*/ 1 && input0.value !== /*value*/ ctx[0]) {
+        				set_input_value(input0, /*value*/ ctx[0]);
         			}
 
-        			if (dirty[0] & /*style*/ 256) {
-        				attr(input0, "style", /*style*/ ctx[8]);
-        			}
-
-        			if (dirty[0] & /*$$props*/ 2097152 && input0_class_value !== (input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[21].class) + " svelte-17pi914"))) {
-        				attr(input0, "class", input0_class_value);
-        			}
-
-        			if (dirty[0] & /*visibleValue*/ 128 && input0.value !== /*visibleValue*/ ctx[7]) {
-        				set_input_value(input0, /*visibleValue*/ ctx[7]);
-        			}
-
-        			if (dirty[0] & /*$$props, $$props*/ 2097152) {
-        				toggle_class(input0, "default", !/*$$props*/ ctx[21].class ? true : false);
-        			}
-
-        			if (dirty[0] & /*$$props, stepFactor*/ 2097160) {
-        				toggle_class(input0, "fast", /*stepFactor*/ ctx[3] > 1 ? "fast" : "");
-        			}
-
-        			if (dirty[0] & /*$$props, stepFactor*/ 2097160) {
-        				toggle_class(input0, "slow", /*stepFactor*/ ctx[3] < 1 ? "slow" : "");
-        			}
-
-        			if (dirty[0] & /*$$props, editing*/ 2097168) {
-        				toggle_class(input0, "editing", /*editing*/ ctx[4]);
-        			}
-
-        			if (dirty[0] & /*$$props*/ 2097152) {
-        				toggle_class(input0, "edit", true);
-        			}
-
-        			if (dirty[0] & /*$$props, editing*/ 2097168) {
-        				toggle_class(input0, "hide", !/*editing*/ ctx[4]);
-        			}
-
-        			if (dirty[0] & /*style*/ 256) {
-        				attr(input1, "style", /*style*/ ctx[8]);
-        			}
-
-        			if (dirty[0] & /*$$props*/ 2097152 && input1_class_value !== (input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[21].class) + " svelte-17pi914"))) {
-        				attr(input1, "class", input1_class_value);
-        			}
-
-        			if (dirty[0] & /*visibleValue*/ 128 && input1.value !== /*visibleValue*/ ctx[7]) {
-        				set_input_value(input1, /*visibleValue*/ ctx[7]);
-        			}
-
-        			if (dirty[0] & /*$$props, $$props*/ 2097152) {
-        				toggle_class(input1, "default", !/*$$props*/ ctx[21].class ? true : false);
-        			}
-
-        			if (dirty[0] & /*$$props, stepFactor*/ 2097160) {
-        				toggle_class(input1, "fast", /*stepFactor*/ ctx[3] > 1 ? "fast" : "");
-        			}
-
-        			if (dirty[0] & /*$$props, stepFactor*/ 2097160) {
-        				toggle_class(input1, "slow", /*stepFactor*/ ctx[3] < 1 ? "slow" : "");
-        			}
-
-        			if (dirty[0] & /*$$props*/ 2097152) {
-        				toggle_class(input1, "drag", true);
-        			}
-
-        			if (dirty[0] & /*$$props, editing*/ 2097168) {
-        				toggle_class(input1, "hide", /*editing*/ ctx[4]);
+        			if (dirty & /*value*/ 1 && input1.value !== /*value*/ ctx[0]) {
+        				set_input_value(input1, /*value*/ ctx[0]);
         			}
         		},
         		i: noop,
         		o: noop,
         		d(detaching) {
-        			if (detaching) detach(t0);
         			if (detaching) detach(input0);
-        			/*input0_binding*/ ctx[36](null);
-        			if (detaching) detach(t1);
+        			if (detaching) detach(t);
         			if (detaching) detach(input1);
-        			/*input1_binding*/ ctx[38](null);
         			mounted = false;
         			run_all(dispose);
         		}
         	};
         }
 
-        function mouseenterHandler(e) {
-        	
-        } // seems not to be very practical to have focus on rollover:
-        // dragElement?.focus();
-
-        function mouseleaveHandler(e) {
-        	
-        }
-
-        const mousedown_handler = () => {
-        	
-        };
-
-        const touchstart_handler = () => {
-        	
-        };
-
         function instance($$self, $$props, $$invalidate) {
         	let { value = 0 } = $$props;
-        	let { min = -Number.MAX_VALUE } = $$props;
-        	let { max = Number.MAX_VALUE } = $$props;
-        	let { step = 1 } = $$props;
-        	let { decimals = 0 } = $$props;
-        	let { horizontal = true } = $$props;
-        	let { vertical = true } = $$props;
-        	let { mainStyle = undefined } = $$props;
-        	let { fastStyle = undefined } = $$props;
-        	let { slowStyle = undefined } = $$props;
-        	let { focusStyle = undefined } = $$props;
-        	let { editingStyle = undefined } = $$props;
-        	const dispatch = createEventDispatcher();
-        	let dragElement, editElement;
-        	let dragFocussed = false;
-        	let stepFactor = 1;
-        	let dragging = false;
-        	let clickX, clickY;
-        	let visibleValue;
-        	let preciseValue;
-        	let editing = false;
-        	let internalEditFocus = false;
-        	let altPressed = false;
-        	let shiftPressed = false;
-        	let style;
-        	visibleValue = setValue(value);
-        	preciseValue = setValue(value);
-
-        	function mousedownHandler(e) {
-        		dispatch("consoleLog", "down " + e.target.id);
-
-        		// console.log('down');
-        		if (editing) {
-        			e.stopPropagation();
-        		} else {
-        			clickX = e.clientX;
-        			clickY = e.clientY;
-
-        			if (e.type == "touchstart") {
-        				clickX = e.touches[0].clientX;
-        				clickY = e.touches[0].clientY;
-        			}
-
-        			$$invalidate(6, dragging = true);
-        			preciseValue = setValue(value);
-        		} //console.log(e.clientX, e.clientY);
-        	}
-
-        	function mousemoveHandler(e) {
-        		e.preventDefault();
-        		let actX = e.clientX;
-        		let actY = e.clientY;
-
-        		if (e.type == "touchmove") {
-        			actX = e.touches[0].clientX;
-        			actY = e.touches[0].clientY;
-        		}
-
-        		let distX = horizontal ? actX - clickX : 0;
-        		let distY = vertical ? -(actY - clickY) : 0;
-        		let stepNum = Math.abs(distX) > Math.abs(distY) ? distX : distY;
-        		stepValue(stepNum);
-        		clickX = actX;
-        		clickY = actY;
-        	}
-
-        	function mouseupHandler(e) {
-        		dispatch("consoleLog", "up " + e.target.id);
-
-        		// console.log('up');
-        		$$invalidate(6, dragging = false);
-
-        		$$invalidate(3, stepFactor = 1);
-        	}
-
-        	function dblclickHandler(e) {
-        		dispatch("consoleLog", "dblClick " + e.target.id);
-        		startEditing();
-        	} // dragElement.focus();
-
-        	function windowdownHandler(e) {
-        		dispatch("consoleLog", "down window");
-
-        		// console.log('window mousedown');
-        		console.log("calling stopEditing() from windowdownHandler");
-
-        		stopEditing();
-        	}
-
-        	function dragFocusHandler(e) {
-        		dispatch("consoleLog", "focus " + e.target.id);
-
-        		// // console.log(dragElement);
-        		$$invalidate(32, dragFocussed = true);
-        	} // if (!justStartedEditing) {
-        	//   stopEditing();      
-
-        	// }
-        	// justStartedEditing = false;
-        	function dragBlurHandler(e) {
-        		dispatch("consoleLog", "blur " + e.target.id);
-        		console.log("blur " + e.target.id);
-        		$$invalidate(32, dragFocussed = false);
-
-        		// if (!editing) {
-        		//   stopEditing();
-        		// }
-        		if (!internalEditFocus) {
-        			console.log("calling stopEditing() from dragBlurHandler");
-        			stopEditing();
-        			internalEditFocus = false;
-        		}
-        	}
-
-        	function editFocusHandler(e) {
-        		dispatch("consoleLog", "focus " + e.target.id);
-        	} // if (!justStartedEditing) {
-        	//   stopEditing();      
-
-        	// }
-        	// justStartedEditing = false;
-        	function editBlurHandler(e) {
-        		dispatch("consoleLog", "blur " + e.target.id);
-        		console.log("blur " + e.target.id);
-        		console.log("calling stopEditing() from editBlurHandler");
-        		stopEditing();
-        	}
-
-        	// function focusFromOutside() {
-        	//   dispatch('consoleLog', '-----> Focus from outside');    
-        	// }
-        	// function focusFromOutside() {
-        	//   dispatch('consoleLog', '-----> Focus from outside');    
-        	// }
-        	// function focusFromOutside() {
-        	//   dispatch('consoleLog', '-----> Focus from outside');    
-        	// }
-        	function inputHandler(e) {
-        		// console.log(e);
-        		let checkValue = parseFloat(dragElement.value);
-
-        		if (!isNaN(checkValue)) {
-        			preciseValue = checkValue;
-        			preciseValue = Math.min(preciseValue, max);
-        			preciseValue = Math.max(preciseValue, min);
-        			dispatch("input", preciseValue.toFixed(decimals));
-        		}
-        	}
-
-        	function keydownHandler(e) {
-        		dispatch("consoleLog", "keydown: " + e.key);
-
-        		// console.log(e);
-        		if (e.key == "Shift") {
-        			$$invalidate(34, shiftPressed = true);
-        		}
-
-        		if (e.key == "Alt") {
-        			$$invalidate(33, altPressed = true);
-        		}
-        	}
-
-        	function keyupHandler(e) {
-        		dispatch("consoleLog", "keyup: " + e.key);
-
-        		// console.log(e)
-        		if (e.key == "Shift") {
-        			$$invalidate(34, shiftPressed = false);
-        		}
-
-        		if (e.key == "Alt") {
-        			$$invalidate(33, altPressed = false);
-        		}
-
-        		if (dragFocussed) {
-        			if (vertical && e.key == "ArrowUp" || horizontal && e.key == "ArrowRight") {
-        				stepValue(10);
-        			}
-
-        			if (vertical && e.key == "ArrowDown" || horizontal && e.key == "ArrowLeft") {
-        				stepValue(-10);
-        			}
-        		}
-
-        		if (!editing) {
-        			if (e.key == "Enter") {
-        				startEditing();
-        			}
-        		} else {
-        			if (e.key == "Enter") {
-        				console.log("calling stopEditing() from keyupHandler Enter");
-        				stopEditing();
-        				dragElement.focus();
-        			}
-
-        			if (e.key == "Escape") {
-        				console.log("calling stopEditing() from keyupHandler Escape");
-        				stopEditing();
-        				dragElement.focus();
-        			}
-        		}
-        	}
-
-        	function setValue(val) {
-        		val = parseFloat(val);
-        		if (!isNaN(val)) preciseValue = val;
-        		preciseValue = Math.min(preciseValue, max);
-        		preciseValue = Math.max(preciseValue, min);
-        		$$invalidate(7, visibleValue = preciseValue.toFixed(decimals));
-        		$$invalidate(22, value = preciseValue.toFixed(decimals));
-        		dispatch("input", value);
-        		dispatch("change", value);
-        	}
-
-        	function stepValue(numSteps) {
-        		preciseValue = preciseValue ?? parseFloat(visibleValue);
-        		preciseValue += numSteps * step * stepFactor;
-        		preciseValue = Math.min(preciseValue, max);
-        		preciseValue = Math.max(preciseValue, min);
-        		$$invalidate(7, visibleValue = preciseValue.toFixed(decimals));
-        		$$invalidate(22, value = preciseValue.toFixed(decimals));
-        		dispatch("input", value);
-        		dispatch("change", value);
-        	}
-
-        	function startEditing() {
-        		console.log("startEditing");
-        		dispatch("consoleLog", "startEditing");
-
-        		preciseValue = parseFloat(visibleValue);
-        		$$invalidate(4, editing = true);
-        		editElement.setSelectionRange(0, 30);
-        		internalEditFocus = true;
-        		editElement.focus();
-        	} // window.setTimeout(() => {
-        	//   console.log('timeout blur')
-
-        	//   dragElement.blur();
-        	//   window.setTimeout(() => {
-        	//     console.log('timeout focus')
-        	//     dragElement.focus();      
-        	//   }, 1000);
-        	// }, 1000);
-        	function stopEditing() {
-        		console.log("stopEditing");
-        		dispatch("consoleLog", "stopEditing");
-        		$$invalidate(4, editing = false);
-        		editElement.setSelectionRange(0, 0);
-
-        		// dragElement.focus();
-        		setValue(visibleValue);
-        	}
 
         	function input0_input_handler() {
-        		visibleValue = this.value;
-        		$$invalidate(7, visibleValue);
-        	}
-
-        	function input0_binding($$value) {
-        		binding_callbacks[$$value ? "unshift" : "push"](() => {
-        			editElement = $$value;
-        			$$invalidate(5, editElement);
-        		});
+        		value = this.value;
+        		$$invalidate(0, value);
         	}
 
         	function input1_input_handler() {
-        		visibleValue = this.value;
-        		$$invalidate(7, visibleValue);
+        		value = this.value;
+        		$$invalidate(0, value);
         	}
 
-        	function input1_binding($$value) {
-        		binding_callbacks[$$value ? "unshift" : "push"](() => {
-        			dragElement = $$value;
-        			$$invalidate(2, dragElement);
-        		});
-        	}
-
-        	$$self.$$set = $$new_props => {
-        		$$invalidate(21, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
-        		if ("value" in $$new_props) $$invalidate(22, value = $$new_props.value);
-        		if ("min" in $$new_props) $$invalidate(0, min = $$new_props.min);
-        		if ("max" in $$new_props) $$invalidate(23, max = $$new_props.max);
-        		if ("step" in $$new_props) $$invalidate(1, step = $$new_props.step);
-        		if ("decimals" in $$new_props) $$invalidate(24, decimals = $$new_props.decimals);
-        		if ("horizontal" in $$new_props) $$invalidate(25, horizontal = $$new_props.horizontal);
-        		if ("vertical" in $$new_props) $$invalidate(26, vertical = $$new_props.vertical);
-        		if ("mainStyle" in $$new_props) $$invalidate(27, mainStyle = $$new_props.mainStyle);
-        		if ("fastStyle" in $$new_props) $$invalidate(28, fastStyle = $$new_props.fastStyle);
-        		if ("slowStyle" in $$new_props) $$invalidate(29, slowStyle = $$new_props.slowStyle);
-        		if ("focusStyle" in $$new_props) $$invalidate(30, focusStyle = $$new_props.focusStyle);
-        		if ("editingStyle" in $$new_props) $$invalidate(31, editingStyle = $$new_props.editingStyle);
+        	$$self.$$set = $$props => {
+        		if ("value" in $$props) $$invalidate(0, value = $$props.value);
         	};
 
-        	$$self.$$.update = () => {
-        		if ($$self.$$.dirty[0] & /*dragElement*/ 4) {
-        			// updaters --------------------------------
-        			// update readonly state of input element
-        			if (dragElement) {
-        				// dragElement.readOnly = !editing;
-        				$$invalidate(2, dragElement.readOnly = true, dragElement);
-        			}
-        		}
-
-        		if ($$self.$$.dirty[0] & /*editing*/ 16 | $$self.$$.dirty[1] & /*dragFocussed, altPressed, shiftPressed*/ 14) {
-        			// update stepFactor
-        			{
-        				$$invalidate(3, stepFactor = 1);
-
-        				if (dragFocussed && !editing) {
-        					if (altPressed && shiftPressed) {
-        						$$invalidate(3, stepFactor = 10);
-        					} else if (altPressed) {
-        						$$invalidate(3, stepFactor = 0.1);
-        					}
-        				}
-        			}
-        		}
-
-        		if ($$self.$$.dirty[0] & /*mainStyle, style, focusStyle, editing, stepFactor, fastStyle, slowStyle*/ 2013266200 | $$self.$$.dirty[1] & /*dragFocussed, editingStyle*/ 3) {
-        			// update inline style string
-        			{
-        				$$invalidate(8, style = mainStyle ?? "");
-        				$$invalidate(8, style += dragFocussed && focusStyle ? ";" + focusStyle : "");
-
-        				$$invalidate(8, style += !editing && stepFactor > 1 && fastStyle
-        				? ";" + fastStyle
-        				: "");
-
-        				$$invalidate(8, style += !editing && stepFactor < 1 && slowStyle
-        				? ";" + slowStyle
-        				: "");
-
-        				$$invalidate(8, style += editing && editingStyle ? ";" + editingStyle : "");
-        			}
-        		}
-        	};
-
-        	$$props = exclude_internal_props($$props);
-
-        	return [
-        		min,
-        		step,
-        		dragElement,
-        		stepFactor,
-        		editing,
-        		editElement,
-        		dragging,
-        		visibleValue,
-        		style,
-        		mousedownHandler,
-        		mousemoveHandler,
-        		mouseupHandler,
-        		dblclickHandler,
-        		windowdownHandler,
-        		dragFocusHandler,
-        		dragBlurHandler,
-        		editFocusHandler,
-        		editBlurHandler,
-        		inputHandler,
-        		keydownHandler,
-        		keyupHandler,
-        		$$props,
-        		value,
-        		max,
-        		decimals,
-        		horizontal,
-        		vertical,
-        		mainStyle,
-        		fastStyle,
-        		slowStyle,
-        		focusStyle,
-        		editingStyle,
-        		dragFocussed,
-        		altPressed,
-        		shiftPressed,
-        		input0_input_handler,
-        		input0_binding,
-        		input1_input_handler,
-        		input1_binding
-        	];
+        	return [value, input0_input_handler, input1_input_handler];
         }
 
         class NumberSpinner extends SvelteComponent {
         	constructor(options) {
         		super();
-        		if (!document.getElementById("svelte-17pi914-style")) add_css();
-
-        		init(
-        			this,
-        			options,
-        			instance,
-        			create_fragment,
-        			safe_not_equal,
-        			{
-        				value: 22,
-        				min: 0,
-        				max: 23,
-        				step: 1,
-        				decimals: 24,
-        				horizontal: 25,
-        				vertical: 26,
-        				mainStyle: 27,
-        				fastStyle: 28,
-        				slowStyle: 29,
-        				focusStyle: 30,
-        				editingStyle: 31
-        			},
-        			[-1, -1]
-        		);
+        		if (!document.getElementById("svelte-hst1lk-style")) add_css();
+        		init(this, options, instance, create_fragment, safe_not_equal, { value: 0 });
         	}
         }
 
