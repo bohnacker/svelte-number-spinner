@@ -431,6 +431,9 @@ var app = (function () {
         function set_input_value(input, value) {
             input.value = value == null ? '' : value;
         }
+        function toggle_class(element, name, toggle) {
+            element.classList[toggle ? 'add' : 'remove'](name);
+        }
 
         let current_component;
         function set_current_component(component) {
@@ -635,8 +638,8 @@ var app = (function () {
 
         function add_css() {
         	var style = element("style");
-        	style.id = "svelte-hst1lk-style";
-        	style.textContent = "input#drag.svelte-hst1lk{user-select:none}input.svelte-hst1lk:not(.editing)::selection{background:#0000}input#edit.svelte-hst1lk{user-select:text}";
+        	style.id = "svelte-1u9ld9k-style";
+        	style.textContent = ".default.svelte-1u9ld9k{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:4em;height:1.6em;margin:0px;padding:5px;border:1 solid #0004;border-radius:4px;text-align:right;cursor:initial}input#drag.svelte-1u9ld9k{cursor:initial;user-select:none}input.svelte-1u9ld9k:not(.editing)::selection{background:#0000}input#edit.svelte-1u9ld9k{user-select:text}";
         	append(document.head, style);
         }
 
@@ -655,24 +658,28 @@ var app = (function () {
         			attr(input0, "id", "edit");
         			attr(input0, "type", "text");
         			attr(input0, "tabindex", "-1");
-        			attr(input0, "class", "svelte-hst1lk");
+        			attr(input0, "class", "svelte-1u9ld9k");
+        			toggle_class(input0, "default", true);
         			attr(input1, "id", "drag");
         			attr(input1, "type", "text");
         			attr(input1, "contenteditable", "false");
         			attr(input1, "tabindex", "0");
-        			attr(input1, "class", "svelte-hst1lk");
+        			attr(input1, "class", "svelte-1u9ld9k");
+        			toggle_class(input1, "default", true);
         		},
         		m(target, anchor) {
         			insert(target, input0, anchor);
+        			/*input0_binding*/ ctx[3](input0);
         			set_input_value(input0, /*value*/ ctx[0]);
         			insert(target, t, anchor);
         			insert(target, input1, anchor);
+        			/*input1_binding*/ ctx[5](input1);
         			set_input_value(input1, /*value*/ ctx[0]);
 
         			if (!mounted) {
         				dispose = [
-        					listen(input0, "input", /*input0_input_handler*/ ctx[1]),
-        					listen(input1, "input", /*input1_input_handler*/ ctx[2])
+        					listen(input0, "input", /*input0_input_handler*/ ctx[4]),
+        					listen(input1, "input", /*input1_input_handler*/ ctx[6])
         				];
 
         				mounted = true;
@@ -691,8 +698,10 @@ var app = (function () {
         		o: noop,
         		d(detaching) {
         			if (detaching) detach(input0);
+        			/*input0_binding*/ ctx[3](null);
         			if (detaching) detach(t);
         			if (detaching) detach(input1);
+        			/*input1_binding*/ ctx[5](null);
         			mounted = false;
         			run_all(dispose);
         		}
@@ -701,10 +710,26 @@ var app = (function () {
 
         function instance($$self, $$props, $$invalidate) {
         	let { value = 0 } = $$props;
+        	let editElement;
+        	let dragElement;
+
+        	function input0_binding($$value) {
+        		binding_callbacks[$$value ? "unshift" : "push"](() => {
+        			editElement = $$value;
+        			$$invalidate(2, editElement);
+        		});
+        	}
 
         	function input0_input_handler() {
         		value = this.value;
         		$$invalidate(0, value);
+        	}
+
+        	function input1_binding($$value) {
+        		binding_callbacks[$$value ? "unshift" : "push"](() => {
+        			dragElement = $$value;
+        			$$invalidate(1, dragElement);
+        		});
         	}
 
         	function input1_input_handler() {
@@ -716,13 +741,31 @@ var app = (function () {
         		if ("value" in $$props) $$invalidate(0, value = $$props.value);
         	};
 
-        	return [value, input0_input_handler, input1_input_handler];
+        	$$self.$$.update = () => {
+        		if ($$self.$$.dirty & /*dragElement*/ 2) {
+        			// update readonly state of input element
+        			if (dragElement) {
+        				// dragElement.readOnly = !editing;
+        				$$invalidate(1, dragElement.readOnly = true, dragElement);
+        			}
+        		}
+        	};
+
+        	return [
+        		value,
+        		dragElement,
+        		editElement,
+        		input0_binding,
+        		input0_input_handler,
+        		input1_binding,
+        		input1_input_handler
+        	];
         }
 
         class NumberSpinner extends SvelteComponent {
         	constructor(options) {
         		super();
-        		if (!document.getElementById("svelte-hst1lk-style")) add_css();
+        		if (!document.getElementById("svelte-1u9ld9k-style")) add_css();
         		init(this, options, instance, create_fragment, safe_not_equal, { value: 0 });
         	}
         }
