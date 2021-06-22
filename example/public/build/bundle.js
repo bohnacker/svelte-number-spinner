@@ -359,18 +359,9 @@ var app = (function () {
 
     var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-    function createCommonjsModule(fn, basedir, module) {
-    	return module = {
-    	  path: basedir,
-    	  exports: {},
-    	  require: function (path, base) {
-          return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
-        }
-    	}, fn(module, module.exports), module.exports;
-    }
-
-    function commonjsRequire () {
-    	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
+    function createCommonjsModule(fn) {
+      var module = { exports: {} };
+    	return fn(module, module.exports), module.exports;
     }
 
     var dist = createCommonjsModule(function (module, exports) {
@@ -638,8 +629,8 @@ var app = (function () {
 
         function add_css() {
         	var style = element("style");
-        	style.id = "svelte-1u9ld9k-style";
-        	style.textContent = ".default.svelte-1u9ld9k{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:4em;height:1.6em;margin:0px;padding:5px;border:1 solid #0004;border-radius:4px;text-align:right;cursor:initial}input#drag.svelte-1u9ld9k{cursor:initial;user-select:none}input.svelte-1u9ld9k:not(.editing)::selection{background:#0000}input#edit.svelte-1u9ld9k{user-select:text}";
+        	style.id = "svelte-djqgon-style";
+        	style.textContent = "input.svelte-djqgon{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:4em;height:1.6em;margin:0px;padding:5px;border:1 solid #0004;border-radius:4px;text-align:right}input#drag.svelte-djqgon{cursor:ew-resize;user-select:none}input#drag.svelte-djqgon::selection{cursor:ew-resize;user-select:none;background:#0000}input#edit.svelte-djqgon{user-select:text}";
         	append(document.head, style);
         }
 
@@ -658,14 +649,12 @@ var app = (function () {
         			attr(input0, "id", "edit");
         			attr(input0, "type", "text");
         			attr(input0, "tabindex", "-1");
-        			attr(input0, "class", "svelte-1u9ld9k");
+        			attr(input0, "class", "svelte-djqgon");
         			toggle_class(input0, "default", true);
         			attr(input1, "id", "drag");
         			attr(input1, "type", "text");
-        			attr(input1, "contenteditable", "false");
         			attr(input1, "tabindex", "0");
-        			attr(input1, "class", "svelte-1u9ld9k");
-        			toggle_class(input1, "default", true);
+        			attr(input1, "class", "svelte-djqgon");
         		},
         		m(target, anchor) {
         			insert(target, input0, anchor);
@@ -743,9 +732,12 @@ var app = (function () {
 
         	$$self.$$.update = () => {
         		if ($$self.$$.dirty & /*dragElement*/ 2) {
+        			// afterUpdate(() => {
+        			//   console.log(dragElement);
+        			// });
         			// update readonly state of input element
         			if (dragElement) {
-        				// dragElement.readOnly = !editing;
+        				console.log(dragElement);
         				$$invalidate(1, dragElement.readOnly = true, dragElement);
         			}
         		}
@@ -765,7 +757,7 @@ var app = (function () {
         class NumberSpinner extends SvelteComponent {
         	constructor(options) {
         		super();
-        		if (!document.getElementById("svelte-1u9ld9k-style")) add_css();
+        		if (!document.getElementById("svelte-djqgon-style")) add_css();
         		init(this, options, instance, create_fragment, safe_not_equal, { value: 0 });
         	}
         }
