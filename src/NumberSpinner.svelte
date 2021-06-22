@@ -1,31 +1,41 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, afterUpdate, tick } from 'svelte';
 
   export let value = 0;
 
   let editElement;
   let dragElement;
 
+  // afterUpdate(() => {
+  //   console.log(dragElement);
+  // });
+
   // update readonly state of input element
   $: if (dragElement) {
-    // dragElement.readOnly = !editing;
+    console.log(dragElement);
     dragElement.readOnly = true;
   }
+
+
 </script>
 
 <!-- DOM --------------------------------------------------------------->
 
-<svelte:window />
 
 <!-- this is the editable input field -->
-<input id="edit" type="text" class:default={true} tabindex="-1" bind:this={editElement} bind:value />
+<input bind:this={editElement} bind:value id="edit" type="text" class:default={true} tabindex="-1" />
 
 <!-- this is the input field controlled by mouse and touch drag events -->
-<input id="drag" type="text" class:default={true} contenteditable={'false'} tabindex="0" bind:this={dragElement} bind:value />
+<input bind:this={dragElement} bind:value id="drag" type="text" tabindex="0" />
+
+<!-- <button on:click={() => console.log(inputElement)}>Hallo</button>
+
+<input type="text" value={123} bind:this={inputElement} /> -->
+
 
 <!-- CSS --------------------------------------------------------------->
 <style>
-  .default {
+  input {
     display: inline-block;
     box-sizing: border-box;
     font-variant-numeric: tabular-nums;
@@ -38,19 +48,21 @@
     border: 1 solid #0004;
     border-radius: 4px;
     text-align: right;
-    cursor: initial; /* get rid of the caret cursor in non-editing mode */
   }
 
   input#drag {
-    cursor: initial; /* get rid of the caret cursor in non-editing mode */
+    cursor: ew-resize; /* get rid of the caret cursor in non-editing mode */
     user-select: none;
   }
-
-  input:not(.editing)::selection {
+  input#drag::selection {
+    cursor: ew-resize; /* get rid of the caret cursor in non-editing mode */
+    user-select: none;
     background: #0000;
   }
 
   input#edit {
     user-select: text;
   }
+
+
 </style>
