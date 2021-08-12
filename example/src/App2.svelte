@@ -8,8 +8,8 @@
 
 <!-- ------------------------------------- -->
 
-<h3>Touch 2</h3>
-<p>When pressing "Focus" input gets focussed and keyboard should come up. "Blur" removes the keyboard.</p>
+<h3>Touch 2B</h3>
+<p>Version with two input elements. Hoping to just show one of them at the same time.</p>
 
 <hr>
 

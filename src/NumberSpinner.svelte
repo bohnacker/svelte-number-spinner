@@ -7,24 +7,70 @@
   // export let max = Number.MAX_VALUE;
   // export let step = 1;
 
-  let inputElement;
+  let dragging = false;
+  let editing = false;
+  let isTouchDevice = false;
+  let dragElement, editElement;
 
-  function focusHandler(ev) {
-    console.log(inputElement);
-    inputElement.focus();
+  function touchstartHandler(ev) {
+    isTouchDevice = true;
+    mousedownHandler(ev);
   }
-  function blurHandler(ev) {
-    console.log(inputElement);
-    inputElement.blur();
+  function mousedownHandler(ev) {
+    dragging = true;
   }
+
+  function touchendHandler(ev) {
+    mouseupHandler(ev);
+  }
+  function mouseupHandler(ev) {
+    dragging = false;
+    editing = true;
+    editElement.focus();
+  }
+
+  // function focusHandler(ev) {
+  //   console.log(inputElement);
+  //   inputElement.focus();
+  // }
+  // function blurHandler(ev) {
+  //   console.log(inputElement);
+  //   inputElement.blur();
+  // }
 </script>
 
 <!-- DOM --------------------------------------------------------------->
 
-<button on:click={focusHandler}>Focus</button>
-<button on:click={blurHandler}>Blur</button>
-<input type="text" bind:this={inputElement} bind:value />
+<svelte:window 
+on:mouseup|stopPropagation={mouseupHandler}
+on:touchend|stopPropagation={touchendHandler}
+
+/>
+
+<input
+  type="text"
+  on:mousedown|stopPropagation={mousedownHandler}
+  on:touchstart|stopPropagation={touchstartHandler}
+  class="drag"
+  class:active={!editing}
+  bind:this={dragElement}
+  bind:value
+  readonly={true}
+/>
+<input class="edit" class:active={editing} type="text" bind:this={editElement} bind:value />
 
 <!-- CSS --------------------------------------------------------------->
 <style>
+  input {
+    display: inline-block;
+    width: 120px;
+    opacity: 0.3;
+  }
+  input.drag {
+    user-select: none;
+  }
+
+  .active {
+    opacity: 1;
+  }
 </style>
