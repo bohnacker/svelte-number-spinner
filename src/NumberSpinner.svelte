@@ -7,7 +7,13 @@
   // export let max = Number.MAX_VALUE;
   // export let step = 1;
 
+  let editing = false;
   let inputElement;
+
+  $: if (inputElement) {
+    inputElement.readOnly = !editing;
+    inputElement.style.userSelect = "none";
+  }
 
   function focusHandler(ev) {
     console.log(inputElement);
@@ -21,7 +27,7 @@
 
 <!-- DOM --------------------------------------------------------------->
 
-<input type="text" bind:this={inputElement} bind:value contenteditable={false}/>
+<input type="text" bind:this={inputElement} bind:value contenteditable={false} />
 
 <!-- CSS --------------------------------------------------------------->
 <style>
