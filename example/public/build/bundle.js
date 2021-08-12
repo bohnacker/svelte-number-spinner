@@ -408,36 +408,45 @@ var app = (function () {
     const file$1 = "src/NumberSpinner.svelte";
 
     function create_fragment$1(ctx) {
-    	let button;
+    	let button0;
     	let t1;
+    	let button1;
+    	let t3;
     	let input;
     	let mounted;
     	let dispose;
 
     	const block = {
     		c: function create() {
-    			button = element("button");
-    			button.textContent = "Focus";
+    			button0 = element("button");
+    			button0.textContent = "Focus";
     			t1 = space();
+    			button1 = element("button");
+    			button1.textContent = "Blur";
+    			t3 = space();
     			input = element("input");
-    			add_location(button, file$1, 19, 0, 434);
+    			add_location(button0, file$1, 23, 0, 523);
+    			add_location(button1, file$1, 24, 0, 570);
     			attr_dev(input, "type", "text");
-    			add_location(input, file$1, 20, 0, 481);
+    			add_location(input, file$1, 25, 0, 615);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, button, anchor);
+    			insert_dev(target, button0, anchor);
     			insert_dev(target, t1, anchor);
+    			insert_dev(target, button1, anchor);
+    			insert_dev(target, t3, anchor);
     			insert_dev(target, input, anchor);
-    			/*input_binding*/ ctx[3](input);
+    			/*input_binding*/ ctx[4](input);
     			set_input_value(input, /*value*/ ctx[0]);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(button, "click", /*focusHandler*/ ctx[2], false, false, false),
-    					listen_dev(input, "input", /*input_input_handler*/ ctx[4])
+    					listen_dev(button0, "click", /*focusHandler*/ ctx[2], false, false, false),
+    					listen_dev(button1, "click", /*blurHandler*/ ctx[3], false, false, false),
+    					listen_dev(input, "input", /*input_input_handler*/ ctx[5])
     				];
 
     				mounted = true;
@@ -451,10 +460,12 @@ var app = (function () {
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(button);
+    			if (detaching) detach_dev(button0);
     			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(button1);
+    			if (detaching) detach_dev(t3);
     			if (detaching) detach_dev(input);
-    			/*input_binding*/ ctx[3](null);
+    			/*input_binding*/ ctx[4](null);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -487,6 +498,11 @@ var app = (function () {
     		inputElement.focus();
     	}
 
+    	function blurHandler(ev) {
+    		console.log(inputElement);
+    		inputElement.blur();
+    	}
+
     	const writable_props = ["value"];
 
     	Object.keys($$props).forEach(key => {
@@ -514,7 +530,8 @@ var app = (function () {
     		dispatch,
     		value,
     		inputElement,
-    		focusHandler
+    		focusHandler,
+    		blurHandler
     	});
 
     	$$self.$inject_state = $$props => {
@@ -526,7 +543,14 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [value, inputElement, focusHandler, input_binding, input_input_handler];
+    	return [
+    		value,
+    		inputElement,
+    		focusHandler,
+    		blurHandler,
+    		input_binding,
+    		input_input_handler
+    	];
     }
 
     class NumberSpinner extends SvelteComponentDev {
@@ -568,7 +592,7 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			br = element("br");
-    			add_location(br, file, 33, 52, 732);
+    			add_location(br, file, 33, 52, 761);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, br, anchor);
@@ -615,7 +639,7 @@ var app = (function () {
     			t5 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			add_location(br, file, 31, 124, 674);
+    			add_location(br, file, 31, 124, 703);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, t0, anchor);
@@ -738,7 +762,7 @@ var app = (function () {
     			h3.textContent = "Touch 1";
     			t1 = space();
     			p = element("p");
-    			p.textContent = "When pressing \"Focus\" input gets focussed and keyboard should come up.";
+    			p.textContent = "When pressing \"Focus\" input gets focussed and keyboard should come up. \"Blur\" removes the keyboard.";
     			t3 = space();
     			hr0 = element("hr");
     			t4 = space();
@@ -761,17 +785,17 @@ var app = (function () {
     			add_location(h3, file, 10, 0, 177);
     			add_location(p, file, 11, 0, 194);
     			attr_dev(hr0, "class", "svelte-bq8nj9");
-    			add_location(hr0, file, 13, 0, 273);
+    			add_location(hr0, file, 13, 0, 302);
     			attr_dev(div0, "class", "row svelte-bq8nj9");
-    			add_location(div0, file, 15, 0, 279);
+    			add_location(div0, file, 15, 0, 308);
     			attr_dev(hr1, "class", "svelte-bq8nj9");
-    			add_location(hr1, file, 19, 0, 423);
+    			add_location(hr1, file, 19, 0, 452);
     			attr_dev(div1, "class", "row svelte-bq8nj9");
-    			add_location(div1, file, 21, 0, 429);
+    			add_location(div1, file, 21, 0, 458);
     			attr_dev(hr2, "class", "svelte-bq8nj9");
-    			add_location(hr2, file, 25, 0, 495);
+    			add_location(hr2, file, 25, 0, 524);
     			attr_dev(div2, "class", "console svelte-bq8nj9");
-    			add_location(div2, file, 28, 0, 502);
+    			add_location(div2, file, 28, 0, 531);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");

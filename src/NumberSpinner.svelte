@@ -13,11 +13,16 @@
     console.log(inputElement);
     inputElement.focus();
   }
+  function blurHandler(ev) {
+    console.log(inputElement);
+    inputElement.blur();
+  }
 </script>
 
 <!-- DOM --------------------------------------------------------------->
 
 <button on:click={focusHandler}>Focus</button>
+<button on:click={blurHandler}>Blur</button>
 <input type="text" bind:this={inputElement} bind:value />
 
 <!-- CSS --------------------------------------------------------------->
