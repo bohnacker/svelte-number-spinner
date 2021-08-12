@@ -1,5 +1,5 @@
 <script>
-  import NumberSpinner from "../../dist/index.js";
+  import NumberSpinner from "../../src/index.js";
   let value1 = 100;
   let value2 = 33;
   let logs = [];
@@ -8,6 +8,11 @@
 
 <!-- ------------------------------------- -->
 
+<h3>Touch 1</h3>
+<p>When pressing "Focus" input gets focussed and keyboard should come up.</p>
+
+<hr>
+
 <div class="row">
   <NumberSpinner bind:value={value1} on:consoleLog={(e) => logs = [{timestamp:Date.now(), msg:e.detail}, ...logs]} />
 </div>
@@ -15,7 +20,7 @@
 <hr>
 
 <div class="row">
-  <NumberSpinner bind:value={value2} vertical={true} horizontal={false}/>
+  <NumberSpinner bind:value={value2} />
 </div>
 
 <hr>
