@@ -8,8 +8,8 @@
 
 <!-- ------------------------------------- -->
 
-<h3>Touch 1</h3>
-<p>When pressing "Focus" input gets focussed and keyboard should come up. "Blur" removes the keyboard.</p>
+<h3>Touch 2A</h3>
+<p>Trying out triggering the keyboard from an input element that was at first not editable.</p>
 
 <hr>
 
