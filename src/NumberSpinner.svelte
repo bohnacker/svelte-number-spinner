@@ -13,8 +13,7 @@
 
   // just for initialisation
   $: if (inputElement) {
-    inputElement.readOnly = true;
-    inputElement.style.userSelect = "none";
+    inputElement.readOnly = !editing;
   }
 
   function mousedownHandler(ev) {
@@ -28,22 +27,17 @@
 
   function mouseupHandler(ev) {
     dragging = false;
-
-   // inputElement.blur();
-    inputElement.readOnly = false;
-    inputElement.style.userSelect = "";
-    inputElement.contentEditable = true;
-   // inputElement.focus();
-
+    editing = true;
+    setTimeout(() => {
+      console.log("timeout")
+      inputElement.focus;
+    }, 1000);
+    
     console.log(inputElement);
   }
   function touchendHandler(ev) {
     dragging = false;
-
-    inputElement.blur();
-    inputElement.readOnly = false;
-    inputElement.style.userSelect = "";
-    inputElement.focus();
+    editing = true;
 
     console.log(dragging);
   }
@@ -71,6 +65,7 @@
   on:mousedown={mousedownHandler}
   on:touchstart={touchstartHandler}
   bind:this={inputElement}
+  contenteditable={editing ? 'true' : 'false'}
 />
 
 <!-- CSS --------------------------------------------------------------->
