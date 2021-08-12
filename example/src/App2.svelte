@@ -9,7 +9,7 @@
 <!-- ------------------------------------- -->
 
 <h3>Touch 2B</h3>
-<p>Version with two input elements. Hoping to just show one of them at the same time.</p>
+<p>Version with two input elements, one for dragging, one for editing. Hoping to show just one of them at the same time.</p>
 
 <hr>
 

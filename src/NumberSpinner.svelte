@@ -18,6 +18,7 @@
   }
   function mousedownHandler(ev) {
     dragging = true;
+    console.log(editElement);
   }
 
   function touchendHandler(ev) {
@@ -41,10 +42,9 @@
 
 <!-- DOM --------------------------------------------------------------->
 
-<svelte:window 
-on:mouseup|stopPropagation={mouseupHandler}
-on:touchend|stopPropagation={touchendHandler}
-
+<svelte:window
+  on:mouseup|stopPropagation={dragging ? mouseupHandler : ""}
+  on:touchend|stopPropagation={dragging ? touchendHandler : ""}
 />
 
 <input
