@@ -8,7 +8,7 @@
 
 <!-- ------------------------------------- -->
 
-<h3>Touch 1</h3>
+<h3>Touch 2</h3>
 <p>When pressing "Focus" input gets focussed and keyboard should come up. "Blur" removes the keyboard.</p>
 
 <hr>
