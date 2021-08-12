@@ -21,9 +21,7 @@
 
 <!-- DOM --------------------------------------------------------------->
 
-<button on:click={focusHandler}>Focus</button>
-<button on:click={blurHandler}>Blur</button>
-<input type="text" bind:this={inputElement} bind:value />
+<input type="text" bind:this={inputElement} bind:value contenteditable={false}/>
 
 <!-- CSS --------------------------------------------------------------->
 <style>
