@@ -7,12 +7,45 @@
   // export let max = Number.MAX_VALUE;
   // export let step = 1;
 
+  let dragging = false;
   let editing = false;
   let inputElement;
 
+  // just for initialisation
   $: if (inputElement) {
-    inputElement.readOnly = !editing;
+    inputElement.readOnly = true;
     inputElement.style.userSelect = "none";
+  }
+
+  function mousedownHandler(ev) {
+    dragging = true;
+    console.log(dragging);
+  }
+  function touchstartHandler(ev) {
+    dragging = true;
+    console.log(dragging);
+  }
+
+  function mouseupHandler(ev) {
+    dragging = false;
+
+   // inputElement.blur();
+    inputElement.readOnly = false;
+    inputElement.style.userSelect = "";
+    inputElement.contentEditable = true;
+   // inputElement.focus();
+
+    console.log(inputElement);
+  }
+  function touchendHandler(ev) {
+    dragging = false;
+
+    inputElement.blur();
+    inputElement.readOnly = false;
+    inputElement.style.userSelect = "";
+    inputElement.focus();
+
+    console.log(dragging);
   }
 
   function focusHandler(ev) {
@@ -27,7 +60,18 @@
 
 <!-- DOM --------------------------------------------------------------->
 
-<input type="text" bind:this={inputElement} bind:value contenteditable={false} />
+<svelte:window
+  on:mouseup={dragging ? mouseupHandler : ""}
+  on:touchend={dragging ? touchendHandler : ""}
+/>
+
+<input
+  type="text"
+  bind:value
+  on:mousedown={mousedownHandler}
+  on:touchstart={touchstartHandler}
+  bind:this={inputElement}
+/>
 
 <!-- CSS --------------------------------------------------------------->
 <style>
