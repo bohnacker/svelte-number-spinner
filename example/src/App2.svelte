@@ -25,6 +25,7 @@
 
 <hr>
 
+<input type="text" value="Some other normal input field" />
 
 <div class="console">
   {#each logs as log, i}

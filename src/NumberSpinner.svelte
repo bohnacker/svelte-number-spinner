@@ -18,13 +18,15 @@
   }
   function mousedownHandler(ev) {
     dragging = true;
+    // dragElement.focus();
   }
 
-  function dblclickHandler(ev) {
+  async function dblclickHandler(ev) {
     editing = true;
+    await tick();
     editElement.focus();
     // Don't know, if it's better to select everything by default or not.
-    editElement.select(0, 30);
+    //editElement.select(0, 30);
   }
 
   function touchendHandler(ev) {
@@ -38,6 +40,7 @@
   //   console.log(inputElement);
   //   inputElement.focus();
   // }
+
   async function editBlurHandler(ev) {
     editing = false;
 
@@ -49,7 +52,7 @@
       }
     }, 0);
 
-    // This doesn't work, but would be more elegant svelte-like:
+    // This doesn't work (maybe document.activeElement is updated even later), but would be more elegant svelte-like:
     // await tick();
     // console.log(document.activeElement);
     // if (document.activeElement === document.body) {
@@ -75,6 +78,7 @@
   bind:this={dragElement}
   bind:value
   readonly={true}
+  tabindex="0"
 />
 <input
   class="edit"
@@ -88,8 +92,9 @@
 <!-- CSS --------------------------------------------------------------->
 <style>
   input {
-    display: inline-block;
+    /* display: none; */
     width: 120px;
+    display: inline-block;
     opacity: 0.3;
   }
   input.drag {
@@ -97,6 +102,7 @@
   }
 
   .active {
+    /* display: inline-block; */
     opacity: 1;
   }
   .drag {
