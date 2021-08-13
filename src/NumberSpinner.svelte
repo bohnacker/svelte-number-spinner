@@ -36,10 +36,13 @@
     dragging = false;
   }
 
-  // function focusHandler(ev) {
-  //   console.log(inputElement);
-  //   inputElement.focus();
-  // }
+  function dragFocusHandler(ev) {
+    // focussed = true;
+  }
+  function dragBlurHandler(ev) {
+    // console.log(inputElement);
+    // inputElement.focus();
+  }
 
   async function editBlurHandler(ev) {
     editing = false;
@@ -73,6 +76,8 @@
   on:mousedown|stopPropagation={mousedownHandler}
   on:touchstart|stopPropagation={touchstartHandler}
   on:dblclick|stopPropagation={dblclickHandler}
+  on:focus={dragFocusHandler}
+  on:blur={dragBlurHandler}
   class="drag"
   class:active={!editing}
   bind:this={dragElement}
@@ -94,6 +99,10 @@
   input {
     display: none;
     width: 120px;
+  }
+
+  input:focus {
+    border: 1px solid red;
   }
 
   .drag {
