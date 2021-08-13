@@ -18,7 +18,13 @@
   }
   function mousedownHandler(ev) {
     dragging = true;
-    console.log(editElement);
+  }
+
+  function dblclickHandler(ev) {
+    editing = true;
+    editElement.focus();
+    // Don't know, if it's better to select everything by default or not.
+    editElement.select(0, 30);
   }
 
   function touchendHandler(ev) {
@@ -26,20 +32,18 @@
   }
   function mouseupHandler(ev) {
     dragging = false;
-    editing = true;
-    editElement.focus();
-    // Don't know, if it's better to select everything by default or not.
-    editElement.select(0, 30);
   }
 
   // function focusHandler(ev) {
   //   console.log(inputElement);
   //   inputElement.focus();
   // }
-  // function blurHandler(ev) {
-  //   console.log(inputElement);
-  //   inputElement.blur();
-  // }
+  function editBlurHandler(ev) {
+    editing = false;
+    console.log(document.activeElement);
+
+    //inputElement.blur();
+  }
 </script>
 
 <!-- DOM --------------------------------------------------------------->
@@ -53,13 +57,14 @@
   type="text"
   on:mousedown|stopPropagation={mousedownHandler}
   on:touchstart|stopPropagation={touchstartHandler}
+  on:dblclick|stopPropagation={dblclickHandler}
   class="drag"
   class:active={!editing}
   bind:this={dragElement}
   bind:value
   readonly={true}
 />
-<input class="edit" class:active={editing} type="text" bind:this={editElement} bind:value />
+<input class="edit" on:blur={editBlurHandler} class:active={editing} type="text" bind:this={editElement} bind:value />
 
 <!-- CSS --------------------------------------------------------------->
 <style>
@@ -74,5 +79,11 @@
 
   .active {
     opacity: 1;
+  }
+  .drag {
+    color:royalblue;
+  }
+  .edit {
+    color:crimson;
   }
 </style>
