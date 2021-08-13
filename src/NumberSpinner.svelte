@@ -28,6 +28,8 @@
     dragging = false;
     editing = true;
     editElement.focus();
+    // Don't know, if it's better to select everything by default or not.
+    editElement.select(0, 30);
   }
 
   // function focusHandler(ev) {

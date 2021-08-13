@@ -9,7 +9,7 @@
 <!-- ------------------------------------- -->
 
 <h3>Touch 2B</h3>
-<p>Version with two input elements, one for dragging, one for editing. Hoping to show just one of them at the same time.</p>
+<p>Version with two input elements, one for dragging, one for editing. Clicking on the first should give focus to the second and the keyboard should come up.</p>
 
 <hr>
 
