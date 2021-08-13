@@ -99,10 +99,14 @@
   input {
     display: none;
     width: 120px;
+    box-sizing: border-box;
+    padding: 5px;
   }
 
   input:focus {
-    border: 1px solid red;
+    border: 2px solid dodgerblue;
+    padding: 4px;
+    outline: none; /* removes the standard focus border */
   }
 
   .drag {
