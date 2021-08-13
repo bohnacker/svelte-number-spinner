@@ -26,7 +26,7 @@
     await tick();
     editElement.focus();
     // Don't know, if it's better to select everything by default or not.
-    //editElement.select(0, 30);
+    // editElement.setSelectionRange(0, 30);
   }
 
   function touchendHandler(ev) {
@@ -62,13 +62,22 @@
     //   dragElement.focus();
     // }
   }
+
+  function startEditing() {
+
+  }
+
+  function stopEditing() {
+    
+  }
+
 </script>
 
 <!-- DOM --------------------------------------------------------------->
 
 <svelte:window
-  on:mouseup|stopPropagation={dragging ? mouseupHandler : ""}
-  on:touchend|stopPropagation={dragging ? touchendHandler : ""}
+  on:mouseup|stopPropagation={dragging ? mouseupHandler : editBlurHandler}
+  on:touchend|stopPropagation={dragging ? touchendHandler : editBlurHandler}
 />
 
 <input
