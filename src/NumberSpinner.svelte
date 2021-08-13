@@ -7,10 +7,13 @@
   // export let max = Number.MAX_VALUE;
   // export let step = 1;
 
+  let isTouchDevice = false;
+
   let dragging = false;
   let editing = false;
-  let isTouchDevice = false;
   let dragElement, editElement;
+  let dragFocussed = false;
+  let editFocussed = false;
 
   function touchstartHandler(ev) {
     isTouchDevice = true;
@@ -18,7 +21,7 @@
   }
   function mousedownHandler(ev) {
     dragging = true;
-    // dragElement.focus();
+    dragElement.focus();
   }
 
   async function dblclickHandler(ev) {
@@ -26,6 +29,7 @@
     await tick();
     editElement.focus();
     // Don't know, if it's better to select everything by default or not.
+    editElement.select();
     // editElement.setSelectionRange(0, 30);
   }
 
@@ -37,20 +41,27 @@
   }
 
   function dragFocusHandler(ev) {
-    // focussed = true;
+    dragFocussed = true;
   }
   function dragBlurHandler(ev) {
-    // console.log(inputElement);
-    // inputElement.focus();
+    dragFocussed = false;
+  }
+  function editFocusHandler(ev) {
+    editFocussed = true;
   }
 
   async function editBlurHandler(ev) {
+    //console.log(ev);
+    editFocussed = false;
     editing = false;
 
     // bring focus back to the drag element if the body was clicked
     setTimeout(() => {
       console.log(document.activeElement);
-      if (document.activeElement === document.body) {
+      dispatch('consoleLog', ev.type);
+      dispatch('consoleLog', document.activeElement);
+
+      if (document.activeElement === document.body || document.activeElement === editElement) {
         dragElement.focus();
       }
     }, 0);
@@ -89,6 +100,7 @@
   on:blur={dragBlurHandler}
   class="drag"
   class:active={!editing}
+  class:focus={dragFocussed}
   bind:this={dragElement}
   bind:value
   readonly={true}
@@ -96,8 +108,10 @@
 />
 <input
   class="edit"
+  on:focus={editFocusHandler}
   on:blur={editBlurHandler}
   class:active={editing}
+  class:focus={editFocussed}
   type="text"
   bind:this={editElement}
   bind:value
@@ -112,7 +126,7 @@
     padding: 5px;
   }
 
-  input:focus {
+  .focus {
     border: 2px solid dodgerblue;
     padding: 4px;
     outline: none; /* removes the standard focus border */
