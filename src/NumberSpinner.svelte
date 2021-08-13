@@ -92,23 +92,19 @@
 <!-- CSS --------------------------------------------------------------->
 <style>
   input {
-    /* display: none; */
+    display: none;
     width: 120px;
-    display: inline-block;
-    opacity: 0.3;
-  }
-  input.drag {
-    user-select: none;
   }
 
-  .active {
-    /* display: inline-block; */
-    opacity: 1;
-  }
   .drag {
+    user-select: none;
     color: royalblue;
   }
   .edit {
     color: crimson;
+  }
+
+  .active {
+    display: inline-block;
   }
 </style>

@@ -8,7 +8,7 @@
 
 <!-- ------------------------------------- -->
 
-<h3>Touch 2B1</h3>
+<h3>Touch 2B2</h3>
 <p>Version with two input elements, one for dragging, one for editing (different colors just to see quickly which one is displayed). Double click on the first should give focus to the second and the keyboard should come up. When loosing focus on the second, editing should be ended.</p>
 
 <hr>
