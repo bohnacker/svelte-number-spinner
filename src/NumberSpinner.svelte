@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, tick } from "svelte";
   const dispatch = createEventDispatcher();
 
   export let value = 0;
@@ -38,11 +38,23 @@
   //   console.log(inputElement);
   //   inputElement.focus();
   // }
-  function editBlurHandler(ev) {
+  async function editBlurHandler(ev) {
     editing = false;
-    console.log(document.activeElement);
 
-    //inputElement.blur();
+    // bring focus back to the drag element if the body was clicked
+    setTimeout(() => {
+      console.log(document.activeElement);
+      if (document.activeElement === document.body) {
+        dragElement.focus();
+      }
+    }, 0);
+
+    // This doesn't work, but would be more elegant svelte-like:
+    // await tick();
+    // console.log(document.activeElement);
+    // if (document.activeElement === document.body) {
+    //   dragElement.focus();
+    // }
   }
 </script>
 
@@ -64,7 +76,14 @@
   bind:value
   readonly={true}
 />
-<input class="edit" on:blur={editBlurHandler} class:active={editing} type="text" bind:this={editElement} bind:value />
+<input
+  class="edit"
+  on:blur={editBlurHandler}
+  class:active={editing}
+  type="text"
+  bind:this={editElement}
+  bind:value
+/>
 
 <!-- CSS --------------------------------------------------------------->
 <style>
@@ -81,9 +100,9 @@
     opacity: 1;
   }
   .drag {
-    color:royalblue;
+    color: royalblue;
   }
   .edit {
-    color:crimson;
+    color: crimson;
   }
 </style>
