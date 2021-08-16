@@ -280,7 +280,11 @@
   on:dblclick|stopPropagation={dblclickHandler}
   on:focus={dragFocusHandler}
   on:blur={dragBlurHandler}
-  class="drag"
+  class={$$props.class}
+  class:drag={true}
+  class:default={!$$props.class ? true : false}
+  class:fast={stepFactor > 1 ? "fast" : ""}
+  class:slow={stepFactor < 1 ? "slow" : ""}
   class:active={!editing}
   class:focus={dragFocussed}
   bind:this={dragElement}
@@ -290,11 +294,13 @@
   tabindex="0"
 />
 <input
-  class="edit"
   on:mouseup|stopPropagation={(ev) => {}}
   on:touchend|stopPropagation={(ev) => {}}
   on:focus={editFocusHandler}
   on:blur={editBlurHandler}
+  class={$$props.class}
+  class:edit={true}
+  class:default={!$$props.class ? true : false}
   class:active={editing}
   class:focus={editFocussed}
   type="text"
@@ -304,26 +310,53 @@
 
 <!-- CSS --------------------------------------------------------------->
 <style>
-  input {
+  .default {
     display: none;
-    width: 120px;
     box-sizing: border-box;
-    padding: 5px;
+    font-variant-numeric: tabular-nums;
+    background-color: white;
+    color: black;
+    width: 4em;
+    height: 1.6em;
+    margin: 0px;
+    padding: 0.25em;
+    border: 0.075em solid #0004;
+    border-radius: 0.15em;
     text-align: right;
+    vertical-align: baseline;
   }
 
-  .focus {
-    border: 2px solid dodgerblue;
-    padding: 4px;
+  .default:focus {
+    border: 0.075em solid #06f;
     outline: none; /* removes the standard focus border */
   }
 
-  .drag {
+  .default.fast {
+    border-top-width: 0.15em;
+    padding-top: 0.175em;
+  }
+
+  .default.slow {
+    border-bottom-width: 0.15em;
+    padding-bottom: 0.175em;
+  }
+
+  .default.dragging {
+    border-color: #06f;
+  }
+
+  .default.editing {
+    border: 0.15em solid #06f;
+    padding: 0.175em;
+    cursor: default;
+  }
+
+  .default.drag {
     user-select: none;
     color: royalblue;
     cursor: ew-resize;
   }
-  .edit {
+  .default.edit {
     color: crimson;
     cursor: default;
   }
