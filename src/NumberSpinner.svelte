@@ -84,9 +84,9 @@
   }
 
   function dblclickHandler(ev) {
-    dispatch("consoleLog", ev.type);
+    // dispatch("consoleLog", ev.type);
 
-    startEditing();
+    // startEditing();
   }
 
   function touchendHandler(ev) {
@@ -98,6 +98,10 @@
     dispatch("consoleLog", ev.type);
 
     dragging = false;
+
+    if (hasMoved < 2) {
+      startEditing();
+    }
   }
 
   function dragFocusHandler(ev) {
