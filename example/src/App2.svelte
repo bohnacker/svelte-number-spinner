@@ -7,9 +7,9 @@
 
 <!-- ------------------------------------- -->
 
-<h3>Touch 2B3</h3>
+<h3>Touch 2B4</h3>
 <p>
-  Bring in some of the dragging behaviour. Hoping that nothing breaks.
+  Adding keyboard support.
 </p>
 
 <hr />

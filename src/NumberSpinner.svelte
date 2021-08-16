@@ -29,20 +29,22 @@
   let dragging = false;
   let hasMoved, clickX, clickY;
   let stepFactor = 1;
-  
+  let altPressed = false;
+  let shiftPressed = false;
+
   let editing = false;
-  
+
   // update all values (preciseValue, visibleValue)
   updateValues(value);
 
   function touchstartHandler(ev) {
-    dispatch('consoleLog', ev.type);
+    dispatch("consoleLog", ev.type);
 
     isTouchDevice = true;
     dragstartHandler(ev);
   }
   function dragstartHandler(ev) {
-    dispatch('consoleLog', ev.type);
+    dispatch("consoleLog", ev.type);
 
     dragging = true;
     dragElement.focus();
@@ -81,9 +83,112 @@
     hasMoved++;
   }
 
-  async function dblclickHandler(ev) {
-    dispatch('consoleLog', ev.type);
+  function dblclickHandler(ev) {
+    dispatch("consoleLog", ev.type);
 
+    startEditing();
+  }
+
+  function touchendHandler(ev) {
+    dispatch("consoleLog", ev.type);
+
+    mouseupHandler(ev);
+  }
+  function mouseupHandler(ev) {
+    dispatch("consoleLog", ev.type);
+
+    dragging = false;
+  }
+
+  function dragFocusHandler(ev) {
+    dispatch("consoleLog", ev.type);
+
+    dragFocussed = true;
+  }
+  function dragBlurHandler(ev) {
+    dispatch("consoleLog", ev.type);
+
+    dragFocussed = false;
+  }
+  function editFocusHandler(ev) {
+    dispatch("consoleLog", ev.type);
+
+    editFocussed = true;
+  }
+  async function editBlurHandler(ev) {
+    dispatch("consoleLog", ev.type);
+
+    stopEditing();
+  }
+
+  function keydownHandler(e) {
+    // console.log(e);
+    if (e.key == "Shift") {
+      shiftPressed = true;
+    }
+    if (e.key == "Alt") {
+      altPressed = true;
+    }
+  }
+
+  function keyupHandler(e) {
+    // console.log(e)
+    if (e.key == "Shift") {
+      shiftPressed = false;
+    }
+
+    if (e.key == "Alt") {
+      altPressed = false;
+    }
+
+    if (dragFocussed) {
+      if (!editing) {
+        // increment should at least be step
+        let increment = Math.max(step, step * Math.round(10 * speed));
+
+        if (e.key == "ArrowUp" || e.key == "ArrowRight") {
+          addToValue(increment);
+        }
+        if (e.key == "ArrowDown" || e.key == "ArrowLeft") {
+          addToValue(-increment);
+        }
+      }
+
+      if (e.key == "Enter") {
+        if (!editing) {
+          startEditing();
+        } else {
+          stopEditing();
+        }
+      }
+      if (e.key == "Escape") {
+        if (editing) {
+          stopEditing();
+        }
+      }
+    }
+  }
+
+  // updaters --------------------------------
+
+  $: {
+    if (!editing && !dragging) {
+      updateValues(value);
+    }
+  }
+
+  $: {
+    stepFactor = 1;
+    if (dragFocussed && !editing) {
+      if (altPressed && shiftPressed) {
+        stepFactor = 10;
+      } else if (altPressed) {
+        stepFactor = 0.1;
+      }
+    }
+  }
+
+  async function startEditing() {
     editing = true;
     await tick();
     editElement.focus();
@@ -92,35 +197,7 @@
     // editElement.setSelectionRange(0, 30);
   }
 
-  function touchendHandler(ev) {
-    dispatch('consoleLog', ev.type);
-
-    mouseupHandler(ev);
-  }
-  function mouseupHandler(ev) {
-    dispatch('consoleLog', ev.type);
-
-    dragging = false;
-  }
-
-  function dragFocusHandler(ev) {
-    dispatch('consoleLog', ev.type);
-
-    dragFocussed = true;
-  }
-  function dragBlurHandler(ev) {
-    dispatch('consoleLog', ev.type);
-
-    dragFocussed = false;
-  }
-  function editFocusHandler(ev) {
-    dispatch('consoleLog', ev.type);
-
-    editFocussed = true;
-  }
-  async function editBlurHandler(ev) {
-    dispatch('consoleLog', ev.type);
-
+  function stopEditing() {
     editFocussed = false;
     editing = false;
 
@@ -138,10 +215,6 @@
     //   dragElement.focus();
     // }
   }
-
-  function startEditing() {}
-
-  function stopEditing() {}
 
   function stepValue(numSteps) {
     preciseValue = preciseValue ?? parseFloat(visibleValue);
@@ -161,13 +234,13 @@
 
     visibleValue = Math.round(preciseValue / step) * step;
     visibleValue = visibleValue.toFixed(decimals);
-    
+
     value = roundToPrecision(preciseValue);
 
-    dispatch('input', parseFloat(value));
-    dispatch('change', parseFloat(value));
+    dispatch("input", parseFloat(value));
+    dispatch("change", parseFloat(value));
   }
-  
+
   function keepInRange(val) {
     min = parseFloat(min);
     max = parseFloat(max);
@@ -187,7 +260,6 @@
     let dec = precision < 1 ? Math.ceil(-Math.log10(precision)) : 0;
     return parseFloat(val.toFixed(dec));
   }
-
 </script>
 
 <!-- DOM --------------------------------------------------------------->
@@ -197,6 +269,8 @@
   on:touchmove={dragging ? touchmoveHandler : ""}
   on:mouseup|stopPropagation={dragging ? mouseupHandler : editBlurHandler}
   on:touchend|stopPropagation={dragging ? touchendHandler : editBlurHandler}
+  on:keydown={keydownHandler}
+  on:keyup={keyupHandler}
 />
 
 <input
@@ -217,12 +291,8 @@
 />
 <input
   class="edit"
-  on:mouseup|stopPropagation={(ev) => {
-    console.log(ev);
-  }}
-  on:touchend|stopPropagation={(ev) => {
-    console.log(ev);
-  }}
+  on:mouseup|stopPropagation={(ev) => {}}
+  on:touchend|stopPropagation={(ev) => {}}
   on:focus={editFocusHandler}
   on:blur={editBlurHandler}
   class:active={editing}
