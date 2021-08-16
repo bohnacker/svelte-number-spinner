@@ -29,20 +29,20 @@
   let dragging = false;
   let hasMoved, clickX, clickY;
   let stepFactor = 1;
-  
+
   let editing = false;
-  
+
   // update all values (preciseValue, visibleValue)
   updateValues(value);
 
   function touchstartHandler(ev) {
-    dispatch('consoleLog', ev.type);
+    dispatch("consoleLog", ev.type);
 
     isTouchDevice = true;
     dragstartHandler(ev);
   }
   function dragstartHandler(ev) {
-    dispatch('consoleLog', ev.type);
+    dispatch("consoleLog", ev.type);
 
     dragging = true;
     dragElement.focus();
@@ -82,44 +82,52 @@
   }
 
   async function dblclickHandler(ev) {
-    dispatch('consoleLog', ev.type);
-
-    editing = true;
-    await tick();
-    editElement.focus();
-    // Don't know, if it's better to select everything by default or not.
-    editElement.select();
-    // editElement.setSelectionRange(0, 30);
+    // dispatch('consoleLog', ev.type);
+    // editing = true;
+    // await tick();
+    // editElement.focus();
+    // // Don't know, if it's better to select everything by default or not.
+    // editElement.select();
+    // // editElement.setSelectionRange(0, 30);
   }
 
   function touchendHandler(ev) {
-    dispatch('consoleLog', ev.type);
+    dispatch("consoleLog", ev.type);
 
     mouseupHandler(ev);
   }
-  function mouseupHandler(ev) {
-    dispatch('consoleLog', ev.type);
+  async function mouseupHandler(ev) {
+    dispatch("consoleLog", ev.type);
 
     dragging = false;
+
+    if (hasMoved < 2) {
+      editing = true;
+      await tick();
+      editElement.focus();
+      // Don't know, if it's better to select everything by default or not.
+      editElement.select();
+      // editElement.setSelectionRange(0, 30);
+    }
   }
 
   function dragFocusHandler(ev) {
-    dispatch('consoleLog', ev.type);
+    dispatch("consoleLog", ev.type);
 
     dragFocussed = true;
   }
   function dragBlurHandler(ev) {
-    dispatch('consoleLog', ev.type);
+    dispatch("consoleLog", ev.type);
 
     dragFocussed = false;
   }
   function editFocusHandler(ev) {
-    dispatch('consoleLog', ev.type);
+    dispatch("consoleLog", ev.type);
 
     editFocussed = true;
   }
   async function editBlurHandler(ev) {
-    dispatch('consoleLog', ev.type);
+    dispatch("consoleLog", ev.type);
 
     editFocussed = false;
     editing = false;
@@ -161,13 +169,13 @@
 
     visibleValue = Math.round(preciseValue / step) * step;
     visibleValue = visibleValue.toFixed(decimals);
-    
+
     value = roundToPrecision(preciseValue);
 
-    dispatch('input', parseFloat(value));
-    dispatch('change', parseFloat(value));
+    dispatch("input", parseFloat(value));
+    dispatch("change", parseFloat(value));
   }
-  
+
   function keepInRange(val) {
     min = parseFloat(min);
     max = parseFloat(max);
@@ -187,7 +195,6 @@
     let dec = precision < 1 ? Math.ceil(-Math.log10(precision)) : 0;
     return parseFloat(val.toFixed(dec));
   }
-
 </script>
 
 <!-- DOM --------------------------------------------------------------->
