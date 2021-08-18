@@ -254,8 +254,12 @@
   function stopEditing() {
     editFocussed = false;
     editing = false;
-    preciseValue = parseFloat(visibleValue);
-    updateValues(preciseValue);
+
+    let checkValue = parseFloat(editElement.value);
+    if (!isNaN(checkValue)) {
+      preciseValue = parseFloat(visibleValue);
+      updateValues(preciseValue);
+    }
 
     // bring focus back to the drag element if the body was clicked
     setTimeout(() => {
@@ -364,6 +368,7 @@
   type="text"
   bind:this={editElement}
   bind:value={visibleValue}
+  inputmode={step == Math.round(step) ? "numeric" : "text"}
 />
 
 <!-- CSS --------------------------------------------------------------->
