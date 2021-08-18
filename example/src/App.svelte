@@ -18,7 +18,7 @@
 <h2>Svelte Number Spinner Example</h2>
 
 <p>
-  Change the values of the number spinners through mousedrag and arrow keys. Press <i>Alt</i> for smaller steps, <i>Alt+Shift</i> for larger steps. Double click to edit.
+  Change the values of the number spinners through mousedrag and arrow keys. Press <i>Alt</i> for smaller steps, <i>Alt+Shift</i> for larger steps. Click without dragging to edit.
 </p>
 
 <hr>
@@ -42,7 +42,7 @@
 <hr>
 
 <div class="row">
-  <div class="explanation">step = 0.01, decimals = 2, precision = 0.001, editOnClick = true<br>Current value is {value3}</div> 
+  <div class="explanation">step = 0.01, decimals = 2, precision = 0.001<br>Current value is {value3}</div> 
   <div class="right">
     <NumberSpinner bind:value={value3} min=-5 max=5 step=0.01 decimals=2 precision=0.001 editOnClick={true}/>
   </div> 
@@ -171,15 +171,15 @@
     outline:none;
   }
 
-  :global(.number-spinner-custom).fast {
+  :global(.number-spinner-custom.fast) {
     background-color: #0ccb;
   }
 
-  :global(.number-spinner-custom).slow {
+  :global(.number-spinner-custom.slow) {
     background-color: #66fb;
   }
 
-  :global(.number-spinner-custom).editing {
+  :global(.number-spinner-custom.editing) {
     background-color: #f00;
     cursor: default;
   }

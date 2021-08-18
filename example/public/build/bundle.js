@@ -423,6 +423,12 @@ var app = (function () {
         function element(name) {
             return document.createElement(name);
         }
+        function text(data) {
+            return document.createTextNode(data);
+        }
+        function space() {
+            return text(' ');
+        }
         function listen(node, event, handler, options) {
             node.addEventListener(event, handler, options);
             return () => node.removeEventListener(event, handler, options);
@@ -497,6 +503,10 @@ var app = (function () {
                 update_scheduled = true;
                 resolved_promise.then(flush);
             }
+        }
+        function tick() {
+            schedule_update();
+            return resolved_promise;
         }
         function add_render_callback(fn) {
             render_callbacks.push(fn);
@@ -692,68 +702,98 @@ var app = (function () {
 
         function add_css() {
         	var style = element("style");
-        	style.id = "svelte-1dc5u64-style";
-        	style.textContent = ".default.svelte-1dc5u64{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:4em;height:1.6em;margin:0px;padding:0.25em;border:0.075em solid #0004;border-radius:0.15em;text-align:right;vertical-align:baseline;cursor:initial}.default.svelte-1dc5u64:focus{border:0.075em solid #06f;outline:none}.default.fast.svelte-1dc5u64{border-top-width:0.15em;padding-top:0.175em}.default.slow.svelte-1dc5u64{border-bottom-width:0.15em;padding-bottom:0.175em}.default.dragging.svelte-1dc5u64{border-color:#06f}.default.editing.svelte-1dc5u64{border:0.15em solid #06f;padding:0.175em;cursor:default}input.svelte-1dc5u64{user-select:none}input.svelte-1dc5u64:not(.editing)::selection{background:#0000}input.editing.svelte-1dc5u64{user-select:text}";
+        	style.id = "svelte-14p4d2s-style";
+        	style.textContent = ".default.svelte-14p4d2s{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:4em;height:1.6em;margin:0px;padding:0.25em;border:0.075em solid #0004;border-radius:0.15em;text-align:right;vertical-align:baseline;cursor:ew-resize}.default.svelte-14p4d2s:focus{border:0.075em solid #06f;outline:none}.default.fast.svelte-14p4d2s{border-top-width:0.15em;padding-top:0.175em}.default.slow.svelte-14p4d2s{border-bottom-width:0.15em;padding-bottom:0.175em}.default.dragging.svelte-14p4d2s{border-color:#04c}.default.editing.svelte-14p4d2s{cursor:initial}.drag.svelte-14p4d2s{user-select:none}.drag.svelte-14p4d2s::selection{background:#0000}.inactive.svelte-14p4d2s{display:none !important}";
         	append(document_1.head, style);
         }
 
         function create_fragment(ctx) {
-        	let input;
-        	let input_class_value;
-        	let input_contenteditable_value;
+        	let input0;
+        	let input0_class_value;
+        	let t;
+        	let input1;
+        	let input1_class_value;
+        	let input1_inputmode_value;
         	let mounted;
         	let dispose;
 
         	return {
         		c() {
-        			input = element("input");
-        			attr(input, "type", "text");
-        			attr(input, "style", /*style*/ ctx[5]);
-        			attr(input, "class", input_class_value = "" + (null_to_empty(/*$$props*/ ctx[17].class) + " svelte-1dc5u64"));
-        			attr(input, "contenteditable", input_contenteditable_value = /*editing*/ ctx[3] ? "true" : "false");
-        			attr(input, "tabindex", "0");
-        			toggle_class(input, "default", !/*$$props*/ ctx[17].class ? true : false);
-        			toggle_class(input, "fast", /*stepFactor*/ ctx[1] > 1 ? "fast" : "");
-        			toggle_class(input, "slow", /*stepFactor*/ ctx[1] < 1 ? "slow" : "");
-        			toggle_class(input, "dragging", /*dragging*/ ctx[2]);
-        			toggle_class(input, "editing", /*editing*/ ctx[3]);
+        			input0 = element("input");
+        			t = space();
+        			input1 = element("input");
+        			attr(input0, "type", "text");
+        			attr(input0, "style", /*style*/ ctx[9]);
+        			attr(input0, "class", input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[23].class) + " svelte-14p4d2s"));
+        			input0.readOnly = true;
+        			attr(input0, "contenteditable", false);
+        			attr(input0, "tabindex", "0");
+        			toggle_class(input0, "default", !/*$$props*/ ctx[23].class ? true : false);
+        			toggle_class(input0, "drag", true);
+        			toggle_class(input0, "dragging", /*dragging*/ ctx[3]);
+        			toggle_class(input0, "fast", /*stepFactor*/ ctx[4] > 1 ? "fast" : "");
+        			toggle_class(input0, "slow", /*stepFactor*/ ctx[4] < 1 ? "slow" : "");
+        			toggle_class(input0, "focus", /*dragFocussed*/ ctx[1]);
+        			toggle_class(input0, "inactive", /*editing*/ ctx[5]);
+        			attr(input1, "style", /*style*/ ctx[9]);
+        			attr(input1, "class", input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[23].class) + " svelte-14p4d2s"));
+        			attr(input1, "type", "text");
+
+        			attr(input1, "inputmode", input1_inputmode_value = /*step*/ ctx[0] == Math.round(/*step*/ ctx[0])
+        			? "numeric"
+        			: "text");
+
+        			toggle_class(input1, "default", !/*$$props*/ ctx[23].class ? true : false);
+        			toggle_class(input1, "edit", true);
+        			toggle_class(input1, "editing", /*editing*/ ctx[5]);
+        			toggle_class(input1, "focus", /*editFocussed*/ ctx[2]);
+        			toggle_class(input1, "inactive", !/*editing*/ ctx[5]);
         		},
         		m(target, anchor) {
-        			insert(target, input, anchor);
-        			/*input_binding*/ ctx[41](input);
-        			set_input_value(input, /*visibleValue*/ ctx[4]);
+        			insert(target, input0, anchor);
+        			/*input0_binding*/ ctx[44](input0);
+        			set_input_value(input0, /*visibleValue*/ ctx[6]);
+        			insert(target, t, anchor);
+        			insert(target, input1, anchor);
+        			/*input1_binding*/ ctx[46](input1);
+        			set_input_value(input1, /*visibleValue*/ ctx[6]);
 
         			if (!mounted) {
         				dispose = [
         					listen(window, "mousemove", function () {
-        						if (is_function(/*dragging*/ ctx[2] ? /*mousemoveHandler*/ ctx[8] : "")) (/*dragging*/ ctx[2] ? /*mousemoveHandler*/ ctx[8] : "").apply(this, arguments);
-        					}),
-        					listen(window, "mouseup", function () {
-        						if (is_function(/*dragging*/ ctx[2] ? /*mouseupHandler*/ ctx[9] : "")) (/*dragging*/ ctx[2] ? /*mouseupHandler*/ ctx[9] : "").apply(this, arguments);
+        						if (is_function(/*dragging*/ ctx[3] ? /*dragmoveHandler*/ ctx[13] : "")) (/*dragging*/ ctx[3] ? /*dragmoveHandler*/ ctx[13] : "").apply(this, arguments);
         					}),
         					listen(window, "touchmove", function () {
-        						if (is_function(/*dragging*/ ctx[2] ? /*mousemoveHandler*/ ctx[8] : "")) (/*dragging*/ ctx[2] ? /*mousemoveHandler*/ ctx[8] : "").apply(this, arguments);
+        						if (is_function(/*dragging*/ ctx[3] ? /*touchmoveHandler*/ ctx[12] : "")) (/*dragging*/ ctx[3] ? /*touchmoveHandler*/ ctx[12] : "").apply(this, arguments);
         					}),
-        					listen(window, "touchend", function () {
-        						if (is_function(/*dragging*/ ctx[2] ? /*mouseupHandler*/ ctx[9] : "")) (/*dragging*/ ctx[2] ? /*mouseupHandler*/ ctx[9] : "").apply(this, arguments);
-        					}),
-        					listen(window, "mousedown", function () {
-        						if (is_function(/*editing*/ ctx[3] ? /*windowdownHandler*/ ctx[11] : "")) (/*editing*/ ctx[3] ? /*windowdownHandler*/ ctx[11] : "").apply(this, arguments);
-        					}),
-        					listen(window, "touchstart", function () {
-        						if (is_function(/*editing*/ ctx[3] ? /*windowdownHandler*/ ctx[11] : "")) (/*editing*/ ctx[3] ? /*windowdownHandler*/ ctx[11] : "").apply(this, arguments);
-        					}),
-        					listen(window, "keydown", /*keydownHandler*/ ctx[15]),
-        					listen(window, "keyup", /*keyupHandler*/ ctx[16]),
-        					listen(input, "mouseenter", mouseenterHandler),
-        					listen(input, "mouseleave", mouseleaveHandler),
-        					listen(input, "mousedown", stop_propagation(/*mousedownHandler*/ ctx[7])),
-        					listen(input, "touchstart", stop_propagation(prevent_default(/*touchstartHandler*/ ctx[6]))),
-        					listen(input, "dblclick", stop_propagation(/*dblclickHandler*/ ctx[10])),
-        					listen(input, "focus", /*focusHandler*/ ctx[12]),
-        					listen(input, "blur", /*blurHandler*/ ctx[13]),
-        					listen(input, "input", /*inputHandler*/ ctx[14]),
-        					listen(input, "input", /*input_input_handler*/ ctx[42])
+        					listen(window, "mouseup", stop_propagation(function () {
+        						if (is_function(/*dragging*/ ctx[3]
+        						? /*mouseupHandler*/ ctx[15]
+        						: /*editBlurHandler*/ ctx[19])) (/*dragging*/ ctx[3]
+        						? /*mouseupHandler*/ ctx[15]
+        						: /*editBlurHandler*/ ctx[19]).apply(this, arguments);
+        					})),
+        					listen(window, "touchend", stop_propagation(function () {
+        						if (is_function(/*dragging*/ ctx[3]
+        						? /*touchendHandler*/ ctx[14]
+        						: /*editBlurHandler*/ ctx[19])) (/*dragging*/ ctx[3]
+        						? /*touchendHandler*/ ctx[14]
+        						: /*editBlurHandler*/ ctx[19]).apply(this, arguments);
+        					})),
+        					listen(window, "keydown", /*keydownHandler*/ ctx[20]),
+        					listen(window, "keyup", /*keyupHandler*/ ctx[21]),
+        					listen(input0, "mousedown", stop_propagation(/*dragstartHandler*/ ctx[11])),
+        					listen(input0, "touchstart", stop_propagation(prevent_default(/*touchstartHandler*/ ctx[10]))),
+        					listen(input0, "dblclick", stop_propagation(dblclickHandler)),
+        					listen(input0, "focus", /*dragFocusHandler*/ ctx[16]),
+        					listen(input0, "blur", /*dragBlurHandler*/ ctx[17]),
+        					listen(input0, "input", /*input0_input_handler*/ ctx[45]),
+        					listen(input1, "mouseup", stop_propagation(mouseup_handler)),
+        					listen(input1, "touchend", stop_propagation(touchend_handler)),
+        					listen(input1, "focus", /*editFocusHandler*/ ctx[18]),
+        					listen(input1, "blur", /*editBlurHandler*/ ctx[19]),
+        					listen(input1, "input", /*inputHandler*/ ctx[22]),
+        					listen(input1, "input", /*input1_input_handler*/ ctx[47])
         				];
 
         				mounted = true;
@@ -762,61 +802,110 @@ var app = (function () {
         		p(new_ctx, dirty) {
         			ctx = new_ctx;
 
-        			if (dirty[0] & /*style*/ 32) {
-        				attr(input, "style", /*style*/ ctx[5]);
+        			if (dirty[0] & /*style*/ 512) {
+        				attr(input0, "style", /*style*/ ctx[9]);
         			}
 
-        			if (dirty[0] & /*$$props*/ 131072 && input_class_value !== (input_class_value = "" + (null_to_empty(/*$$props*/ ctx[17].class) + " svelte-1dc5u64"))) {
-        				attr(input, "class", input_class_value);
+        			if (dirty[0] & /*$$props*/ 8388608 && input0_class_value !== (input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[23].class) + " svelte-14p4d2s"))) {
+        				attr(input0, "class", input0_class_value);
         			}
 
-        			if (dirty[0] & /*editing*/ 8 && input_contenteditable_value !== (input_contenteditable_value = /*editing*/ ctx[3] ? "true" : "false")) {
-        				attr(input, "contenteditable", input_contenteditable_value);
+        			if (dirty[0] & /*visibleValue*/ 64 && input0.value !== /*visibleValue*/ ctx[6]) {
+        				set_input_value(input0, /*visibleValue*/ ctx[6]);
         			}
 
-        			if (dirty[0] & /*visibleValue*/ 16 && input.value !== /*visibleValue*/ ctx[4]) {
-        				set_input_value(input, /*visibleValue*/ ctx[4]);
+        			if (dirty[0] & /*$$props, $$props*/ 8388608) {
+        				toggle_class(input0, "default", !/*$$props*/ ctx[23].class ? true : false);
         			}
 
-        			if (dirty[0] & /*$$props, $$props*/ 131072) {
-        				toggle_class(input, "default", !/*$$props*/ ctx[17].class ? true : false);
+        			if (dirty[0] & /*$$props*/ 8388608) {
+        				toggle_class(input0, "drag", true);
         			}
 
-        			if (dirty[0] & /*$$props, stepFactor*/ 131074) {
-        				toggle_class(input, "fast", /*stepFactor*/ ctx[1] > 1 ? "fast" : "");
+        			if (dirty[0] & /*$$props, dragging*/ 8388616) {
+        				toggle_class(input0, "dragging", /*dragging*/ ctx[3]);
         			}
 
-        			if (dirty[0] & /*$$props, stepFactor*/ 131074) {
-        				toggle_class(input, "slow", /*stepFactor*/ ctx[1] < 1 ? "slow" : "");
+        			if (dirty[0] & /*$$props, stepFactor*/ 8388624) {
+        				toggle_class(input0, "fast", /*stepFactor*/ ctx[4] > 1 ? "fast" : "");
         			}
 
-        			if (dirty[0] & /*$$props, dragging*/ 131076) {
-        				toggle_class(input, "dragging", /*dragging*/ ctx[2]);
+        			if (dirty[0] & /*$$props, stepFactor*/ 8388624) {
+        				toggle_class(input0, "slow", /*stepFactor*/ ctx[4] < 1 ? "slow" : "");
         			}
 
-        			if (dirty[0] & /*$$props, editing*/ 131080) {
-        				toggle_class(input, "editing", /*editing*/ ctx[3]);
+        			if (dirty[0] & /*$$props, dragFocussed*/ 8388610) {
+        				toggle_class(input0, "focus", /*dragFocussed*/ ctx[1]);
+        			}
+
+        			if (dirty[0] & /*$$props, editing*/ 8388640) {
+        				toggle_class(input0, "inactive", /*editing*/ ctx[5]);
+        			}
+
+        			if (dirty[0] & /*style*/ 512) {
+        				attr(input1, "style", /*style*/ ctx[9]);
+        			}
+
+        			if (dirty[0] & /*$$props*/ 8388608 && input1_class_value !== (input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[23].class) + " svelte-14p4d2s"))) {
+        				attr(input1, "class", input1_class_value);
+        			}
+
+        			if (dirty[0] & /*step*/ 1 && input1_inputmode_value !== (input1_inputmode_value = /*step*/ ctx[0] == Math.round(/*step*/ ctx[0])
+        			? "numeric"
+        			: "text")) {
+        				attr(input1, "inputmode", input1_inputmode_value);
+        			}
+
+        			if (dirty[0] & /*visibleValue*/ 64 && input1.value !== /*visibleValue*/ ctx[6]) {
+        				set_input_value(input1, /*visibleValue*/ ctx[6]);
+        			}
+
+        			if (dirty[0] & /*$$props, $$props*/ 8388608) {
+        				toggle_class(input1, "default", !/*$$props*/ ctx[23].class ? true : false);
+        			}
+
+        			if (dirty[0] & /*$$props*/ 8388608) {
+        				toggle_class(input1, "edit", true);
+        			}
+
+        			if (dirty[0] & /*$$props, editing*/ 8388640) {
+        				toggle_class(input1, "editing", /*editing*/ ctx[5]);
+        			}
+
+        			if (dirty[0] & /*$$props, editFocussed*/ 8388612) {
+        				toggle_class(input1, "focus", /*editFocussed*/ ctx[2]);
+        			}
+
+        			if (dirty[0] & /*$$props, editing*/ 8388640) {
+        				toggle_class(input1, "inactive", !/*editing*/ ctx[5]);
         			}
         		},
         		i: noop,
         		o: noop,
         		d(detaching) {
-        			if (detaching) detach(input);
-        			/*input_binding*/ ctx[41](null);
+        			if (detaching) detach(input0);
+        			/*input0_binding*/ ctx[44](null);
+        			if (detaching) detach(t);
+        			if (detaching) detach(input1);
+        			/*input1_binding*/ ctx[46](null);
         			mounted = false;
         			run_all(dispose);
         		}
         	};
         }
 
-        function mouseenterHandler(e) {
+        function dblclickHandler(ev) {
         	
-        } // seems not to be very practical to have focus on rollover:
-        // inputElement?.focus();
+        } // dispatch("consoleLog", ev.type);
+        // startEditing();
 
-        function mouseleaveHandler(e) {
+        const mouseup_handler = ev => {
         	
-        }
+        };
+
+        const touchend_handler = ev => {
+        	
+        };
 
         function instance($$self, $$props, $$invalidate) {
         	const dispatch = createEventDispatcher();
@@ -825,14 +914,12 @@ var app = (function () {
         	let { min = options.min ?? -Number.MAX_VALUE } = $$props;
         	let { max = options.max ?? Number.MAX_VALUE } = $$props;
         	let { step = options.step ?? 1 } = $$props;
-        	let { precision = options.precision ?? undefined } = $$props;
-        	precision = precision ?? step;
+        	let { precision = options.precision ?? step } = $$props;
         	let { decimals = options.decimals ?? 0 } = $$props;
         	let { speed = options.speed ?? 1 } = $$props;
         	let { horizontal = options.horizontal ?? true } = $$props;
         	let { vertical = options.vertical ?? false } = $$props;
         	let { circular = options.circular ?? false } = $$props;
-        	let { editOnClick = options.editOnClick ?? false } = $$props;
         	let { mainStyle = options.mainStyle ?? undefined } = $$props;
         	let { fastStyle = options.fastStyle ?? undefined } = $$props;
         	let { slowStyle = options.slowStyle ?? undefined } = $$props;
@@ -840,51 +927,56 @@ var app = (function () {
         	let { draggingStyle = options.draggingStyle ?? undefined } = $$props;
         	let { editingStyle = options.editingStyle ?? undefined } = $$props;
         	let { cursor = options.cursor ?? undefined } = $$props;
-        	let inputElement;
-        	let focussed = false;
-        	let stepFactor = 1;
-        	let dragging = false;
-        	let clickX, clickY;
-        	let hasMoved = 0;
-        	let visibleValue;
         	let preciseValue;
-        	let editing = false;
+        	let visibleValue;
+        	let isTouchDevice = false;
+        	let dragElement, editElement;
+        	let dragFocussed = false;
+        	let editFocussed = false;
+        	let dragging = false;
+        	let hasMoved, clickX, clickY;
+        	let stepFactor = 1;
         	let altPressed = false;
         	let shiftPressed = false;
+        	let editing = false;
         	let style;
-        	let isTouchDevice = false;
-        	visibleValue = setValue(value);
-        	preciseValue = setValue(value);
         	let htmlNode = document.querySelector("html");
         	let htmlNodeOriginalCursor = htmlNode.style.cursor;
         	let defaultCursor;
 
-        	function touchstartHandler(e) {
-        		dispatch("consoleLog", "touchstart");
+        	// update all values (preciseValue, visibleValue)
+        	updateValues(value);
+
+        	function touchstartHandler(ev) {
+        		dispatch("consoleLog", ev.type);
         		isTouchDevice = true;
-        		mousedownHandler(e);
+        		dragstartHandler(ev);
         	}
 
-        	function mousedownHandler(e) {
-        		dispatch("consoleLog", "mousedown");
-
-        		// console.log('down');
-        		if (editing) {
-        			e.stopPropagation();
-        		} else {
-        			hasMoved = 0;
-        			clickX = isTouchDevice ? e.touches[0].clientX : e.clientX;
-        			clickY = isTouchDevice ? e.touches[0].clientY : e.clientY;
-        			$$invalidate(2, dragging = true);
-        			preciseValue = setValue(value);
-        		} //console.log(e.clientX, e.clientY);
+        	function dragstartHandler(ev) {
+        		dispatch("consoleLog", ev.type);
+        		$$invalidate(3, dragging = true);
+        		dragElement.focus();
+        		hasMoved = 0;
+        		clickX = isTouchDevice ? ev.touches[0].clientX : ev.clientX;
+        		clickY = isTouchDevice ? ev.touches[0].clientY : ev.clientY;
+        		$$invalidate(3, dragging = true);
+        		updateValues(value);
         	}
 
-        	function mousemoveHandler(e) {
-        		// dispatch('consoleLog', 'mousemove');
-        		let actX = isTouchDevice ? e.touches[0].clientX : e.clientX;
+        	function touchmoveHandler(ev) {
+        		// dispatch('consoleLog', ev.type);
+        		isTouchDevice = true;
 
-        		let actY = isTouchDevice ? e.touches[0].clientY : e.clientY;
+        		dragmoveHandler(ev);
+        	}
+
+        	function dragmoveHandler(ev) {
+        		// dispatch('consoleLog', ev.type);
+        		// ev.preventDefault();
+        		let actX = isTouchDevice ? ev.touches[0].clientX : ev.clientX;
+
+        		let actY = isTouchDevice ? ev.touches[0].clientY : ev.clientY;
         		let distX = horizontal ? actX - clickX : 0;
         		let distY = vertical ? -(actY - clickY) : 0;
         		let stepNum = Math.abs(distX) > Math.abs(distY) ? distX : distY;
@@ -894,137 +986,154 @@ var app = (function () {
         		hasMoved++;
         	}
 
-        	function mouseupHandler(e) {
-        		dispatch("consoleLog", "mouseup");
+        	function touchendHandler(ev) {
+        		dispatch("consoleLog", ev.type);
+        		mouseupHandler(ev);
+        	}
 
-        		// console.log('up');
-        		$$invalidate(2, dragging = false);
+        	function mouseupHandler(ev) {
+        		dispatch("consoleLog", ev.type);
+        		$$invalidate(3, dragging = false);
 
-        		if (editOnClick && hasMoved < 2) {
+        		if (hasMoved < 2) {
         			startEditing();
         		}
         	}
 
-        	function dblclickHandler(e) {
-        		dispatch("consoleLog", "dblclick");
-
-        		if (!editOnClick) {
-        			startEditing();
-        		}
+        	function dragFocusHandler(ev) {
+        		dispatch("consoleLog", ev.type);
+        		$$invalidate(1, dragFocussed = true);
         	}
 
-        	function windowdownHandler(e) {
-        		dispatch("consoleLog", "window mousedown");
+        	function dragBlurHandler(ev) {
+        		dispatch("consoleLog", ev.type);
+        		$$invalidate(1, dragFocussed = false);
+        	}
 
-        		// console.log('window mousedown');
+        	function editFocusHandler(ev) {
+        		dispatch("consoleLog", ev.type);
+        		$$invalidate(2, editFocussed = true);
+        	}
+
+        	async function editBlurHandler(ev) {
+        		dispatch("consoleLog", ev.type);
         		stopEditing();
         	}
 
-        	function focusHandler(e) {
-        		dispatch("consoleLog", "focus");
-
-        		// console.log(inputElement);
-        		$$invalidate(37, focussed = true);
-
-        		stopEditing();
-        	}
-
-        	function blurHandler(e) {
-        		dispatch("consoleLog", "blur");
-
-        		// console.log('blur');
-        		$$invalidate(37, focussed = false);
-
-        		stopEditing();
-        	}
-
-        	function inputHandler(e) {
+        	function keydownHandler(ev) {
+        		// dispatch("consoleLog", ev.type);
         		// console.log(e);
-        		let checkValue = parseFloat(inputElement.value);
+        		if (ev.key == "Shift") {
+        			$$invalidate(42, shiftPressed = true);
+        		}
+
+        		if (ev.key == "Alt") {
+        			$$invalidate(41, altPressed = true);
+        		}
+        	}
+
+        	function keyupHandler(ev) {
+        		// dispatch("consoleLog", ev.type);
+        		// console.log(e)
+        		if (ev.key == "Shift") {
+        			$$invalidate(42, shiftPressed = false);
+        		}
+
+        		if (ev.key == "Alt") {
+        			$$invalidate(41, altPressed = false);
+        		}
+
+        		if (dragFocussed && !editing) {
+        			// increment should at least be step
+        			let increment = Math.max(step, step * Math.round(10 * speed));
+
+        			if (ev.key == "ArrowUp" || ev.key == "ArrowRight") {
+        				addToValue(increment);
+        			}
+
+        			if (ev.key == "ArrowDown" || ev.key == "ArrowLeft") {
+        				addToValue(-increment);
+        			}
+
+        			if (ev.key == "Enter") {
+        				startEditing();
+        			}
+        		} else if (editFocussed && editing) {
+        			if (ev.key == "Enter" || ev.key == "Escape") {
+        				stopEditing();
+        			}
+        		}
+        	}
+
+        	function inputHandler(ev) {
+        		// dispatch("consoleLog", ev.type);
+        		// console.log(e);
+        		let checkValue = parseFloat(editElement.value);
 
         		if (!isNaN(checkValue)) {
         			preciseValue = checkValue;
         			preciseValue = keepInRange(preciseValue);
+
+        			// console.log("dispatch input: ", preciseValue)
         			dispatch("input", parseFloat(roundToPrecision(preciseValue)));
         		}
         	}
 
-        	function keydownHandler(e) {
-        		// console.log(e);
-        		if (e.key == "Shift") {
-        			$$invalidate(39, shiftPressed = true);
-        		}
-
-        		if (e.key == "Alt") {
-        			$$invalidate(38, altPressed = true);
-        		}
+        	async function startEditing() {
+        		$$invalidate(5, editing = true);
+        		preciseValue = parseFloat(visibleValue);
+        		await tick();
+        		editElement.focus();
+        		editElement.select();
         	}
 
-        	function keyupHandler(e) {
-        		// console.log(e)
-        		if (e.key == "Shift") {
-        			$$invalidate(39, shiftPressed = false);
+        	function stopEditing() {
+        		$$invalidate(2, editFocussed = false);
+        		$$invalidate(5, editing = false);
+        		let checkValue = parseFloat(editElement.value);
+
+        		if (!isNaN(checkValue)) {
+        			preciseValue = parseFloat(visibleValue);
+        			updateValues(preciseValue);
         		}
+        	} // Interaction variation: bring focus back to the drag element if the body was clicked:
+        	// setTimeout(() => {
 
-        		if (e.key == "Alt") {
-        			$$invalidate(38, altPressed = false);
-        		}
-
-        		if (focussed) {
-        			if (!editing) {
-        				// increment should at least be step
-        				let increment = Math.max(step, step * Math.round(10 * speed));
-
-        				if (e.key == "ArrowUp" || e.key == "ArrowRight") {
-        					addToValue(increment);
-        				}
-
-        				if (e.key == "ArrowDown" || e.key == "ArrowLeft") {
-        					addToValue(-increment);
-        				}
-        			}
-
-        			if (e.key == "Enter") {
-        				if (!editing) {
-        					startEditing();
-        				} else {
-        					stopEditing();
-        				}
-        			}
-
-        			if (e.key == "Escape") {
-        				if (editing) {
-        					stopEditing();
-        				}
-        			}
-        		}
-        	}
-
+        	//   if (document.activeElement === document.body || document.activeElement === editElement) {
+        	//     dragElement.focus();
+        	//   }
+        	// }, 0);
+        	// This doesn't work (maybe document.activeElement is updated even later), but would be more elegant svelte-like:
+        	// await tick();
+        	// console.log(document.activeElement);
+        	// if (document.activeElement === document.body) {
+        	//   dragElement.focus();
+        	// }
         	function stepValue(numSteps) {
         		preciseValue = preciseValue ?? parseFloat(visibleValue);
         		preciseValue += numSteps * step * stepFactor * speed;
-        		setValue(preciseValue);
+        		updateValues(preciseValue);
         	}
 
         	function addToValue(increment) {
         		preciseValue = preciseValue ?? parseFloat(visibleValue);
         		preciseValue += increment * stepFactor;
-        		setValue(preciseValue);
+        		updateValues(preciseValue);
         	}
 
-        	function setValue(val) {
+        	function updateValues(val) {
         		preciseValue = parseFloat(val);
         		preciseValue = keepInRange(preciseValue);
-        		$$invalidate(4, visibleValue = Math.round(preciseValue / step) * step);
-        		$$invalidate(4, visibleValue = visibleValue.toFixed(decimals));
-        		$$invalidate(18, value = roundToPrecision(preciseValue));
+        		$$invalidate(6, visibleValue = Math.round(preciseValue / step) * step);
+        		$$invalidate(6, visibleValue = visibleValue.toFixed(decimals));
+        		$$invalidate(24, value = roundToPrecision(preciseValue));
         		dispatch("input", parseFloat(value));
         		dispatch("change", parseFloat(value));
         	}
 
         	function keepInRange(val) {
-        		$$invalidate(19, min = parseFloat(min));
-        		$$invalidate(20, max = parseFloat(max));
+        		$$invalidate(25, min = parseFloat(min));
+        		$$invalidate(26, max = parseFloat(max));
 
         		if (circular) {
         			let range = max - min;
@@ -1044,94 +1153,84 @@ var app = (function () {
         		return parseFloat(val.toFixed(dec));
         	}
 
-        	function startEditing() {
-        		if (isTouchDevice) return;
-        		preciseValue = parseFloat(visibleValue);
-        		$$invalidate(3, editing = true);
-        		inputElement?.setSelectionRange(0, 30);
-        	}
-
-        	function stopEditing() {
-        		if (isTouchDevice) return;
-        		$$invalidate(3, editing = false);
-        		inputElement?.setSelectionRange(0, 0);
-        		preciseValue = parseFloat(visibleValue);
-        		setValue(preciseValue);
-        	}
-
-        	function input_binding($$value) {
+        	function input0_binding($$value) {
         		binding_callbacks[$$value ? "unshift" : "push"](() => {
-        			inputElement = $$value;
-        			($$invalidate(0, inputElement), $$invalidate(3, editing));
+        			dragElement = $$value;
+        			$$invalidate(7, dragElement);
         		});
         	}
 
-        	function input_input_handler() {
+        	function input0_input_handler() {
         		visibleValue = this.value;
-        		$$invalidate(4, visibleValue);
+        		$$invalidate(6, visibleValue);
+        	}
+
+        	function input1_binding($$value) {
+        		binding_callbacks[$$value ? "unshift" : "push"](() => {
+        			editElement = $$value;
+        			$$invalidate(8, editElement);
+        		});
+        	}
+
+        	function input1_input_handler() {
+        		visibleValue = this.value;
+        		$$invalidate(6, visibleValue);
         	}
 
         	$$self.$$set = $$new_props => {
-        		$$invalidate(17, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
-        		if ("options" in $$new_props) $$invalidate(22, options = $$new_props.options);
-        		if ("value" in $$new_props) $$invalidate(18, value = $$new_props.value);
-        		if ("min" in $$new_props) $$invalidate(19, min = $$new_props.min);
-        		if ("max" in $$new_props) $$invalidate(20, max = $$new_props.max);
-        		if ("step" in $$new_props) $$invalidate(23, step = $$new_props.step);
-        		if ("precision" in $$new_props) $$invalidate(21, precision = $$new_props.precision);
-        		if ("decimals" in $$new_props) $$invalidate(24, decimals = $$new_props.decimals);
-        		if ("speed" in $$new_props) $$invalidate(25, speed = $$new_props.speed);
-        		if ("horizontal" in $$new_props) $$invalidate(26, horizontal = $$new_props.horizontal);
-        		if ("vertical" in $$new_props) $$invalidate(27, vertical = $$new_props.vertical);
-        		if ("circular" in $$new_props) $$invalidate(28, circular = $$new_props.circular);
-        		if ("editOnClick" in $$new_props) $$invalidate(29, editOnClick = $$new_props.editOnClick);
-        		if ("mainStyle" in $$new_props) $$invalidate(30, mainStyle = $$new_props.mainStyle);
-        		if ("fastStyle" in $$new_props) $$invalidate(31, fastStyle = $$new_props.fastStyle);
-        		if ("slowStyle" in $$new_props) $$invalidate(32, slowStyle = $$new_props.slowStyle);
-        		if ("focusStyle" in $$new_props) $$invalidate(33, focusStyle = $$new_props.focusStyle);
-        		if ("draggingStyle" in $$new_props) $$invalidate(34, draggingStyle = $$new_props.draggingStyle);
-        		if ("editingStyle" in $$new_props) $$invalidate(35, editingStyle = $$new_props.editingStyle);
-        		if ("cursor" in $$new_props) $$invalidate(36, cursor = $$new_props.cursor);
+        		$$invalidate(23, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
+        		if ("options" in $$new_props) $$invalidate(27, options = $$new_props.options);
+        		if ("value" in $$new_props) $$invalidate(24, value = $$new_props.value);
+        		if ("min" in $$new_props) $$invalidate(25, min = $$new_props.min);
+        		if ("max" in $$new_props) $$invalidate(26, max = $$new_props.max);
+        		if ("step" in $$new_props) $$invalidate(0, step = $$new_props.step);
+        		if ("precision" in $$new_props) $$invalidate(28, precision = $$new_props.precision);
+        		if ("decimals" in $$new_props) $$invalidate(29, decimals = $$new_props.decimals);
+        		if ("speed" in $$new_props) $$invalidate(30, speed = $$new_props.speed);
+        		if ("horizontal" in $$new_props) $$invalidate(31, horizontal = $$new_props.horizontal);
+        		if ("vertical" in $$new_props) $$invalidate(32, vertical = $$new_props.vertical);
+        		if ("circular" in $$new_props) $$invalidate(33, circular = $$new_props.circular);
+        		if ("mainStyle" in $$new_props) $$invalidate(34, mainStyle = $$new_props.mainStyle);
+        		if ("fastStyle" in $$new_props) $$invalidate(35, fastStyle = $$new_props.fastStyle);
+        		if ("slowStyle" in $$new_props) $$invalidate(36, slowStyle = $$new_props.slowStyle);
+        		if ("focusStyle" in $$new_props) $$invalidate(37, focusStyle = $$new_props.focusStyle);
+        		if ("draggingStyle" in $$new_props) $$invalidate(38, draggingStyle = $$new_props.draggingStyle);
+        		if ("editingStyle" in $$new_props) $$invalidate(39, editingStyle = $$new_props.editingStyle);
+        		if ("cursor" in $$new_props) $$invalidate(40, cursor = $$new_props.cursor);
         	};
 
         	$$self.$$.update = () => {
-        		if ($$self.$$.dirty[0] & /*editing, dragging, value*/ 262156) {
+        		if ($$self.$$.dirty[0] & /*editing, dragging, value*/ 16777256) {
         			// updaters --------------------------------
         			{
         				if (!editing && !dragging) {
-        					setValue(value);
+        					updateValues(value);
         				}
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*inputElement, editing*/ 9) {
-        			if (inputElement) {
-        				$$invalidate(0, inputElement.readOnly = !editing, inputElement);
-        			}
-        		}
-
-        		if ($$self.$$.dirty[0] & /*editing*/ 8 | $$self.$$.dirty[1] & /*focussed, altPressed, shiftPressed*/ 448) {
+        		if ($$self.$$.dirty[0] & /*dragFocussed, editing*/ 34 | $$self.$$.dirty[1] & /*altPressed, shiftPressed*/ 3072) {
         			{
-        				$$invalidate(1, stepFactor = 1);
+        				$$invalidate(4, stepFactor = 1);
 
-        				if (focussed && !editing) {
+        				if (dragFocussed && !editing) {
         					if (altPressed && shiftPressed) {
-        						$$invalidate(1, stepFactor = 10);
+        						$$invalidate(4, stepFactor = 10);
         					} else if (altPressed) {
-        						$$invalidate(1, stepFactor = 0.1);
+        						$$invalidate(4, stepFactor = 0.1);
         					}
         				}
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*horizontal, vertical, dragging*/ 201326596 | $$self.$$.dirty[1] & /*cursor, defaultCursor*/ 544) {
+        		if ($$self.$$.dirty[0] & /*dragging*/ 8 | $$self.$$.dirty[1] & /*horizontal, vertical, cursor, defaultCursor*/ 4611) {
         			{
         				// let cursorClass = horizontal
         				//   ? vertical
         				//     ? 'move-cursor'
         				//     : 'horizontal-cursor'
         				//   : 'vertical-cursor';
-        				$$invalidate(40, defaultCursor = horizontal
+        				$$invalidate(43, defaultCursor = horizontal
         				? vertical ? "move" : "ew-resize"
         				: "ns-resize");
 
@@ -1143,22 +1242,25 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*mainStyle, style, editing, stepFactor, dragging*/ 1073741870 | $$self.$$.dirty[1] & /*focussed, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 639) {
+        		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 574 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 5112) {
         			{
-        				$$invalidate(5, style = mainStyle ?? "");
-        				$$invalidate(5, style += focussed && focusStyle ? ";" + focusStyle : "");
+        				$$invalidate(9, style = mainStyle ?? "");
 
-        				$$invalidate(5, style += !editing && stepFactor > 1 && fastStyle
+        				$$invalidate(9, style += (dragFocussed || editFocussed) && focusStyle
+        				? ";" + focusStyle
+        				: "");
+
+        				$$invalidate(9, style += !editing && stepFactor > 1 && fastStyle
         				? ";" + fastStyle
         				: "");
 
-        				$$invalidate(5, style += !editing && stepFactor < 1 && slowStyle
+        				$$invalidate(9, style += !editing && stepFactor < 1 && slowStyle
         				? ";" + slowStyle
         				: "");
 
-        				$$invalidate(5, style += dragging && draggingStyle ? ";" + draggingStyle : "");
-        				$$invalidate(5, style += editing && editingStyle ? ";" + editingStyle : "");
-        				$$invalidate(5, style += !editing ? ";cursor:" + (cursor ?? defaultCursor) : "");
+        				$$invalidate(9, style += dragging && draggingStyle ? ";" + draggingStyle : "");
+        				$$invalidate(9, style += editing && editingStyle ? ";" + editingStyle : "");
+        				$$invalidate(9, style += !editing ? ";cursor:" + (cursor ?? defaultCursor) : "");
         			}
         		}
         	};
@@ -1166,36 +1268,40 @@ var app = (function () {
         	$$props = exclude_internal_props($$props);
 
         	return [
-        		inputElement,
-        		stepFactor,
+        		step,
+        		dragFocussed,
+        		editFocussed,
         		dragging,
+        		stepFactor,
         		editing,
         		visibleValue,
+        		dragElement,
+        		editElement,
         		style,
         		touchstartHandler,
-        		mousedownHandler,
-        		mousemoveHandler,
+        		dragstartHandler,
+        		touchmoveHandler,
+        		dragmoveHandler,
+        		touchendHandler,
         		mouseupHandler,
-        		dblclickHandler,
-        		windowdownHandler,
-        		focusHandler,
-        		blurHandler,
-        		inputHandler,
+        		dragFocusHandler,
+        		dragBlurHandler,
+        		editFocusHandler,
+        		editBlurHandler,
         		keydownHandler,
         		keyupHandler,
+        		inputHandler,
         		$$props,
         		value,
         		min,
         		max,
-        		precision,
         		options,
-        		step,
+        		precision,
         		decimals,
         		speed,
         		horizontal,
         		vertical,
         		circular,
-        		editOnClick,
         		mainStyle,
         		fastStyle,
         		slowStyle,
@@ -1203,19 +1309,20 @@ var app = (function () {
         		draggingStyle,
         		editingStyle,
         		cursor,
-        		focussed,
         		altPressed,
         		shiftPressed,
         		defaultCursor,
-        		input_binding,
-        		input_input_handler
+        		input0_binding,
+        		input0_input_handler,
+        		input1_binding,
+        		input1_input_handler
         	];
         }
 
         class NumberSpinner extends SvelteComponent {
         	constructor(options) {
         		super();
-        		if (!document_1.getElementById("svelte-1dc5u64-style")) add_css();
+        		if (!document_1.getElementById("svelte-14p4d2s-style")) add_css();
 
         		init(
         			this,
@@ -1224,27 +1331,26 @@ var app = (function () {
         			create_fragment,
         			safe_not_equal,
         			{
-        				options: 22,
-        				value: 18,
-        				min: 19,
-        				max: 20,
-        				step: 23,
-        				precision: 21,
-        				decimals: 24,
-        				speed: 25,
-        				horizontal: 26,
-        				vertical: 27,
-        				circular: 28,
-        				editOnClick: 29,
-        				mainStyle: 30,
-        				fastStyle: 31,
-        				slowStyle: 32,
-        				focusStyle: 33,
-        				draggingStyle: 34,
-        				editingStyle: 35,
-        				cursor: 36
+        				options: 27,
+        				value: 24,
+        				min: 25,
+        				max: 26,
+        				step: 0,
+        				precision: 28,
+        				decimals: 29,
+        				speed: 30,
+        				horizontal: 31,
+        				vertical: 32,
+        				circular: 33,
+        				mainStyle: 34,
+        				fastStyle: 35,
+        				slowStyle: 36,
+        				focusStyle: 37,
+        				draggingStyle: 38,
+        				editingStyle: 39,
+        				cursor: 40
         			},
-        			[-1, -1]
+        			[-1, -1, -1]
         		);
         	}
         }
@@ -1555,7 +1661,7 @@ var app = (function () {
     			t4 = text(" for smaller steps, ");
     			i1 = element("i");
     			i1.textContent = "Alt+Shift";
-    			t6 = text(" for larger steps. Double click to edit.");
+    			t6 = text(" for larger steps. Click without dragging to edit.");
     			t7 = space();
     			hr0 = element("hr");
     			t8 = space();
@@ -1585,7 +1691,7 @@ var app = (function () {
     			t20 = space();
     			div8 = element("div");
     			div6 = element("div");
-    			t21 = text("step = 0.01, decimals = 2, precision = 0.001, editOnClick = true");
+    			t21 = text("step = 0.01, decimals = 2, precision = 0.001");
     			br2 = element("br");
     			t22 = text("Current value is ");
     			t23 = text(/*value3*/ ctx[2]);
@@ -1666,108 +1772,108 @@ var app = (function () {
     			create_component(numberspinner7.$$.fragment);
     			t61 = space();
     			hr8 = element("hr");
-    			attr_dev(h2, "class", "svelte-eleaea");
+    			attr_dev(h2, "class", "svelte-5t2c9c");
     			add_location(h2, file, 17, 0, 354);
-    			attr_dev(i0, "class", "svelte-eleaea");
+    			attr_dev(i0, "class", "svelte-5t2c9c");
     			add_location(i0, file, 20, 83, 481);
-    			attr_dev(i1, "class", "svelte-eleaea");
+    			attr_dev(i1, "class", "svelte-5t2c9c");
     			add_location(i1, file, 20, 113, 511);
-    			attr_dev(p, "class", "svelte-eleaea");
+    			attr_dev(p, "class", "svelte-5t2c9c");
     			add_location(p, file, 19, 0, 394);
-    			attr_dev(hr0, "class", "svelte-eleaea");
-    			add_location(hr0, file, 23, 0, 574);
-    			attr_dev(br0, "class", "svelte-eleaea");
-    			add_location(br0, file, 26, 61, 659);
-    			attr_dev(div0, "class", "explanation svelte-eleaea");
-    			add_location(div0, file, 26, 2, 600);
-    			attr_dev(div1, "class", "right svelte-eleaea");
-    			add_location(div1, file, 27, 2, 698);
-    			attr_dev(div2, "class", "row svelte-eleaea");
-    			add_location(div2, file, 25, 0, 580);
-    			attr_dev(hr1, "class", "svelte-eleaea");
-    			add_location(hr1, file, 32, 0, 778);
-    			attr_dev(br1, "class", "svelte-eleaea");
-    			add_location(br1, file, 35, 137, 939);
-    			attr_dev(div3, "class", "explanation svelte-eleaea");
-    			add_location(div3, file, 35, 2, 804);
-    			attr_dev(div4, "class", "right svelte-eleaea");
-    			add_location(div4, file, 36, 2, 978);
-    			attr_dev(div5, "class", "row svelte-eleaea");
-    			add_location(div5, file, 34, 0, 784);
-    			attr_dev(hr2, "class", "svelte-eleaea");
-    			add_location(hr2, file, 41, 0, 1104);
-    			attr_dev(br2, "class", "svelte-eleaea");
-    			add_location(br2, file, 44, 91, 1219);
-    			attr_dev(div6, "class", "explanation svelte-eleaea");
-    			add_location(div6, file, 44, 2, 1130);
-    			attr_dev(div7, "class", "right svelte-eleaea");
-    			add_location(div7, file, 45, 2, 1258);
-    			attr_dev(div8, "class", "row svelte-eleaea");
-    			add_location(div8, file, 43, 0, 1110);
-    			attr_dev(hr3, "class", "svelte-eleaea");
-    			add_location(hr3, file, 50, 0, 1406);
-    			attr_dev(br3, "class", "svelte-eleaea");
-    			add_location(br3, file, 53, 58, 1488);
-    			attr_dev(div9, "class", "explanation svelte-eleaea");
-    			add_location(div9, file, 53, 2, 1432);
-    			attr_dev(div10, "class", "right svelte-eleaea");
-    			add_location(div10, file, 54, 2, 1527);
-    			attr_dev(div11, "class", "row svelte-eleaea");
-    			add_location(div11, file, 52, 0, 1412);
-    			attr_dev(hr4, "class", "svelte-eleaea");
-    			add_location(hr4, file, 67, 0, 1931);
-    			attr_dev(br4, "class", "svelte-eleaea");
-    			add_location(br4, file, 70, 65, 2020);
-    			attr_dev(div12, "class", "explanation svelte-eleaea");
-    			add_location(div12, file, 70, 2, 1957);
-    			attr_dev(div13, "class", "right svelte-eleaea");
-    			add_location(div13, file, 71, 2, 2059);
-    			attr_dev(div14, "class", "row svelte-eleaea");
-    			add_location(div14, file, 69, 0, 1937);
-    			attr_dev(hr5, "class", "svelte-eleaea");
-    			add_location(hr5, file, 78, 0, 2217);
-    			attr_dev(br5, "class", "svelte-eleaea");
-    			add_location(br5, file, 82, 46, 2315);
-    			attr_dev(br6, "class", "svelte-eleaea");
-    			add_location(br6, file, 83, 40, 2360);
-    			attr_dev(div15, "class", "explanation svelte-eleaea");
-    			add_location(div15, file, 81, 2, 2243);
-    			attr_dev(div16, "class", "right svelte-eleaea");
-    			add_location(div16, file, 86, 2, 2421);
-    			attr_dev(div17, "class", "row svelte-eleaea");
-    			add_location(div17, file, 80, 0, 2223);
-    			attr_dev(hr6, "class", "svelte-eleaea");
-    			add_location(hr6, file, 94, 0, 2625);
-    			attr_dev(br7, "class", "svelte-eleaea");
-    			add_location(br7, file, 98, 63, 2740);
-    			attr_dev(br8, "class", "svelte-eleaea");
-    			add_location(br8, file, 99, 29, 2774);
-    			attr_dev(div18, "class", "explanation svelte-eleaea");
-    			add_location(div18, file, 97, 2, 2651);
-    			attr_dev(button0, "class", "svelte-eleaea");
-    			add_location(button0, file, 101, 7, 2797);
-    			attr_dev(div19, "class", "svelte-eleaea");
-    			add_location(div19, file, 101, 2, 2792);
-    			attr_dev(div20, "class", "right small-margin svelte-eleaea");
-    			add_location(div20, file, 102, 2, 2852);
-    			attr_dev(button1, "class", "svelte-eleaea");
-    			add_location(button1, file, 105, 7, 2973);
-    			attr_dev(div21, "class", "svelte-eleaea");
-    			add_location(div21, file, 105, 2, 2968);
-    			attr_dev(div22, "class", "row svelte-eleaea");
-    			add_location(div22, file, 96, 0, 2631);
-    			attr_dev(hr7, "class", "svelte-eleaea");
-    			add_location(hr7, file, 108, 0, 3034);
-    			attr_dev(br9, "class", "svelte-eleaea");
-    			add_location(br9, file, 111, 69, 3127);
-    			attr_dev(div23, "class", "explanation svelte-eleaea");
-    			add_location(div23, file, 111, 2, 3060);
-    			attr_dev(div24, "class", "right svelte-eleaea");
-    			add_location(div24, file, 112, 2, 3166);
-    			attr_dev(div25, "class", "row svelte-eleaea");
-    			add_location(div25, file, 110, 0, 3040);
-    			attr_dev(hr8, "class", "svelte-eleaea");
-    			add_location(hr8, file, 117, 0, 3255);
+    			attr_dev(hr0, "class", "svelte-5t2c9c");
+    			add_location(hr0, file, 23, 0, 584);
+    			attr_dev(br0, "class", "svelte-5t2c9c");
+    			add_location(br0, file, 26, 61, 669);
+    			attr_dev(div0, "class", "explanation svelte-5t2c9c");
+    			add_location(div0, file, 26, 2, 610);
+    			attr_dev(div1, "class", "right svelte-5t2c9c");
+    			add_location(div1, file, 27, 2, 708);
+    			attr_dev(div2, "class", "row svelte-5t2c9c");
+    			add_location(div2, file, 25, 0, 590);
+    			attr_dev(hr1, "class", "svelte-5t2c9c");
+    			add_location(hr1, file, 32, 0, 788);
+    			attr_dev(br1, "class", "svelte-5t2c9c");
+    			add_location(br1, file, 35, 137, 949);
+    			attr_dev(div3, "class", "explanation svelte-5t2c9c");
+    			add_location(div3, file, 35, 2, 814);
+    			attr_dev(div4, "class", "right svelte-5t2c9c");
+    			add_location(div4, file, 36, 2, 988);
+    			attr_dev(div5, "class", "row svelte-5t2c9c");
+    			add_location(div5, file, 34, 0, 794);
+    			attr_dev(hr2, "class", "svelte-5t2c9c");
+    			add_location(hr2, file, 41, 0, 1114);
+    			attr_dev(br2, "class", "svelte-5t2c9c");
+    			add_location(br2, file, 44, 71, 1209);
+    			attr_dev(div6, "class", "explanation svelte-5t2c9c");
+    			add_location(div6, file, 44, 2, 1140);
+    			attr_dev(div7, "class", "right svelte-5t2c9c");
+    			add_location(div7, file, 45, 2, 1248);
+    			attr_dev(div8, "class", "row svelte-5t2c9c");
+    			add_location(div8, file, 43, 0, 1120);
+    			attr_dev(hr3, "class", "svelte-5t2c9c");
+    			add_location(hr3, file, 50, 0, 1396);
+    			attr_dev(br3, "class", "svelte-5t2c9c");
+    			add_location(br3, file, 53, 58, 1478);
+    			attr_dev(div9, "class", "explanation svelte-5t2c9c");
+    			add_location(div9, file, 53, 2, 1422);
+    			attr_dev(div10, "class", "right svelte-5t2c9c");
+    			add_location(div10, file, 54, 2, 1517);
+    			attr_dev(div11, "class", "row svelte-5t2c9c");
+    			add_location(div11, file, 52, 0, 1402);
+    			attr_dev(hr4, "class", "svelte-5t2c9c");
+    			add_location(hr4, file, 67, 0, 1921);
+    			attr_dev(br4, "class", "svelte-5t2c9c");
+    			add_location(br4, file, 70, 65, 2010);
+    			attr_dev(div12, "class", "explanation svelte-5t2c9c");
+    			add_location(div12, file, 70, 2, 1947);
+    			attr_dev(div13, "class", "right svelte-5t2c9c");
+    			add_location(div13, file, 71, 2, 2049);
+    			attr_dev(div14, "class", "row svelte-5t2c9c");
+    			add_location(div14, file, 69, 0, 1927);
+    			attr_dev(hr5, "class", "svelte-5t2c9c");
+    			add_location(hr5, file, 78, 0, 2207);
+    			attr_dev(br5, "class", "svelte-5t2c9c");
+    			add_location(br5, file, 82, 46, 2305);
+    			attr_dev(br6, "class", "svelte-5t2c9c");
+    			add_location(br6, file, 83, 40, 2350);
+    			attr_dev(div15, "class", "explanation svelte-5t2c9c");
+    			add_location(div15, file, 81, 2, 2233);
+    			attr_dev(div16, "class", "right svelte-5t2c9c");
+    			add_location(div16, file, 86, 2, 2411);
+    			attr_dev(div17, "class", "row svelte-5t2c9c");
+    			add_location(div17, file, 80, 0, 2213);
+    			attr_dev(hr6, "class", "svelte-5t2c9c");
+    			add_location(hr6, file, 94, 0, 2615);
+    			attr_dev(br7, "class", "svelte-5t2c9c");
+    			add_location(br7, file, 98, 63, 2730);
+    			attr_dev(br8, "class", "svelte-5t2c9c");
+    			add_location(br8, file, 99, 29, 2764);
+    			attr_dev(div18, "class", "explanation svelte-5t2c9c");
+    			add_location(div18, file, 97, 2, 2641);
+    			attr_dev(button0, "class", "svelte-5t2c9c");
+    			add_location(button0, file, 101, 7, 2787);
+    			attr_dev(div19, "class", "svelte-5t2c9c");
+    			add_location(div19, file, 101, 2, 2782);
+    			attr_dev(div20, "class", "right small-margin svelte-5t2c9c");
+    			add_location(div20, file, 102, 2, 2842);
+    			attr_dev(button1, "class", "svelte-5t2c9c");
+    			add_location(button1, file, 105, 7, 2963);
+    			attr_dev(div21, "class", "svelte-5t2c9c");
+    			add_location(div21, file, 105, 2, 2958);
+    			attr_dev(div22, "class", "row svelte-5t2c9c");
+    			add_location(div22, file, 96, 0, 2621);
+    			attr_dev(hr7, "class", "svelte-5t2c9c");
+    			add_location(hr7, file, 108, 0, 3024);
+    			attr_dev(br9, "class", "svelte-5t2c9c");
+    			add_location(br9, file, 111, 69, 3117);
+    			attr_dev(div23, "class", "explanation svelte-5t2c9c");
+    			add_location(div23, file, 111, 2, 3050);
+    			attr_dev(div24, "class", "right svelte-5t2c9c");
+    			add_location(div24, file, 112, 2, 3156);
+    			attr_dev(div25, "class", "row svelte-5t2c9c");
+    			add_location(div25, file, 110, 0, 3030);
+    			attr_dev(hr8, "class", "svelte-5t2c9c");
+    			add_location(hr8, file, 117, 0, 3245);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");

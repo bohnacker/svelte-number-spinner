@@ -1,8 +1,9 @@
 # svelte-number-spinner
 
-A number spinner component for Svelte. It's a simple input field with a number that can be controlled using the mouse or keyboard. Pressing *Alt* or *Alt+Shift* makes steps smaller or bigger.
+A number spinner component for Svelte. It's a simple input field with a number that can be controlled using the mouse or keyboard. Pressing *Alt* or *Alt+Shift* makes steps smaller or bigger. Clicking on the input field without dragging the mouse or pressing enter starts the normal input mode.
 
-Mobile devices with touch are also supported but only with a simplified version. Keyboard input is deactivated because I didn't manage to bring up the keyboard without destroying something else. If somebody has an idea how to do that: help is appreciated!
+**New since version 0.6.0**
+Mobile devices with touch are now also supported which needed some major rework. I had to remove the option to select between double click or simple click to start editing. Now, only simple click is possible.
 
 ## Demo
 
@@ -42,7 +43,6 @@ npm install --save svelte-number-spinner
 | horizontal     | Boolean | true        | Change value by dragging horizontally               |
 | vertical       | Boolean | false       | Change value by dragging vertically                 |
 | circular       | Boolean | false       | Enable circular range (good for angles, hours, ...) |
-| editOnClick    | Boolean | false       | Enter edit mode on click instead dblClick           |
 | cursor         | String  | undefined   | Individual cursor                                   |
 | class          | String  | undefined   | Custom component class name                         |
 | mainStyle      | String  | undefined   | Custom inline style for general appearance          |
@@ -68,7 +68,7 @@ Example:
 
   let value1 = 50;
   let value2 = 10;
-  let options = {horizontal:false, vertical:true, editOnClick:true}
+  let options = {horizontal:false, vertical:true}
 </script>
 
 <NumberSpinner bind:value={value1} min=0 max=100 {options} />
@@ -80,12 +80,12 @@ Example:
 
 ### Styling with custom class name
 
-You can style the component by overriding the default styles by giving a custom class name. If you give your own class name all default styles are removed. So, best would be to take the default styles below, put it in your global css, rename the class and remove what you don't need.
+You can style the component by overriding the default styles by giving a custom class name. If you give your own class name all default styles are removed. So, best would be to take the default styles below, put it in your global css, rename the class and remove and change stuff.
 
 It's recomended to keep the order for `:focus` and `.fast`/`.slow` selectors. Default styles are:
 
 ```css
-  .default {
+ .default {
     display: inline-block;
     box-sizing: border-box;
     font-variant-numeric: tabular-nums;
@@ -99,12 +99,12 @@ It's recomended to keep the order for `:focus` and `.fast`/`.slow` selectors. De
     border-radius: 0.15em;
     text-align: right;
     vertical-align: baseline;
-    cursor: initial;
+    cursor: ew-resize;
   }
 
   .default:focus {
     border: 0.075em solid #06f;
-    outline: none;
+    outline: none; /* removes the standard focus border */
   }
 
   .default.fast {
@@ -118,19 +118,17 @@ It's recomended to keep the order for `:focus` and `.fast`/`.slow` selectors. De
   }
 
   .default.dragging {
-    border-color: #06f;
+    border-color: #04c;
   }
 
   .default.editing {
-    border: 0.15em solid #06f;
-    padding: 0.175em;
-    cursor: default;
+    cursor: initial;
   }
 ```
 
 ### Styling with props
 
-If you want to replace just a few of the styles or add some more without removing the default style, it might be easier for you to use the props `mainStyle`, `focusStyle`, `fastStyle`, `slowStyle` and `editingStyle`.
+If you want to replace just a few of the styles or add some more without removing the default style, it might be easier for you to use the props `mainStyle`, `focusStyle`, `fastStyle`, `slowStyle`, `draggingStyle` and `editingStyle`.
 
 For each of them you can give a style string like `"width:80px; padding-right:10px"`. In the example below only the font color for fast and slow mode are changed:
 
