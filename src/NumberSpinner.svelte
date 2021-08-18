@@ -372,7 +372,7 @@
   type="text"
   bind:this={editElement}
   bind:value={visibleValue}
-  inputmode={step == Math.round(step) ? "numeric" : "text"}
+  inputmode={step == Math.round(step) && min >= 0 ? "numeric" : "text"}
 />
 
 <!-- CSS --------------------------------------------------------------->

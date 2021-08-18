@@ -352,76 +352,76 @@
     			t = space();
     			input1 = element("input");
     			attr(input0, "type", "text");
-    			attr(input0, "style", /*style*/ ctx[9]);
-    			attr(input0, "class", input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[23].class) + " svelte-14p4d2s"));
+    			attr(input0, "style", /*style*/ ctx[10]);
+    			attr(input0, "class", input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-14p4d2s"));
     			input0.readOnly = true;
     			attr(input0, "contenteditable", false);
     			attr(input0, "tabindex", "0");
-    			toggle_class(input0, "default", !/*$$props*/ ctx[23].class ? true : false);
+    			toggle_class(input0, "default", !/*$$props*/ ctx[24].class ? true : false);
     			toggle_class(input0, "drag", true);
-    			toggle_class(input0, "dragging", /*dragging*/ ctx[3]);
-    			toggle_class(input0, "fast", /*stepFactor*/ ctx[4] > 1 ? "fast" : "");
-    			toggle_class(input0, "slow", /*stepFactor*/ ctx[4] < 1 ? "slow" : "");
-    			toggle_class(input0, "focus", /*dragFocussed*/ ctx[1]);
-    			toggle_class(input0, "inactive", /*editing*/ ctx[5]);
-    			attr(input1, "style", /*style*/ ctx[9]);
-    			attr(input1, "class", input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[23].class) + " svelte-14p4d2s"));
+    			toggle_class(input0, "dragging", /*dragging*/ ctx[4]);
+    			toggle_class(input0, "fast", /*stepFactor*/ ctx[5] > 1 ? "fast" : "");
+    			toggle_class(input0, "slow", /*stepFactor*/ ctx[5] < 1 ? "slow" : "");
+    			toggle_class(input0, "focus", /*dragFocussed*/ ctx[2]);
+    			toggle_class(input0, "inactive", /*editing*/ ctx[6]);
+    			attr(input1, "style", /*style*/ ctx[10]);
+    			attr(input1, "class", input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-14p4d2s"));
     			attr(input1, "type", "text");
 
-    			attr(input1, "inputmode", input1_inputmode_value = /*step*/ ctx[0] == Math.round(/*step*/ ctx[0])
+    			attr(input1, "inputmode", input1_inputmode_value = /*step*/ ctx[1] == Math.round(/*step*/ ctx[1]) && /*min*/ ctx[0] >= 0
     			? "numeric"
     			: "text");
 
-    			toggle_class(input1, "default", !/*$$props*/ ctx[23].class ? true : false);
+    			toggle_class(input1, "default", !/*$$props*/ ctx[24].class ? true : false);
     			toggle_class(input1, "edit", true);
-    			toggle_class(input1, "editing", /*editing*/ ctx[5]);
-    			toggle_class(input1, "focus", /*editFocussed*/ ctx[2]);
-    			toggle_class(input1, "inactive", !/*editing*/ ctx[5]);
+    			toggle_class(input1, "editing", /*editing*/ ctx[6]);
+    			toggle_class(input1, "focus", /*editFocussed*/ ctx[3]);
+    			toggle_class(input1, "inactive", !/*editing*/ ctx[6]);
     		},
     		m(target, anchor) {
     			insert(target, input0, anchor);
     			/*input0_binding*/ ctx[44](input0);
-    			set_input_value(input0, /*visibleValue*/ ctx[6]);
+    			set_input_value(input0, /*visibleValue*/ ctx[7]);
     			insert(target, t, anchor);
     			insert(target, input1, anchor);
     			/*input1_binding*/ ctx[46](input1);
-    			set_input_value(input1, /*visibleValue*/ ctx[6]);
+    			set_input_value(input1, /*visibleValue*/ ctx[7]);
 
     			if (!mounted) {
     				dispose = [
     					listen(window, "mousemove", function () {
-    						if (is_function(/*dragging*/ ctx[3] ? /*dragmoveHandler*/ ctx[13] : "")) (/*dragging*/ ctx[3] ? /*dragmoveHandler*/ ctx[13] : "").apply(this, arguments);
+    						if (is_function(/*dragging*/ ctx[4] ? /*dragmoveHandler*/ ctx[14] : "")) (/*dragging*/ ctx[4] ? /*dragmoveHandler*/ ctx[14] : "").apply(this, arguments);
     					}),
     					listen(window, "touchmove", function () {
-    						if (is_function(/*dragging*/ ctx[3] ? /*touchmoveHandler*/ ctx[12] : "")) (/*dragging*/ ctx[3] ? /*touchmoveHandler*/ ctx[12] : "").apply(this, arguments);
+    						if (is_function(/*dragging*/ ctx[4] ? /*touchmoveHandler*/ ctx[13] : "")) (/*dragging*/ ctx[4] ? /*touchmoveHandler*/ ctx[13] : "").apply(this, arguments);
     					}),
     					listen(window, "mouseup", stop_propagation(function () {
-    						if (is_function(/*dragging*/ ctx[3]
-    						? /*mouseupHandler*/ ctx[15]
-    						: /*editBlurHandler*/ ctx[19])) (/*dragging*/ ctx[3]
-    						? /*mouseupHandler*/ ctx[15]
-    						: /*editBlurHandler*/ ctx[19]).apply(this, arguments);
+    						if (is_function(/*dragging*/ ctx[4]
+    						? /*mouseupHandler*/ ctx[16]
+    						: /*editBlurHandler*/ ctx[20])) (/*dragging*/ ctx[4]
+    						? /*mouseupHandler*/ ctx[16]
+    						: /*editBlurHandler*/ ctx[20]).apply(this, arguments);
     					})),
     					listen(window, "touchend", stop_propagation(function () {
-    						if (is_function(/*dragging*/ ctx[3]
-    						? /*touchendHandler*/ ctx[14]
-    						: /*editBlurHandler*/ ctx[19])) (/*dragging*/ ctx[3]
-    						? /*touchendHandler*/ ctx[14]
-    						: /*editBlurHandler*/ ctx[19]).apply(this, arguments);
+    						if (is_function(/*dragging*/ ctx[4]
+    						? /*touchendHandler*/ ctx[15]
+    						: /*editBlurHandler*/ ctx[20])) (/*dragging*/ ctx[4]
+    						? /*touchendHandler*/ ctx[15]
+    						: /*editBlurHandler*/ ctx[20]).apply(this, arguments);
     					})),
-    					listen(window, "keydown", /*keydownHandler*/ ctx[20]),
-    					listen(window, "keyup", /*keyupHandler*/ ctx[21]),
-    					listen(input0, "mousedown", stop_propagation(/*dragstartHandler*/ ctx[11])),
-    					listen(input0, "touchstart", stop_propagation(prevent_default(/*touchstartHandler*/ ctx[10]))),
+    					listen(window, "keydown", /*keydownHandler*/ ctx[21]),
+    					listen(window, "keyup", /*keyupHandler*/ ctx[22]),
+    					listen(input0, "mousedown", stop_propagation(/*dragstartHandler*/ ctx[12])),
+    					listen(input0, "touchstart", stop_propagation(prevent_default(/*touchstartHandler*/ ctx[11]))),
     					listen(input0, "dblclick", stop_propagation(dblclickHandler)),
-    					listen(input0, "focus", /*dragFocusHandler*/ ctx[16]),
-    					listen(input0, "blur", /*dragBlurHandler*/ ctx[17]),
+    					listen(input0, "focus", /*dragFocusHandler*/ ctx[17]),
+    					listen(input0, "blur", /*dragBlurHandler*/ ctx[18]),
     					listen(input0, "input", /*input0_input_handler*/ ctx[45]),
     					listen(input1, "mouseup", stop_propagation(mouseup_handler)),
     					listen(input1, "touchend", stop_propagation(touchend_handler)),
-    					listen(input1, "focus", /*editFocusHandler*/ ctx[18]),
-    					listen(input1, "blur", /*editBlurHandler*/ ctx[19]),
-    					listen(input1, "input", /*inputHandler*/ ctx[22]),
+    					listen(input1, "focus", /*editFocusHandler*/ ctx[19]),
+    					listen(input1, "blur", /*editBlurHandler*/ ctx[20]),
+    					listen(input1, "input", /*inputHandler*/ ctx[23]),
     					listen(input1, "input", /*input1_input_handler*/ ctx[47])
     				];
 
@@ -431,82 +431,82 @@
     		p(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty[0] & /*style*/ 512) {
-    				attr(input0, "style", /*style*/ ctx[9]);
+    			if (dirty[0] & /*style*/ 1024) {
+    				attr(input0, "style", /*style*/ ctx[10]);
     			}
 
-    			if (dirty[0] & /*$$props*/ 8388608 && input0_class_value !== (input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[23].class) + " svelte-14p4d2s"))) {
+    			if (dirty[0] & /*$$props*/ 16777216 && input0_class_value !== (input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-14p4d2s"))) {
     				attr(input0, "class", input0_class_value);
     			}
 
-    			if (dirty[0] & /*visibleValue*/ 64 && input0.value !== /*visibleValue*/ ctx[6]) {
-    				set_input_value(input0, /*visibleValue*/ ctx[6]);
+    			if (dirty[0] & /*visibleValue*/ 128 && input0.value !== /*visibleValue*/ ctx[7]) {
+    				set_input_value(input0, /*visibleValue*/ ctx[7]);
     			}
 
-    			if (dirty[0] & /*$$props, $$props*/ 8388608) {
-    				toggle_class(input0, "default", !/*$$props*/ ctx[23].class ? true : false);
+    			if (dirty[0] & /*$$props, $$props*/ 16777216) {
+    				toggle_class(input0, "default", !/*$$props*/ ctx[24].class ? true : false);
     			}
 
-    			if (dirty[0] & /*$$props*/ 8388608) {
+    			if (dirty[0] & /*$$props*/ 16777216) {
     				toggle_class(input0, "drag", true);
     			}
 
-    			if (dirty[0] & /*$$props, dragging*/ 8388616) {
-    				toggle_class(input0, "dragging", /*dragging*/ ctx[3]);
+    			if (dirty[0] & /*$$props, dragging*/ 16777232) {
+    				toggle_class(input0, "dragging", /*dragging*/ ctx[4]);
     			}
 
-    			if (dirty[0] & /*$$props, stepFactor*/ 8388624) {
-    				toggle_class(input0, "fast", /*stepFactor*/ ctx[4] > 1 ? "fast" : "");
+    			if (dirty[0] & /*$$props, stepFactor*/ 16777248) {
+    				toggle_class(input0, "fast", /*stepFactor*/ ctx[5] > 1 ? "fast" : "");
     			}
 
-    			if (dirty[0] & /*$$props, stepFactor*/ 8388624) {
-    				toggle_class(input0, "slow", /*stepFactor*/ ctx[4] < 1 ? "slow" : "");
+    			if (dirty[0] & /*$$props, stepFactor*/ 16777248) {
+    				toggle_class(input0, "slow", /*stepFactor*/ ctx[5] < 1 ? "slow" : "");
     			}
 
-    			if (dirty[0] & /*$$props, dragFocussed*/ 8388610) {
-    				toggle_class(input0, "focus", /*dragFocussed*/ ctx[1]);
+    			if (dirty[0] & /*$$props, dragFocussed*/ 16777220) {
+    				toggle_class(input0, "focus", /*dragFocussed*/ ctx[2]);
     			}
 
-    			if (dirty[0] & /*$$props, editing*/ 8388640) {
-    				toggle_class(input0, "inactive", /*editing*/ ctx[5]);
+    			if (dirty[0] & /*$$props, editing*/ 16777280) {
+    				toggle_class(input0, "inactive", /*editing*/ ctx[6]);
     			}
 
-    			if (dirty[0] & /*style*/ 512) {
-    				attr(input1, "style", /*style*/ ctx[9]);
+    			if (dirty[0] & /*style*/ 1024) {
+    				attr(input1, "style", /*style*/ ctx[10]);
     			}
 
-    			if (dirty[0] & /*$$props*/ 8388608 && input1_class_value !== (input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[23].class) + " svelte-14p4d2s"))) {
+    			if (dirty[0] & /*$$props*/ 16777216 && input1_class_value !== (input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-14p4d2s"))) {
     				attr(input1, "class", input1_class_value);
     			}
 
-    			if (dirty[0] & /*step*/ 1 && input1_inputmode_value !== (input1_inputmode_value = /*step*/ ctx[0] == Math.round(/*step*/ ctx[0])
+    			if (dirty[0] & /*step, min*/ 3 && input1_inputmode_value !== (input1_inputmode_value = /*step*/ ctx[1] == Math.round(/*step*/ ctx[1]) && /*min*/ ctx[0] >= 0
     			? "numeric"
     			: "text")) {
     				attr(input1, "inputmode", input1_inputmode_value);
     			}
 
-    			if (dirty[0] & /*visibleValue*/ 64 && input1.value !== /*visibleValue*/ ctx[6]) {
-    				set_input_value(input1, /*visibleValue*/ ctx[6]);
+    			if (dirty[0] & /*visibleValue*/ 128 && input1.value !== /*visibleValue*/ ctx[7]) {
+    				set_input_value(input1, /*visibleValue*/ ctx[7]);
     			}
 
-    			if (dirty[0] & /*$$props, $$props*/ 8388608) {
-    				toggle_class(input1, "default", !/*$$props*/ ctx[23].class ? true : false);
+    			if (dirty[0] & /*$$props, $$props*/ 16777216) {
+    				toggle_class(input1, "default", !/*$$props*/ ctx[24].class ? true : false);
     			}
 
-    			if (dirty[0] & /*$$props*/ 8388608) {
+    			if (dirty[0] & /*$$props*/ 16777216) {
     				toggle_class(input1, "edit", true);
     			}
 
-    			if (dirty[0] & /*$$props, editing*/ 8388640) {
-    				toggle_class(input1, "editing", /*editing*/ ctx[5]);
+    			if (dirty[0] & /*$$props, editing*/ 16777280) {
+    				toggle_class(input1, "editing", /*editing*/ ctx[6]);
     			}
 
-    			if (dirty[0] & /*$$props, editFocussed*/ 8388612) {
-    				toggle_class(input1, "focus", /*editFocussed*/ ctx[2]);
+    			if (dirty[0] & /*$$props, editFocussed*/ 16777224) {
+    				toggle_class(input1, "focus", /*editFocussed*/ ctx[3]);
     			}
 
-    			if (dirty[0] & /*$$props, editing*/ 8388640) {
-    				toggle_class(input1, "inactive", !/*editing*/ ctx[5]);
+    			if (dirty[0] & /*$$props, editing*/ 16777280) {
+    				toggle_class(input1, "inactive", !/*editing*/ ctx[6]);
     			}
     		},
     		i: noop,
@@ -584,12 +584,12 @@
 
     	function dragstartHandler(ev) {
     		dispatch("consoleLog", ev.type);
-    		$$invalidate(3, dragging = true);
+    		$$invalidate(4, dragging = true);
     		dragElement.focus();
     		hasMoved = 0;
     		clickX = isTouchDevice ? ev.touches[0].clientX : ev.clientX;
     		clickY = isTouchDevice ? ev.touches[0].clientY : ev.clientY;
-    		$$invalidate(3, dragging = true);
+    		$$invalidate(4, dragging = true);
     		updateValues(value);
     	}
 
@@ -622,7 +622,7 @@
 
     	function mouseupHandler(ev) {
     		dispatch("consoleLog", ev.type);
-    		$$invalidate(3, dragging = false);
+    		$$invalidate(4, dragging = false);
 
     		if (hasMoved < 2) {
     			startEditing();
@@ -631,17 +631,17 @@
 
     	function dragFocusHandler(ev) {
     		dispatch("consoleLog", ev.type);
-    		$$invalidate(1, dragFocussed = true);
+    		$$invalidate(2, dragFocussed = true);
     	}
 
     	function dragBlurHandler(ev) {
     		dispatch("consoleLog", ev.type);
-    		$$invalidate(1, dragFocussed = false);
+    		$$invalidate(2, dragFocussed = false);
     	}
 
     	function editFocusHandler(ev) {
     		dispatch("consoleLog", ev.type);
-    		$$invalidate(2, editFocussed = true);
+    		$$invalidate(3, editFocussed = true);
     	}
 
     	async function editBlurHandler(ev) {
@@ -709,7 +709,7 @@
     	}
 
     	async function startEditing() {
-    		$$invalidate(5, editing = true);
+    		$$invalidate(6, editing = true);
     		preciseValue = parseFloat(visibleValue);
     		await tick();
     		editElement.focus();
@@ -717,8 +717,8 @@
     	}
 
     	function stopEditing() {
-    		$$invalidate(2, editFocussed = false);
-    		$$invalidate(5, editing = false);
+    		$$invalidate(3, editFocussed = false);
+    		$$invalidate(6, editing = false);
     		let checkValue = parseFloat(editElement.value);
 
     		if (!isNaN(checkValue)) {
@@ -753,15 +753,15 @@
     	function updateValues(val) {
     		preciseValue = parseFloat(val);
     		preciseValue = keepInRange(preciseValue);
-    		$$invalidate(6, visibleValue = Math.round(preciseValue / step) * step);
-    		$$invalidate(6, visibleValue = visibleValue.toFixed(decimals));
-    		$$invalidate(24, value = roundToPrecision(preciseValue));
+    		$$invalidate(7, visibleValue = Math.round(preciseValue / step) * step);
+    		$$invalidate(7, visibleValue = visibleValue.toFixed(decimals));
+    		$$invalidate(25, value = roundToPrecision(preciseValue));
     		dispatch("input", parseFloat(value));
     		dispatch("change", parseFloat(value));
     	}
 
     	function keepInRange(val) {
-    		$$invalidate(25, min = parseFloat(min));
+    		$$invalidate(0, min = parseFloat(min));
     		$$invalidate(26, max = parseFloat(max));
 
     		if (circular) {
@@ -785,34 +785,34 @@
     	function input0_binding($$value) {
     		binding_callbacks[$$value ? "unshift" : "push"](() => {
     			dragElement = $$value;
-    			$$invalidate(7, dragElement);
+    			$$invalidate(8, dragElement);
     		});
     	}
 
     	function input0_input_handler() {
     		visibleValue = this.value;
-    		$$invalidate(6, visibleValue);
+    		$$invalidate(7, visibleValue);
     	}
 
     	function input1_binding($$value) {
     		binding_callbacks[$$value ? "unshift" : "push"](() => {
     			editElement = $$value;
-    			$$invalidate(8, editElement);
+    			$$invalidate(9, editElement);
     		});
     	}
 
     	function input1_input_handler() {
     		visibleValue = this.value;
-    		$$invalidate(6, visibleValue);
+    		$$invalidate(7, visibleValue);
     	}
 
     	$$self.$$set = $$new_props => {
-    		$$invalidate(23, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
+    		$$invalidate(24, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
     		if ("options" in $$new_props) $$invalidate(27, options = $$new_props.options);
-    		if ("value" in $$new_props) $$invalidate(24, value = $$new_props.value);
-    		if ("min" in $$new_props) $$invalidate(25, min = $$new_props.min);
+    		if ("value" in $$new_props) $$invalidate(25, value = $$new_props.value);
+    		if ("min" in $$new_props) $$invalidate(0, min = $$new_props.min);
     		if ("max" in $$new_props) $$invalidate(26, max = $$new_props.max);
-    		if ("step" in $$new_props) $$invalidate(0, step = $$new_props.step);
+    		if ("step" in $$new_props) $$invalidate(1, step = $$new_props.step);
     		if ("precision" in $$new_props) $$invalidate(28, precision = $$new_props.precision);
     		if ("decimals" in $$new_props) $$invalidate(29, decimals = $$new_props.decimals);
     		if ("speed" in $$new_props) $$invalidate(30, speed = $$new_props.speed);
@@ -829,7 +829,7 @@
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty[0] & /*editing, dragging, value*/ 16777256) {
+    		if ($$self.$$.dirty[0] & /*editing, dragging, value*/ 33554512) {
     			// updaters --------------------------------
     			{
     				if (!editing && !dragging) {
@@ -838,21 +838,21 @@
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*dragFocussed, editing*/ 34 | $$self.$$.dirty[1] & /*altPressed, shiftPressed*/ 3072) {
+    		if ($$self.$$.dirty[0] & /*dragFocussed, editing*/ 68 | $$self.$$.dirty[1] & /*altPressed, shiftPressed*/ 3072) {
     			{
-    				$$invalidate(4, stepFactor = 1);
+    				$$invalidate(5, stepFactor = 1);
 
     				if (dragFocussed && !editing) {
     					if (altPressed && shiftPressed) {
-    						$$invalidate(4, stepFactor = 10);
+    						$$invalidate(5, stepFactor = 10);
     					} else if (altPressed) {
-    						$$invalidate(4, stepFactor = 0.1);
+    						$$invalidate(5, stepFactor = 0.1);
     					}
     				}
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*dragging*/ 8 | $$self.$$.dirty[1] & /*horizontal, vertical, cursor, defaultCursor*/ 4611) {
+    		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, cursor, defaultCursor*/ 4611) {
     			{
     				// let cursorClass = horizontal
     				//   ? vertical
@@ -871,25 +871,25 @@
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 574 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 5112) {
+    		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 5112) {
     			{
-    				$$invalidate(9, style = mainStyle ?? "");
+    				$$invalidate(10, style = mainStyle ?? "");
 
-    				$$invalidate(9, style += (dragFocussed || editFocussed) && focusStyle
+    				$$invalidate(10, style += (dragFocussed || editFocussed) && focusStyle
     				? ";" + focusStyle
     				: "");
 
-    				$$invalidate(9, style += !editing && stepFactor > 1 && fastStyle
+    				$$invalidate(10, style += !editing && stepFactor > 1 && fastStyle
     				? ";" + fastStyle
     				: "");
 
-    				$$invalidate(9, style += !editing && stepFactor < 1 && slowStyle
+    				$$invalidate(10, style += !editing && stepFactor < 1 && slowStyle
     				? ";" + slowStyle
     				: "");
 
-    				$$invalidate(9, style += dragging && draggingStyle ? ";" + draggingStyle : "");
-    				$$invalidate(9, style += editing && editingStyle ? ";" + editingStyle : "");
-    				$$invalidate(9, style += !editing ? ";cursor:" + (cursor ?? defaultCursor) : "");
+    				$$invalidate(10, style += dragging && draggingStyle ? ";" + draggingStyle : "");
+    				$$invalidate(10, style += editing && editingStyle ? ";" + editingStyle : "");
+    				$$invalidate(10, style += !editing ? ";cursor:" + (cursor ?? defaultCursor) : "");
     			}
     		}
     	};
@@ -897,6 +897,7 @@
     	$$props = exclude_internal_props($$props);
 
     	return [
+    		min,
     		step,
     		dragFocussed,
     		editFocussed,
@@ -922,7 +923,6 @@
     		inputHandler,
     		$$props,
     		value,
-    		min,
     		max,
     		options,
     		precision,
@@ -961,10 +961,10 @@
     			safe_not_equal,
     			{
     				options: 27,
-    				value: 24,
-    				min: 25,
+    				value: 25,
+    				min: 0,
     				max: 26,
-    				step: 0,
+    				step: 1,
     				precision: 28,
     				decimals: 29,
     				speed: 30,
