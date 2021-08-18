@@ -171,15 +171,15 @@
     outline:none;
   }
 
-  :global(.number-spinner-custom).fast {
+  :global(.number-spinner-custom.fast) {
     background-color: #0ccb;
   }
 
-  :global(.number-spinner-custom).slow {
+  :global(.number-spinner-custom.slow) {
     background-color: #66fb;
   }
 
-  :global(.number-spinner-custom).editing {
+  :global(.number-spinner-custom.editing) {
     background-color: #f00;
     cursor: default;
   }
