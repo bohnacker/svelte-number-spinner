@@ -181,7 +181,7 @@
 
   <div class="row">
     <div class="explanation">
-      Using a callback to format the displayed value<br />Current value is {value9}
+      Using a callback to format and parse the displayed value<br />Current value is {value9}
     </div>
     <div class="right">
       <NumberSpinner bind:value={value9} min=0 max=1440 circular=true format={formatMinutesToTime} parse={parseTimeToMinutes}/>

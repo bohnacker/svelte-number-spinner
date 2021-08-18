@@ -1839,7 +1839,7 @@ var app = (function () {
     			t62 = space();
     			div28 = element("div");
     			div26 = element("div");
-    			t63 = text("Using a callback to format the displayed value");
+    			t63 = text("Using a callback to format and parse the displayed value");
     			br10 = element("br");
     			t64 = text("Current value is ");
     			t65 = text(/*value9*/ ctx[9]);
@@ -1951,15 +1951,15 @@ var app = (function () {
     			attr_dev(hr8, "class", "svelte-11zku27");
     			add_location(hr8, file, 179, 2, 4413);
     			attr_dev(br10, "class", "svelte-11zku27");
-    			add_location(br10, file, 183, 52, 4523);
+    			add_location(br10, file, 183, 62, 4533);
     			attr_dev(div26, "class", "explanation svelte-11zku27");
     			add_location(div26, file, 182, 4, 4445);
     			attr_dev(div27, "class", "right svelte-11zku27");
-    			add_location(div27, file, 185, 4, 4570);
+    			add_location(div27, file, 185, 4, 4580);
     			attr_dev(div28, "class", "row svelte-11zku27");
     			add_location(div28, file, 181, 2, 4423);
     			attr_dev(hr9, "class", "svelte-11zku27");
-    			add_location(hr9, file, 191, 2, 4744);
+    			add_location(hr9, file, 191, 2, 4754);
     			attr_dev(main, "class", "svelte-11zku27");
     			add_location(main, file, 34, 0, 985);
     		},
