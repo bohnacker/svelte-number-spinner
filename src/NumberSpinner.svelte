@@ -243,16 +243,19 @@
 
   async function startEditing() {
     editing = true;
+    preciseValue = parseFloat(visibleValue);
+
     await tick();
+
     editElement.focus();
-    // Don't know, if it's better to select everything by default or not.
     editElement.select();
-    // editElement.setSelectionRange(0, 30);
   }
 
   function stopEditing() {
     editFocussed = false;
     editing = false;
+    preciseValue = parseFloat(visibleValue);
+    updateValues(preciseValue);
 
     // bring focus back to the drag element if the body was clicked
     setTimeout(() => {
@@ -260,7 +263,6 @@
         dragElement.focus();
       }
     }, 0);
-
     // This doesn't work (maybe document.activeElement is updated even later), but would be more elegant svelte-like:
     // await tick();
     // console.log(document.activeElement);
@@ -342,7 +344,7 @@
   class:focus={dragFocussed}
   class:inactive={editing}
   bind:this={dragElement}
-  bind:value
+  bind:value={visibleValue}
   readonly={true}
   contenteditable={false}
   tabindex="0"
@@ -361,7 +363,7 @@
   class:inactive={!editing}
   type="text"
   bind:this={editElement}
-  bind:value
+  bind:value={visibleValue}
 />
 
 <!-- CSS --------------------------------------------------------------->

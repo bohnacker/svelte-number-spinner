@@ -42,7 +42,7 @@
 <hr>
 
 <div class="row">
-  <div class="explanation">step = 0.01, decimals = 2, precision = 0.001, editOnClick = true<br>Current value is {value3}</div> 
+  <div class="explanation">step = 0.01, decimals = 2, precision = 0.001<br>Current value is {value3}</div> 
   <div class="right">
     <NumberSpinner bind:value={value3} min=-5 max=5 step=0.01 decimals=2 precision=0.001 editOnClick={true}/>
   </div> 
