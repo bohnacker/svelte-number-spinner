@@ -16,6 +16,14 @@
   export let horizontal = options.horizontal ?? true;
   export let vertical = options.vertical ?? false;
   export let circular = options.circular ?? false;
+  export let mainStyle = options.mainStyle ?? undefined;
+  export let fastStyle = options.fastStyle ?? undefined;
+  export let slowStyle = options.slowStyle ?? undefined;
+  export let focusStyle = options.focusStyle ?? undefined;
+  export let draggingStyle = options.draggingStyle ?? undefined;
+  export let editingStyle = options.editingStyle ?? undefined;
+  export let cursor = options.cursor ?? undefined;
+
 
   let preciseValue;
   let visibleValue;
@@ -33,6 +41,11 @@
   let shiftPressed = false;
 
   let editing = false;
+
+  let style;
+  let htmlNode = document.querySelector('html');
+  let htmlNodeOriginalCursor = htmlNode.style.cursor;
+  let defaultCursor;
 
   // update all values (preciseValue, visibleValue)
   updateValues(value);
@@ -85,7 +98,6 @@
 
   function dblclickHandler(ev) {
     // dispatch("consoleLog", ev.type);
-
     // startEditing();
   }
 
@@ -125,49 +137,61 @@
     stopEditing();
   }
 
-  function keydownHandler(e) {
+  function keydownHandler(ev) {
+    // dispatch("consoleLog", ev.type);
     // console.log(e);
-    if (e.key == "Shift") {
+
+    if (ev.key == "Shift") {
       shiftPressed = true;
     }
-    if (e.key == "Alt") {
+    if (ev.key == "Alt") {
       altPressed = true;
     }
   }
 
-  function keyupHandler(e) {
+  function keyupHandler(ev) {
+    // dispatch("consoleLog", ev.type);
     // console.log(e)
-    if (e.key == "Shift") {
+
+    if (ev.key == "Shift") {
       shiftPressed = false;
     }
 
-    if (e.key == "Alt") {
+    if (ev.key == "Alt") {
       altPressed = false;
     }
 
-    if (dragFocussed) {
-      if (!editing) {
-        // increment should at least be step
-        let increment = Math.max(step, step * Math.round(10 * speed));
+    if (dragFocussed && !editing) {
+      // increment should at least be step
+      let increment = Math.max(step, step * Math.round(10 * speed));
 
-        if (e.key == "ArrowUp" || e.key == "ArrowRight") {
-          addToValue(increment);
-        }
-        if (e.key == "ArrowDown" || e.key == "ArrowLeft") {
-          addToValue(-increment);
-        }
+      if (ev.key == "ArrowUp" || ev.key == "ArrowRight") {
+        addToValue(increment);
       }
-
-      if (e.key == "Enter") {
-        if (!editing) {
-          startEditing();
-        }
+      if (ev.key == "ArrowDown" || ev.key == "ArrowLeft") {
+        addToValue(-increment);
       }
-      
+      if (ev.key == "Enter") {
+        startEditing();
+      }
     } else if (editFocussed && editing) {
-      if (e.key == "Enter" || e.key == "Escape") {
-          stopEditing();
+      if (ev.key == "Enter" || ev.key == "Escape") {
+        stopEditing();
       }
+    }
+  }
+
+  function inputHandler(ev) {
+    // dispatch("consoleLog", ev.type);
+    // console.log(e);
+
+    let checkValue = parseFloat(editElement.value);
+
+    if (!isNaN(checkValue)) {
+      preciseValue = checkValue;
+      preciseValue = keepInRange(preciseValue);
+      // console.log("dispatch input: ", preciseValue)
+      dispatch('input', parseFloat(roundToPrecision(preciseValue)));
     }
   }
 
@@ -189,6 +213,35 @@
       }
     }
   }
+
+  $: {
+    // let cursorClass = horizontal
+    //   ? vertical
+    //     ? 'move-cursor'
+    //     : 'horizontal-cursor'
+    //   : 'vertical-cursor';
+
+    defaultCursor = horizontal ? (vertical ? 'move' : 'ew-resize') : 'ns-resize';
+
+    if (dragging) {
+      htmlNode.style.cursor = cursor ?? defaultCursor;
+      // addClass(htmlNode, cursorClass);
+    } else {
+      htmlNode.style.cursor = htmlNodeOriginalCursor;
+      // removeClass(htmlNode, cursorClass);
+    }
+  }
+
+  $: {
+    style = mainStyle ?? '';
+    style += (dragFocussed || editFocussed) && focusStyle ? ';' + focusStyle : '';
+    style += !editing && stepFactor > 1 && fastStyle ? ';' + fastStyle : '';
+    style += !editing && stepFactor < 1 && slowStyle ? ';' + slowStyle : '';
+    style += dragging && draggingStyle ? ';' + draggingStyle : '';
+    style += editing && editingStyle ? ';' + editingStyle : '';
+    style += !editing ? ';cursor:' + (cursor ?? defaultCursor) : '';
+  }
+
 
   async function startEditing() {
     editing = true;
@@ -282,6 +335,7 @@
   on:dblclick|stopPropagation={dblclickHandler}
   on:focus={dragFocusHandler}
   on:blur={dragBlurHandler}
+  {style}
   class={$$props.class}
   class:drag={true}
   class:default={!$$props.class ? true : false}
@@ -300,6 +354,8 @@
   on:touchend|stopPropagation={(ev) => {}}
   on:focus={editFocusHandler}
   on:blur={editBlurHandler}
+  on:input={inputHandler}
+  {style}
   class={$$props.class}
   class:edit={true}
   class:default={!$$props.class ? true : false}
