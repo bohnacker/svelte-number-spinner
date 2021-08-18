@@ -18,7 +18,7 @@
 <h2>Svelte Number Spinner Example</h2>
 
 <p>
-  Change the values of the number spinners through mousedrag and arrow keys. Press <i>Alt</i> for smaller steps, <i>Alt+Shift</i> for larger steps. Double click to edit.
+  Change the values of the number spinners through mousedrag and arrow keys. Press <i>Alt</i> for smaller steps, <i>Alt+Shift</i> for larger steps. Click without dragging to edit.
 </p>
 
 <hr>

@@ -24,7 +24,6 @@
   export let editingStyle = options.editingStyle ?? undefined;
   export let cursor = options.cursor ?? undefined;
 
-
   let preciseValue;
   let visibleValue;
 
@@ -43,7 +42,7 @@
   let editing = false;
 
   let style;
-  let htmlNode = document.querySelector('html');
+  let htmlNode = document.querySelector("html");
   let htmlNodeOriginalCursor = htmlNode.style.cursor;
   let defaultCursor;
 
@@ -191,7 +190,7 @@
       preciseValue = checkValue;
       preciseValue = keepInRange(preciseValue);
       // console.log("dispatch input: ", preciseValue)
-      dispatch('input', parseFloat(roundToPrecision(preciseValue)));
+      dispatch("input", parseFloat(roundToPrecision(preciseValue)));
     }
   }
 
@@ -221,7 +220,7 @@
     //     : 'horizontal-cursor'
     //   : 'vertical-cursor';
 
-    defaultCursor = horizontal ? (vertical ? 'move' : 'ew-resize') : 'ns-resize';
+    defaultCursor = horizontal ? (vertical ? "move" : "ew-resize") : "ns-resize";
 
     if (dragging) {
       htmlNode.style.cursor = cursor ?? defaultCursor;
@@ -233,15 +232,14 @@
   }
 
   $: {
-    style = mainStyle ?? '';
-    style += (dragFocussed || editFocussed) && focusStyle ? ';' + focusStyle : '';
-    style += !editing && stepFactor > 1 && fastStyle ? ';' + fastStyle : '';
-    style += !editing && stepFactor < 1 && slowStyle ? ';' + slowStyle : '';
-    style += dragging && draggingStyle ? ';' + draggingStyle : '';
-    style += editing && editingStyle ? ';' + editingStyle : '';
-    style += !editing ? ';cursor:' + (cursor ?? defaultCursor) : '';
+    style = mainStyle ?? "";
+    style += (dragFocussed || editFocussed) && focusStyle ? ";" + focusStyle : "";
+    style += !editing && stepFactor > 1 && fastStyle ? ";" + fastStyle : "";
+    style += !editing && stepFactor < 1 && slowStyle ? ";" + slowStyle : "";
+    style += dragging && draggingStyle ? ";" + draggingStyle : "";
+    style += editing && editingStyle ? ";" + editingStyle : "";
+    style += !editing ? ";cursor:" + (cursor ?? defaultCursor) : "";
   }
-
 
   async function startEditing() {
     editing = true;
@@ -341,8 +339,8 @@
   class:default={!$$props.class ? true : false}
   class:fast={stepFactor > 1 ? "fast" : ""}
   class:slow={stepFactor < 1 ? "slow" : ""}
-  class:active={!editing}
   class:focus={dragFocussed}
+  class:inactive={editing}
   bind:this={dragElement}
   bind:value
   readonly={true}
@@ -359,8 +357,8 @@
   class={$$props.class}
   class:edit={true}
   class:default={!$$props.class ? true : false}
-  class:active={editing}
   class:focus={editFocussed}
+  class:inactive={!editing}
   type="text"
   bind:this={editElement}
   bind:value
@@ -369,7 +367,7 @@
 <!-- CSS --------------------------------------------------------------->
 <style>
   .default {
-    display: none;
+    display: inline-block;
     box-sizing: border-box;
     font-variant-numeric: tabular-nums;
     background-color: white;
@@ -410,7 +408,6 @@
   }
 
   .default.drag {
-    user-select: none;
     color: royalblue;
     cursor: ew-resize;
   }
@@ -421,12 +418,16 @@
 
   /* mandatory css styles, not customizable */
 
-  /* remove text selection background in non-editing mode */
+  .drag {
+    user-select: none;
+  }
+
   .drag::selection {
+    /* remove text selection background in non-editing mode */
     background: #0000;
   }
 
-  .active {
-    display: inline-block;
+  .inactive {
+    display: none !important;
   }
 </style>
