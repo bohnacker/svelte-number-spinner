@@ -23,6 +23,7 @@
   export let draggingStyle = options.draggingStyle ?? undefined;
   export let editingStyle = options.editingStyle ?? undefined;
   export let cursor = options.cursor ?? undefined;
+  export let format = options.format ?? undefined;
 
   let preciseValue;
   let visibleValue;
@@ -294,7 +295,11 @@
     preciseValue = keepInRange(preciseValue);
 
     visibleValue = Math.round(preciseValue / step) * step;
-    visibleValue = visibleValue.toFixed(decimals);
+    if (format) {
+      visibleValue = format(visibleValue)
+    } else {  
+      visibleValue = visibleValue.toFixed(decimals);
+    }
 
     value = roundToPrecision(preciseValue);
 

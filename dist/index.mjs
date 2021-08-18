@@ -374,11 +374,11 @@ function create_fragment(ctx) {
 		},
 		m(target, anchor) {
 			insert(target, input0, anchor);
-			/*input0_binding*/ ctx[44](input0);
+			/*input0_binding*/ ctx[45](input0);
 			set_input_value(input0, /*visibleValue*/ ctx[7]);
 			insert(target, t, anchor);
 			insert(target, input1, anchor);
-			/*input1_binding*/ ctx[46](input1);
+			/*input1_binding*/ ctx[47](input1);
 			set_input_value(input1, /*visibleValue*/ ctx[7]);
 
 			if (!mounted) {
@@ -410,13 +410,13 @@ function create_fragment(ctx) {
 					listen(input0, "dblclick", stop_propagation(dblclickHandler)),
 					listen(input0, "focus", /*dragFocusHandler*/ ctx[17]),
 					listen(input0, "blur", /*dragBlurHandler*/ ctx[18]),
-					listen(input0, "input", /*input0_input_handler*/ ctx[45]),
+					listen(input0, "input", /*input0_input_handler*/ ctx[46]),
 					listen(input1, "mouseup", stop_propagation(mouseup_handler)),
 					listen(input1, "touchend", stop_propagation(touchend_handler)),
 					listen(input1, "focus", /*editFocusHandler*/ ctx[19]),
 					listen(input1, "blur", /*editBlurHandler*/ ctx[20]),
 					listen(input1, "input", /*inputHandler*/ ctx[23]),
-					listen(input1, "input", /*input1_input_handler*/ ctx[47])
+					listen(input1, "input", /*input1_input_handler*/ ctx[48])
 				];
 
 				mounted = true;
@@ -507,10 +507,10 @@ function create_fragment(ctx) {
 		o: noop,
 		d(detaching) {
 			if (detaching) detach(input0);
-			/*input0_binding*/ ctx[44](null);
+			/*input0_binding*/ ctx[45](null);
 			if (detaching) detach(t);
 			if (detaching) detach(input1);
-			/*input1_binding*/ ctx[46](null);
+			/*input1_binding*/ ctx[47](null);
 			mounted = false;
 			run_all(dispose);
 		}
@@ -550,6 +550,7 @@ function instance($$self, $$props, $$invalidate) {
 	let { draggingStyle = options.draggingStyle ?? undefined } = $$props;
 	let { editingStyle = options.editingStyle ?? undefined } = $$props;
 	let { cursor = options.cursor ?? undefined } = $$props;
+	let { format = options.format ?? undefined } = $$props;
 	let preciseValue;
 	let visibleValue;
 	let isTouchDevice = false;
@@ -647,11 +648,11 @@ function instance($$self, $$props, $$invalidate) {
 		// dispatch("consoleLog", ev.type);
 		// console.log(e);
 		if (ev.key == "Shift") {
-			$$invalidate(42, shiftPressed = true);
+			$$invalidate(43, shiftPressed = true);
 		}
 
 		if (ev.key == "Alt") {
-			$$invalidate(41, altPressed = true);
+			$$invalidate(42, altPressed = true);
 		}
 	}
 
@@ -659,11 +660,11 @@ function instance($$self, $$props, $$invalidate) {
 		// dispatch("consoleLog", ev.type);
 		// console.log(e)
 		if (ev.key == "Shift") {
-			$$invalidate(42, shiftPressed = false);
+			$$invalidate(43, shiftPressed = false);
 		}
 
 		if (ev.key == "Alt") {
-			$$invalidate(41, altPressed = false);
+			$$invalidate(42, altPressed = false);
 		}
 
 		if (dragFocussed && !editing) {
@@ -748,7 +749,13 @@ function instance($$self, $$props, $$invalidate) {
 		preciseValue = parseFloat(val);
 		preciseValue = keepInRange(preciseValue);
 		$$invalidate(7, visibleValue = Math.round(preciseValue / step) * step);
-		$$invalidate(7, visibleValue = visibleValue.toFixed(decimals));
+
+		if (format) {
+			$$invalidate(7, visibleValue = format(visibleValue));
+		} else {
+			$$invalidate(7, visibleValue = visibleValue.toFixed(decimals));
+		}
+
 		$$invalidate(25, value = roundToPrecision(preciseValue));
 		dispatch("input", parseFloat(value));
 		dispatch("change", parseFloat(value));
@@ -820,6 +827,7 @@ function instance($$self, $$props, $$invalidate) {
 		if ("draggingStyle" in $$new_props) $$invalidate(38, draggingStyle = $$new_props.draggingStyle);
 		if ("editingStyle" in $$new_props) $$invalidate(39, editingStyle = $$new_props.editingStyle);
 		if ("cursor" in $$new_props) $$invalidate(40, cursor = $$new_props.cursor);
+		if ("format" in $$new_props) $$invalidate(41, format = $$new_props.format);
 	};
 
 	$$self.$$.update = () => {
@@ -832,7 +840,7 @@ function instance($$self, $$props, $$invalidate) {
 			}
 		}
 
-		if ($$self.$$.dirty[0] & /*dragFocussed, editing*/ 68 | $$self.$$.dirty[1] & /*altPressed, shiftPressed*/ 3072) {
+		if ($$self.$$.dirty[0] & /*dragFocussed, editing*/ 68 | $$self.$$.dirty[1] & /*altPressed, shiftPressed*/ 6144) {
 			{
 				$$invalidate(5, stepFactor = 1);
 
@@ -846,14 +854,14 @@ function instance($$self, $$props, $$invalidate) {
 			}
 		}
 
-		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, cursor, defaultCursor*/ 4611) {
+		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, cursor, defaultCursor*/ 8707) {
 			{
 				// let cursorClass = horizontal
 				//   ? vertical
 				//     ? 'move-cursor'
 				//     : 'horizontal-cursor'
 				//   : 'vertical-cursor';
-				$$invalidate(43, defaultCursor = horizontal
+				$$invalidate(44, defaultCursor = horizontal
 				? vertical ? "move" : "ew-resize"
 				: "ns-resize");
 
@@ -865,7 +873,7 @@ function instance($$self, $$props, $$invalidate) {
 			}
 		}
 
-		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 5112) {
+		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 9208) {
 			{
 				$$invalidate(10, style = mainStyle ?? "");
 
@@ -932,6 +940,7 @@ function instance($$self, $$props, $$invalidate) {
 		draggingStyle,
 		editingStyle,
 		cursor,
+		format,
 		altPressed,
 		shiftPressed,
 		defaultCursor,
@@ -971,7 +980,8 @@ class NumberSpinner extends SvelteComponent {
 				focusStyle: 37,
 				draggingStyle: 38,
 				editingStyle: 39,
-				cursor: 40
+				cursor: 40,
+				format: 41
 			},
 			[-1, -1, -1]
 		);

@@ -751,11 +751,11 @@ var app = (function () {
         		},
         		m(target, anchor) {
         			insert(target, input0, anchor);
-        			/*input0_binding*/ ctx[44](input0);
+        			/*input0_binding*/ ctx[45](input0);
         			set_input_value(input0, /*visibleValue*/ ctx[7]);
         			insert(target, t, anchor);
         			insert(target, input1, anchor);
-        			/*input1_binding*/ ctx[46](input1);
+        			/*input1_binding*/ ctx[47](input1);
         			set_input_value(input1, /*visibleValue*/ ctx[7]);
 
         			if (!mounted) {
@@ -787,13 +787,13 @@ var app = (function () {
         					listen(input0, "dblclick", stop_propagation(dblclickHandler)),
         					listen(input0, "focus", /*dragFocusHandler*/ ctx[17]),
         					listen(input0, "blur", /*dragBlurHandler*/ ctx[18]),
-        					listen(input0, "input", /*input0_input_handler*/ ctx[45]),
+        					listen(input0, "input", /*input0_input_handler*/ ctx[46]),
         					listen(input1, "mouseup", stop_propagation(mouseup_handler)),
         					listen(input1, "touchend", stop_propagation(touchend_handler)),
         					listen(input1, "focus", /*editFocusHandler*/ ctx[19]),
         					listen(input1, "blur", /*editBlurHandler*/ ctx[20]),
         					listen(input1, "input", /*inputHandler*/ ctx[23]),
-        					listen(input1, "input", /*input1_input_handler*/ ctx[47])
+        					listen(input1, "input", /*input1_input_handler*/ ctx[48])
         				];
 
         				mounted = true;
@@ -884,10 +884,10 @@ var app = (function () {
         		o: noop,
         		d(detaching) {
         			if (detaching) detach(input0);
-        			/*input0_binding*/ ctx[44](null);
+        			/*input0_binding*/ ctx[45](null);
         			if (detaching) detach(t);
         			if (detaching) detach(input1);
-        			/*input1_binding*/ ctx[46](null);
+        			/*input1_binding*/ ctx[47](null);
         			mounted = false;
         			run_all(dispose);
         		}
@@ -927,6 +927,7 @@ var app = (function () {
         	let { draggingStyle = options.draggingStyle ?? undefined } = $$props;
         	let { editingStyle = options.editingStyle ?? undefined } = $$props;
         	let { cursor = options.cursor ?? undefined } = $$props;
+        	let { format = options.format ?? undefined } = $$props;
         	let preciseValue;
         	let visibleValue;
         	let isTouchDevice = false;
@@ -1024,11 +1025,11 @@ var app = (function () {
         		// dispatch("consoleLog", ev.type);
         		// console.log(e);
         		if (ev.key == "Shift") {
-        			$$invalidate(42, shiftPressed = true);
+        			$$invalidate(43, shiftPressed = true);
         		}
 
         		if (ev.key == "Alt") {
-        			$$invalidate(41, altPressed = true);
+        			$$invalidate(42, altPressed = true);
         		}
         	}
 
@@ -1036,11 +1037,11 @@ var app = (function () {
         		// dispatch("consoleLog", ev.type);
         		// console.log(e)
         		if (ev.key == "Shift") {
-        			$$invalidate(42, shiftPressed = false);
+        			$$invalidate(43, shiftPressed = false);
         		}
 
         		if (ev.key == "Alt") {
-        			$$invalidate(41, altPressed = false);
+        			$$invalidate(42, altPressed = false);
         		}
 
         		if (dragFocussed && !editing) {
@@ -1125,7 +1126,13 @@ var app = (function () {
         		preciseValue = parseFloat(val);
         		preciseValue = keepInRange(preciseValue);
         		$$invalidate(7, visibleValue = Math.round(preciseValue / step) * step);
-        		$$invalidate(7, visibleValue = visibleValue.toFixed(decimals));
+
+        		if (format) {
+        			$$invalidate(7, visibleValue = format(visibleValue));
+        		} else {
+        			$$invalidate(7, visibleValue = visibleValue.toFixed(decimals));
+        		}
+
         		$$invalidate(25, value = roundToPrecision(preciseValue));
         		dispatch("input", parseFloat(value));
         		dispatch("change", parseFloat(value));
@@ -1197,6 +1204,7 @@ var app = (function () {
         		if ("draggingStyle" in $$new_props) $$invalidate(38, draggingStyle = $$new_props.draggingStyle);
         		if ("editingStyle" in $$new_props) $$invalidate(39, editingStyle = $$new_props.editingStyle);
         		if ("cursor" in $$new_props) $$invalidate(40, cursor = $$new_props.cursor);
+        		if ("format" in $$new_props) $$invalidate(41, format = $$new_props.format);
         	};
 
         	$$self.$$.update = () => {
@@ -1209,7 +1217,7 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*dragFocussed, editing*/ 68 | $$self.$$.dirty[1] & /*altPressed, shiftPressed*/ 3072) {
+        		if ($$self.$$.dirty[0] & /*dragFocussed, editing*/ 68 | $$self.$$.dirty[1] & /*altPressed, shiftPressed*/ 6144) {
         			{
         				$$invalidate(5, stepFactor = 1);
 
@@ -1223,14 +1231,14 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, cursor, defaultCursor*/ 4611) {
+        		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, cursor, defaultCursor*/ 8707) {
         			{
         				// let cursorClass = horizontal
         				//   ? vertical
         				//     ? 'move-cursor'
         				//     : 'horizontal-cursor'
         				//   : 'vertical-cursor';
-        				$$invalidate(43, defaultCursor = horizontal
+        				$$invalidate(44, defaultCursor = horizontal
         				? vertical ? "move" : "ew-resize"
         				: "ns-resize");
 
@@ -1242,7 +1250,7 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 5112) {
+        		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 9208) {
         			{
         				$$invalidate(10, style = mainStyle ?? "");
 
@@ -1309,6 +1317,7 @@ var app = (function () {
         		draggingStyle,
         		editingStyle,
         		cursor,
+        		format,
         		altPressed,
         		shiftPressed,
         		defaultCursor,
@@ -1348,7 +1357,8 @@ var app = (function () {
         				focusStyle: 37,
         				draggingStyle: 38,
         				editingStyle: 39,
-        				cursor: 40
+        				cursor: 40,
+        				format: 41
         			},
         			[-1, -1, -1]
         		);
@@ -1488,12 +1498,25 @@ var app = (function () {
     	let updating_value_6;
     	let t61;
     	let hr8;
+    	let t62;
+    	let div28;
+    	let div26;
+    	let t63;
+    	let br10;
+    	let t64;
+    	let t65;
+    	let t66;
+    	let div27;
+    	let numberspinner8;
+    	let updating_value_7;
+    	let t67;
+    	let hr9;
     	let current;
     	let mounted;
     	let dispose;
 
     	function numberspinner0_value_binding(value) {
-    		/*numberspinner0_value_binding*/ ctx[11](value);
+    		/*numberspinner0_value_binding*/ ctx[12](value);
     	}
 
     	let numberspinner0_props = {};
@@ -1510,7 +1533,7 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner0, "value", numberspinner0_value_binding));
 
     	function numberspinner1_value_binding(value) {
-    		/*numberspinner1_value_binding*/ ctx[12](value);
+    		/*numberspinner1_value_binding*/ ctx[13](value);
     	}
 
     	let numberspinner1_props = {
@@ -1532,7 +1555,7 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner1, "value", numberspinner1_value_binding));
 
     	function numberspinner2_value_binding(value) {
-    		/*numberspinner2_value_binding*/ ctx[13](value);
+    		/*numberspinner2_value_binding*/ ctx[14](value);
     	}
 
     	let numberspinner2_props = {
@@ -1556,7 +1579,7 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner2, "value", numberspinner2_value_binding));
 
     	function numberspinner3_value_binding(value) {
-    		/*numberspinner3_value_binding*/ ctx[14](value);
+    		/*numberspinner3_value_binding*/ ctx[15](value);
     	}
 
     	let numberspinner3_props = {
@@ -1582,7 +1605,7 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner3, "value", numberspinner3_value_binding));
 
     	function numberspinner4_value_binding(value) {
-    		/*numberspinner4_value_binding*/ ctx[15](value);
+    		/*numberspinner4_value_binding*/ ctx[16](value);
     	}
 
     	let numberspinner4_props = {
@@ -1606,18 +1629,18 @@ var app = (function () {
 
     	numberspinner5 = new dist({
     			props: {
-    				value: /*value6*/ ctx[9],
+    				value: /*value6*/ ctx[10],
     				min: "-100",
     				max: "100"
     			},
     			$$inline: true
     		});
 
-    	numberspinner5.$on("change", /*change_handler*/ ctx[16]);
-    	numberspinner5.$on("input", /*input_handler*/ ctx[17]);
+    	numberspinner5.$on("change", /*change_handler*/ ctx[17]);
+    	numberspinner5.$on("input", /*input_handler*/ ctx[18]);
 
     	function numberspinner6_value_binding(value) {
-    		/*numberspinner6_value_binding*/ ctx[19](value);
+    		/*numberspinner6_value_binding*/ ctx[20](value);
     	}
 
     	let numberspinner6_props = { min: "0", max: "12", circular: true };
@@ -1634,10 +1657,10 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner6, "value", numberspinner6_value_binding));
 
     	function numberspinner7_value_binding(value) {
-    		/*numberspinner7_value_binding*/ ctx[21](value);
+    		/*numberspinner7_value_binding*/ ctx[22](value);
     	}
 
-    	let numberspinner7_props = { options: /*options*/ ctx[10] };
+    	let numberspinner7_props = { options: /*options*/ ctx[11] };
 
     	if (/*value8*/ ctx[8] !== void 0) {
     		numberspinner7_props.value = /*value8*/ ctx[8];
@@ -1650,6 +1673,28 @@ var app = (function () {
 
     	binding_callbacks.push(() => bind(numberspinner7, "value", numberspinner7_value_binding));
 
+    	function numberspinner8_value_binding(value) {
+    		/*numberspinner8_value_binding*/ ctx[23](value);
+    	}
+
+    	let numberspinner8_props = {
+    		min: "0",
+    		max: "1440",
+    		circular: "true",
+    		format: formatMinutesToTime
+    	};
+
+    	if (/*value9*/ ctx[9] !== void 0) {
+    		numberspinner8_props.value = /*value9*/ ctx[9];
+    	}
+
+    	numberspinner8 = new dist({
+    			props: numberspinner8_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(numberspinner8, "value", numberspinner8_value_binding));
+
     	const block = {
     		c: function create() {
     			main = element("main");
@@ -1660,7 +1705,7 @@ var app = (function () {
     			t2 = text("Change the values of the number spinners through mousedrag and arrow keys. Press ");
     			i0 = element("i");
     			i0.textContent = "Alt";
-    			t4 = text(" for smaller steps, ");
+    			t4 = text(" for\n    smaller steps, ");
     			i1 = element("i");
     			i1.textContent = "Alt+Shift";
     			t6 = text(" for larger steps. Click without dragging to edit.");
@@ -1681,7 +1726,7 @@ var app = (function () {
     			t14 = space();
     			div5 = element("div");
     			div3 = element("div");
-    			t15 = text("Range: 0 - 360, vertical = true (dragging and arrow keys up/down will also change the value), circular = true ");
+    			t15 = text("Range: 0 - 360, vertical = true (dragging and arrow keys up/down will also change the value),\n      circular = true ");
     			br1 = element("br");
     			t16 = text("Current value is ");
     			t17 = text(/*value2*/ ctx[1]);
@@ -1731,10 +1776,10 @@ var app = (function () {
     			div15 = element("div");
     			t39 = text("Get value through input and change events.");
     			br5 = element("br");
-    			t40 = text("\n\t\t\tCurrent input value is ");
+    			t40 = text("\n      Current input value is ");
     			t41 = text(/*value6input*/ ctx[5]);
     			br6 = element("br");
-    			t42 = text(" \n\t\t\tCurrent change value is ");
+    			t42 = text("\n      Current change value is ");
     			t43 = text(/*value6change*/ ctx[6]);
     			t44 = space();
     			div16 = element("div");
@@ -1746,7 +1791,7 @@ var app = (function () {
     			div18 = element("div");
     			t47 = text("Test correct updating of the value if changed from outside.");
     			br7 = element("br");
-    			t48 = text("\n\t\t\tCurrent value is ");
+    			t48 = text("\n      Current value is ");
     			t49 = text(/*value7*/ ctx[7]);
     			br8 = element("br");
     			t50 = space();
@@ -1774,110 +1819,132 @@ var app = (function () {
     			create_component(numberspinner7.$$.fragment);
     			t61 = space();
     			hr8 = element("hr");
-    			attr_dev(h2, "class", "svelte-1dqow5n");
-    			add_location(h2, file, 17, 1, 361);
-    			attr_dev(i0, "class", "svelte-1dqow5n");
-    			add_location(i0, file, 20, 83, 489);
-    			attr_dev(i1, "class", "svelte-1dqow5n");
-    			add_location(i1, file, 20, 113, 519);
-    			attr_dev(p, "class", "svelte-1dqow5n");
-    			add_location(p, file, 19, 1, 402);
-    			attr_dev(hr0, "class", "svelte-1dqow5n");
-    			add_location(hr0, file, 23, 1, 594);
-    			attr_dev(br0, "class", "svelte-1dqow5n");
-    			add_location(br0, file, 26, 61, 680);
-    			attr_dev(div0, "class", "explanation svelte-1dqow5n");
-    			add_location(div0, file, 26, 2, 621);
-    			attr_dev(div1, "class", "right svelte-1dqow5n");
-    			add_location(div1, file, 27, 2, 719);
-    			attr_dev(div2, "class", "row svelte-1dqow5n");
-    			add_location(div2, file, 25, 1, 601);
-    			attr_dev(hr1, "class", "svelte-1dqow5n");
-    			add_location(hr1, file, 32, 1, 800);
-    			attr_dev(br1, "class", "svelte-1dqow5n");
-    			add_location(br1, file, 35, 137, 962);
-    			attr_dev(div3, "class", "explanation svelte-1dqow5n");
-    			add_location(div3, file, 35, 2, 827);
-    			attr_dev(div4, "class", "right svelte-1dqow5n");
-    			add_location(div4, file, 36, 2, 1001);
-    			attr_dev(div5, "class", "row svelte-1dqow5n");
-    			add_location(div5, file, 34, 1, 807);
-    			attr_dev(hr2, "class", "svelte-1dqow5n");
-    			add_location(hr2, file, 41, 1, 1128);
-    			attr_dev(br2, "class", "svelte-1dqow5n");
-    			add_location(br2, file, 44, 71, 1224);
-    			attr_dev(div6, "class", "explanation svelte-1dqow5n");
-    			add_location(div6, file, 44, 2, 1155);
-    			attr_dev(div7, "class", "right svelte-1dqow5n");
-    			add_location(div7, file, 45, 2, 1263);
-    			attr_dev(div8, "class", "row svelte-1dqow5n");
-    			add_location(div8, file, 43, 1, 1135);
-    			attr_dev(hr3, "class", "svelte-1dqow5n");
-    			add_location(hr3, file, 50, 1, 1412);
-    			attr_dev(br3, "class", "svelte-1dqow5n");
-    			add_location(br3, file, 53, 58, 1495);
-    			attr_dev(div9, "class", "explanation svelte-1dqow5n");
-    			add_location(div9, file, 53, 2, 1439);
-    			attr_dev(div10, "class", "right svelte-1dqow5n");
-    			add_location(div10, file, 54, 2, 1534);
-    			attr_dev(div11, "class", "row svelte-1dqow5n");
-    			add_location(div11, file, 52, 1, 1419);
-    			attr_dev(hr4, "class", "svelte-1dqow5n");
-    			add_location(hr4, file, 67, 1, 1917);
-    			attr_dev(br4, "class", "svelte-1dqow5n");
-    			add_location(br4, file, 70, 65, 2007);
-    			attr_dev(div12, "class", "explanation svelte-1dqow5n");
-    			add_location(div12, file, 70, 2, 1944);
-    			attr_dev(div13, "class", "right svelte-1dqow5n");
-    			add_location(div13, file, 71, 2, 2046);
-    			attr_dev(div14, "class", "row svelte-1dqow5n");
-    			add_location(div14, file, 69, 1, 1924);
-    			attr_dev(hr5, "class", "svelte-1dqow5n");
-    			add_location(hr5, file, 78, 1, 2201);
-    			attr_dev(br5, "class", "svelte-1dqow5n");
-    			add_location(br5, file, 82, 45, 2299);
-    			attr_dev(br6, "class", "svelte-1dqow5n");
-    			add_location(br6, file, 83, 39, 2343);
-    			attr_dev(div15, "class", "explanation svelte-1dqow5n");
-    			add_location(div15, file, 81, 2, 2228);
-    			attr_dev(div16, "class", "right svelte-1dqow5n");
-    			add_location(div16, file, 86, 2, 2403);
-    			attr_dev(div17, "class", "row svelte-1dqow5n");
-    			add_location(div17, file, 80, 1, 2208);
-    			attr_dev(hr6, "class", "svelte-1dqow5n");
-    			add_location(hr6, file, 94, 1, 2604);
-    			attr_dev(br7, "class", "svelte-1dqow5n");
-    			add_location(br7, file, 98, 62, 2719);
-    			attr_dev(br8, "class", "svelte-1dqow5n");
-    			add_location(br8, file, 99, 28, 2752);
-    			attr_dev(div18, "class", "explanation svelte-1dqow5n");
-    			add_location(div18, file, 97, 2, 2631);
-    			attr_dev(button0, "class", "svelte-1dqow5n");
-    			add_location(button0, file, 101, 7, 2775);
-    			attr_dev(div19, "class", "svelte-1dqow5n");
-    			add_location(div19, file, 101, 2, 2770);
-    			attr_dev(div20, "class", "right small-margin svelte-1dqow5n");
-    			add_location(div20, file, 102, 2, 2830);
-    			attr_dev(button1, "class", "svelte-1dqow5n");
-    			add_location(button1, file, 105, 7, 2950);
-    			attr_dev(div21, "class", "svelte-1dqow5n");
-    			add_location(div21, file, 105, 2, 2945);
-    			attr_dev(div22, "class", "row svelte-1dqow5n");
-    			add_location(div22, file, 96, 1, 2611);
-    			attr_dev(hr7, "class", "svelte-1dqow5n");
-    			add_location(hr7, file, 108, 1, 3013);
-    			attr_dev(br9, "class", "svelte-1dqow5n");
-    			add_location(br9, file, 111, 69, 3107);
-    			attr_dev(div23, "class", "explanation svelte-1dqow5n");
-    			add_location(div23, file, 111, 2, 3040);
-    			attr_dev(div24, "class", "right svelte-1dqow5n");
-    			add_location(div24, file, 112, 2, 3146);
-    			attr_dev(div25, "class", "row svelte-1dqow5n");
-    			add_location(div25, file, 110, 1, 3020);
-    			attr_dev(hr8, "class", "svelte-1dqow5n");
-    			add_location(hr8, file, 117, 1, 3236);
-    			attr_dev(main, "class", "svelte-1dqow5n");
-    			add_location(main, file, 16, 0, 353);
+    			t62 = space();
+    			div28 = element("div");
+    			div26 = element("div");
+    			t63 = text("Using a callback to format the displayed value");
+    			br10 = element("br");
+    			t64 = text("Current value is ");
+    			t65 = text(/*value9*/ ctx[9]);
+    			t66 = space();
+    			div27 = element("div");
+    			create_component(numberspinner8.$$.fragment);
+    			t67 = space();
+    			hr9 = element("hr");
+    			attr_dev(h2, "class", "svelte-11zku27");
+    			add_location(h2, file, 26, 2, 680);
+    			attr_dev(i0, "class", "svelte-11zku27");
+    			add_location(i0, file, 29, 85, 811);
+    			attr_dev(i1, "class", "svelte-11zku27");
+    			add_location(i1, file, 30, 19, 845);
+    			attr_dev(p, "class", "svelte-11zku27");
+    			add_location(p, file, 28, 2, 722);
+    			attr_dev(hr0, "class", "svelte-11zku27");
+    			add_location(hr0, file, 33, 2, 922);
+    			attr_dev(br0, "class", "svelte-11zku27");
+    			add_location(br0, file, 36, 63, 1013);
+    			attr_dev(div0, "class", "explanation svelte-11zku27");
+    			add_location(div0, file, 36, 4, 954);
+    			attr_dev(div1, "class", "right svelte-11zku27");
+    			add_location(div1, file, 37, 4, 1055);
+    			attr_dev(div2, "class", "row svelte-11zku27");
+    			add_location(div2, file, 35, 2, 932);
+    			attr_dev(hr1, "class", "svelte-11zku27");
+    			add_location(hr1, file, 42, 2, 1142);
+    			attr_dev(br1, "class", "svelte-11zku27");
+    			add_location(br1, file, 47, 22, 1322);
+    			attr_dev(div3, "class", "explanation svelte-11zku27");
+    			add_location(div3, file, 45, 4, 1174);
+    			attr_dev(div4, "class", "right svelte-11zku27");
+    			add_location(div4, file, 49, 4, 1369);
+    			attr_dev(div5, "class", "row svelte-11zku27");
+    			add_location(div5, file, 44, 2, 1152);
+    			attr_dev(hr2, "class", "svelte-11zku27");
+    			add_location(hr2, file, 54, 2, 1506);
+    			attr_dev(br2, "class", "svelte-11zku27");
+    			add_location(br2, file, 58, 50, 1614);
+    			attr_dev(div6, "class", "explanation svelte-11zku27");
+    			add_location(div6, file, 57, 4, 1538);
+    			attr_dev(div7, "class", "right svelte-11zku27");
+    			add_location(div7, file, 60, 4, 1661);
+    			attr_dev(div8, "class", "row svelte-11zku27");
+    			add_location(div8, file, 56, 2, 1516);
+    			attr_dev(hr3, "class", "svelte-11zku27");
+    			add_location(hr3, file, 73, 2, 1889);
+    			attr_dev(br3, "class", "svelte-11zku27");
+    			add_location(br3, file, 76, 60, 1977);
+    			attr_dev(div9, "class", "explanation svelte-11zku27");
+    			add_location(div9, file, 76, 4, 1921);
+    			attr_dev(div10, "class", "right svelte-11zku27");
+    			add_location(div10, file, 77, 4, 2019);
+    			attr_dev(div11, "class", "row svelte-11zku27");
+    			add_location(div11, file, 75, 2, 1899);
+    			attr_dev(hr4, "class", "svelte-11zku27");
+    			add_location(hr4, file, 92, 2, 2446);
+    			attr_dev(br4, "class", "svelte-11zku27");
+    			add_location(br4, file, 96, 44, 2548);
+    			attr_dev(div12, "class", "explanation svelte-11zku27");
+    			add_location(div12, file, 95, 4, 2478);
+    			attr_dev(div13, "class", "right svelte-11zku27");
+    			add_location(div13, file, 98, 4, 2595);
+    			attr_dev(div14, "class", "row svelte-11zku27");
+    			add_location(div14, file, 94, 2, 2456);
+    			attr_dev(hr5, "class", "svelte-11zku27");
+    			add_location(hr5, file, 110, 2, 2808);
+    			attr_dev(br5, "class", "svelte-11zku27");
+    			add_location(br5, file, 114, 48, 2914);
+    			attr_dev(br6, "class", "svelte-11zku27");
+    			add_location(br6, file, 115, 42, 2963);
+    			attr_dev(div15, "class", "explanation svelte-11zku27");
+    			add_location(div15, file, 113, 4, 2840);
+    			attr_dev(div16, "class", "right svelte-11zku27");
+    			add_location(div16, file, 118, 4, 3030);
+    			attr_dev(div17, "class", "row svelte-11zku27");
+    			add_location(div17, file, 112, 2, 2818);
+    			attr_dev(hr6, "class", "svelte-11zku27");
+    			add_location(hr6, file, 133, 2, 3313);
+    			attr_dev(br7, "class", "svelte-11zku27");
+    			add_location(br7, file, 137, 65, 3436);
+    			attr_dev(br8, "class", "svelte-11zku27");
+    			add_location(br8, file, 138, 31, 3474);
+    			attr_dev(div18, "class", "explanation svelte-11zku27");
+    			add_location(div18, file, 136, 4, 3345);
+    			attr_dev(button0, "class", "svelte-11zku27");
+    			add_location(button0, file, 141, 6, 3508);
+    			attr_dev(div19, "class", "svelte-11zku27");
+    			add_location(div19, file, 140, 4, 3496);
+    			attr_dev(div20, "class", "right small-margin svelte-11zku27");
+    			add_location(div20, file, 147, 4, 3606);
+    			attr_dev(button1, "class", "svelte-11zku27");
+    			add_location(button1, file, 151, 6, 3743);
+    			attr_dev(div21, "class", "svelte-11zku27");
+    			add_location(div21, file, 150, 4, 3731);
+    			attr_dev(div22, "class", "row svelte-11zku27");
+    			add_location(div22, file, 135, 2, 3323);
+    			attr_dev(hr7, "class", "svelte-11zku27");
+    			add_location(hr7, file, 159, 2, 3849);
+    			attr_dev(br9, "class", "svelte-11zku27");
+    			add_location(br9, file, 163, 48, 3955);
+    			attr_dev(div23, "class", "explanation svelte-11zku27");
+    			add_location(div23, file, 162, 4, 3881);
+    			attr_dev(div24, "class", "right svelte-11zku27");
+    			add_location(div24, file, 165, 4, 4002);
+    			attr_dev(div25, "class", "row svelte-11zku27");
+    			add_location(div25, file, 161, 2, 3859);
+    			attr_dev(hr8, "class", "svelte-11zku27");
+    			add_location(hr8, file, 170, 2, 4099);
+    			attr_dev(br10, "class", "svelte-11zku27");
+    			add_location(br10, file, 174, 52, 4209);
+    			attr_dev(div26, "class", "explanation svelte-11zku27");
+    			add_location(div26, file, 173, 4, 4131);
+    			attr_dev(div27, "class", "right svelte-11zku27");
+    			add_location(div27, file, 176, 4, 4256);
+    			attr_dev(div28, "class", "row svelte-11zku27");
+    			add_location(div28, file, 172, 2, 4109);
+    			attr_dev(hr9, "class", "svelte-11zku27");
+    			add_location(hr9, file, 182, 2, 4404);
+    			attr_dev(main, "class", "svelte-11zku27");
+    			add_location(main, file, 25, 0, 671);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2000,12 +2067,24 @@ var app = (function () {
     			mount_component(numberspinner7, div24, null);
     			append_dev(main, t61);
     			append_dev(main, hr8);
+    			append_dev(main, t62);
+    			append_dev(main, div28);
+    			append_dev(div28, div26);
+    			append_dev(div26, t63);
+    			append_dev(div26, br10);
+    			append_dev(div26, t64);
+    			append_dev(div26, t65);
+    			append_dev(div28, t66);
+    			append_dev(div28, div27);
+    			mount_component(numberspinner8, div27, null);
+    			append_dev(main, t67);
+    			append_dev(main, hr9);
     			current = true;
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(button0, "click", /*click_handler*/ ctx[18], false, false, false),
-    					listen_dev(button1, "click", /*click_handler_1*/ ctx[20], false, false, false)
+    					listen_dev(button0, "click", /*click_handler*/ ctx[19], false, false, false),
+    					listen_dev(button1, "click", /*click_handler_1*/ ctx[21], false, false, false)
     				];
 
     				mounted = true;
@@ -2084,6 +2163,16 @@ var app = (function () {
     			}
 
     			numberspinner7.$set(numberspinner7_changes);
+    			if (!current || dirty & /*value9*/ 512) set_data_dev(t65, /*value9*/ ctx[9]);
+    			const numberspinner8_changes = {};
+
+    			if (!updating_value_7 && dirty & /*value9*/ 512) {
+    				updating_value_7 = true;
+    				numberspinner8_changes.value = /*value9*/ ctx[9];
+    				add_flush_callback(() => updating_value_7 = false);
+    			}
+
+    			numberspinner8.$set(numberspinner8_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -2095,6 +2184,7 @@ var app = (function () {
     			transition_in(numberspinner5.$$.fragment, local);
     			transition_in(numberspinner6.$$.fragment, local);
     			transition_in(numberspinner7.$$.fragment, local);
+    			transition_in(numberspinner8.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
@@ -2106,6 +2196,7 @@ var app = (function () {
     			transition_out(numberspinner5.$$.fragment, local);
     			transition_out(numberspinner6.$$.fragment, local);
     			transition_out(numberspinner7.$$.fragment, local);
+    			transition_out(numberspinner8.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
@@ -2118,6 +2209,7 @@ var app = (function () {
     			destroy_component(numberspinner5);
     			destroy_component(numberspinner6);
     			destroy_component(numberspinner7);
+    			destroy_component(numberspinner8);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -2134,6 +2226,12 @@ var app = (function () {
     	return block;
     }
 
+    function formatMinutesToTime(minutes) {
+    	let hours = Math.floor(minutes / 60);
+    	minutes = minutes % 60;
+    	return hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0");
+    }
+
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("App", slots, []);
@@ -2147,6 +2245,7 @@ var app = (function () {
     	let value6change = value6;
     	let value7 = 0;
     	let value8 = -2;
+    	let value9 = 0;
 
     	let options = {
     		min: -5,
@@ -2213,6 +2312,11 @@ var app = (function () {
     		$$invalidate(8, value8);
     	}
 
+    	function numberspinner8_value_binding(value) {
+    		value9 = value;
+    		$$invalidate(9, value9);
+    	}
+
     	$$self.$capture_state = () => ({
     		NumberSpinner: dist,
     		value1,
@@ -2225,7 +2329,9 @@ var app = (function () {
     		value6change,
     		value7,
     		value8,
-    		options
+    		value9,
+    		options,
+    		formatMinutesToTime
     	});
 
     	$$self.$inject_state = $$props => {
@@ -2234,12 +2340,13 @@ var app = (function () {
     		if ("value3" in $$props) $$invalidate(2, value3 = $$props.value3);
     		if ("value4" in $$props) $$invalidate(3, value4 = $$props.value4);
     		if ("value5" in $$props) $$invalidate(4, value5 = $$props.value5);
-    		if ("value6" in $$props) $$invalidate(9, value6 = $$props.value6);
+    		if ("value6" in $$props) $$invalidate(10, value6 = $$props.value6);
     		if ("value6input" in $$props) $$invalidate(5, value6input = $$props.value6input);
     		if ("value6change" in $$props) $$invalidate(6, value6change = $$props.value6change);
     		if ("value7" in $$props) $$invalidate(7, value7 = $$props.value7);
     		if ("value8" in $$props) $$invalidate(8, value8 = $$props.value8);
-    		if ("options" in $$props) $$invalidate(10, options = $$props.options);
+    		if ("value9" in $$props) $$invalidate(9, value9 = $$props.value9);
+    		if ("options" in $$props) $$invalidate(11, options = $$props.options);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -2256,6 +2363,7 @@ var app = (function () {
     		value6change,
     		value7,
     		value8,
+    		value9,
     		value6,
     		options,
     		numberspinner0_value_binding,
@@ -2268,7 +2376,8 @@ var app = (function () {
     		click_handler,
     		numberspinner6_value_binding,
     		click_handler_1,
-    		numberspinner7_value_binding
+    		numberspinner7_value_binding,
+    		numberspinner8_value_binding
     	];
     }
 
