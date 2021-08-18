@@ -261,12 +261,14 @@
       updateValues(preciseValue);
     }
 
-    // bring focus back to the drag element if the body was clicked
-    setTimeout(() => {
-      if (document.activeElement === document.body || document.activeElement === editElement) {
-        dragElement.focus();
-      }
-    }, 0);
+    // Interaction variation: bring focus back to the drag element if the body was clicked:
+
+    // setTimeout(() => {
+    //   if (document.activeElement === document.body || document.activeElement === editElement) {
+    //     dragElement.focus();
+    //   }
+    // }, 0);
+
     // This doesn't work (maybe document.activeElement is updated even later), but would be more elegant svelte-like:
     // await tick();
     // console.log(document.activeElement);
@@ -341,8 +343,9 @@
   on:blur={dragBlurHandler}
   {style}
   class={$$props.class}
-  class:drag={true}
   class:default={!$$props.class ? true : false}
+  class:drag={true}
+  class:dragging={dragging}
   class:fast={stepFactor > 1 ? "fast" : ""}
   class:slow={stepFactor < 1 ? "slow" : ""}
   class:focus={dragFocussed}
@@ -361,8 +364,9 @@
   on:input={inputHandler}
   {style}
   class={$$props.class}
-  class:edit={true}
   class:default={!$$props.class ? true : false}
+  class:edit={true}
+  class:editing={editing}
   class:focus={editFocussed}
   class:inactive={!editing}
   type="text"
@@ -387,6 +391,7 @@
     border-radius: 0.15em;
     text-align: right;
     vertical-align: baseline;
+    cursor: ew-resize;
   }
 
   .default:focus {
@@ -405,23 +410,13 @@
   }
 
   .default.dragging {
-    border-color: #06f;
+    border-color: #04c;
   }
 
   .default.editing {
-    border: 0.15em solid #06f;
-    padding: 0.175em;
-    cursor: default;
+    cursor: initial;
   }
 
-  .default.drag {
-    color: royalblue;
-    cursor: ew-resize;
-  }
-  .default.edit {
-    color: crimson;
-    cursor: default;
-  }
 
   /* mandatory css styles, not customizable */
 
