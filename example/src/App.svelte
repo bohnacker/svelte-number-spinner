@@ -14,12 +14,21 @@
   let value9 = 0;
   let options = { min: -5, max: 5, step: 0.5, decimals: 1, speed: 0.04 };
 
-  // Callback function for example 9
-  // Takes the actual value and returns a string
+  // Callback functions for example 9
+
+  // Takes the actual value and returns a formatted time string
   function formatMinutesToTime(minutes) {
     let hours = Math.floor(minutes / 60);
     minutes = minutes % 60;
     return hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0");
+  }
+  function parseTimeToMinutes(timeString) {
+    let res = timeString.split(":");
+    let hours = parseInt(res[0]);
+    hours = Math.min(Math.max(hours, 0), 23);
+    let minutes = res[1] ? parseInt(res[1]) : 0;
+    minutes = Math.min(Math.max(minutes, 0), 59);
+    return hours * 60 + minutes;
   }
 </script>
 
@@ -175,7 +184,7 @@
       Using a callback to format the displayed value<br />Current value is {value9}
     </div>
     <div class="right">
-      <NumberSpinner bind:value={value9} min=0 max=1440 circular=true format={formatMinutesToTime} />
+      <NumberSpinner bind:value={value9} min=0 max=1440 circular=true format={formatMinutesToTime} parse={parseTimeToMinutes}/>
     </div>
   
   </div>

@@ -24,6 +24,7 @@
   export let editingStyle = options.editingStyle ?? undefined;
   export let cursor = options.cursor ?? undefined;
   export let format = options.format ?? undefined;
+  export let parse = options.parse ?? undefined;
 
   let preciseValue;
   let visibleValue;
@@ -244,7 +245,7 @@
 
   async function startEditing() {
     editing = true;
-    preciseValue = parseFloat(visibleValue);
+    //preciseValue = parseFloat(visibleValue);
 
     await tick();
 
@@ -256,19 +257,24 @@
     editFocussed = false;
     editing = false;
 
-    let checkValue = parseFloat(editElement.value);
-    if (!isNaN(checkValue)) {
-      preciseValue = parseFloat(visibleValue);
+    if (parse) {
+      preciseValue = parse(visibleValue);
       updateValues(preciseValue);
+
+    } else {
+      let checkValue = parseFloat(editElement.value);
+      if (!isNaN(checkValue)) {
+        preciseValue = parseFloat(visibleValue);
+        updateValues(preciseValue);
+      }
     }
 
-    // Interaction variation: bring focus back to the drag element if the body was clicked:
-
-    // setTimeout(() => {
-    //   if (document.activeElement === document.body || document.activeElement === editElement) {
-    //     dragElement.focus();
-    //   }
-    // }, 0);
+    // Bring focus back to the drag element if the body was clicked:
+    setTimeout(() => {
+      if (document.activeElement === document.body || document.activeElement === editElement) {
+        dragElement.focus();
+      }
+    }, 0);
 
     // This doesn't work (maybe document.activeElement is updated even later), but would be more elegant svelte-like:
     // await tick();

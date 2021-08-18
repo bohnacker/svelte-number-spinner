@@ -374,11 +374,11 @@ function create_fragment(ctx) {
 		},
 		m(target, anchor) {
 			insert(target, input0, anchor);
-			/*input0_binding*/ ctx[45](input0);
+			/*input0_binding*/ ctx[46](input0);
 			set_input_value(input0, /*visibleValue*/ ctx[7]);
 			insert(target, t, anchor);
 			insert(target, input1, anchor);
-			/*input1_binding*/ ctx[47](input1);
+			/*input1_binding*/ ctx[48](input1);
 			set_input_value(input1, /*visibleValue*/ ctx[7]);
 
 			if (!mounted) {
@@ -410,13 +410,13 @@ function create_fragment(ctx) {
 					listen(input0, "dblclick", stop_propagation(dblclickHandler)),
 					listen(input0, "focus", /*dragFocusHandler*/ ctx[17]),
 					listen(input0, "blur", /*dragBlurHandler*/ ctx[18]),
-					listen(input0, "input", /*input0_input_handler*/ ctx[46]),
+					listen(input0, "input", /*input0_input_handler*/ ctx[47]),
 					listen(input1, "mouseup", stop_propagation(mouseup_handler)),
 					listen(input1, "touchend", stop_propagation(touchend_handler)),
 					listen(input1, "focus", /*editFocusHandler*/ ctx[19]),
 					listen(input1, "blur", /*editBlurHandler*/ ctx[20]),
 					listen(input1, "input", /*inputHandler*/ ctx[23]),
-					listen(input1, "input", /*input1_input_handler*/ ctx[48])
+					listen(input1, "input", /*input1_input_handler*/ ctx[49])
 				];
 
 				mounted = true;
@@ -507,10 +507,10 @@ function create_fragment(ctx) {
 		o: noop,
 		d(detaching) {
 			if (detaching) detach(input0);
-			/*input0_binding*/ ctx[45](null);
+			/*input0_binding*/ ctx[46](null);
 			if (detaching) detach(t);
 			if (detaching) detach(input1);
-			/*input1_binding*/ ctx[47](null);
+			/*input1_binding*/ ctx[48](null);
 			mounted = false;
 			run_all(dispose);
 		}
@@ -551,6 +551,7 @@ function instance($$self, $$props, $$invalidate) {
 	let { editingStyle = options.editingStyle ?? undefined } = $$props;
 	let { cursor = options.cursor ?? undefined } = $$props;
 	let { format = options.format ?? undefined } = $$props;
+	let { parse = options.parse ?? undefined } = $$props;
 	let preciseValue;
 	let visibleValue;
 	let isTouchDevice = false;
@@ -648,11 +649,11 @@ function instance($$self, $$props, $$invalidate) {
 		// dispatch("consoleLog", ev.type);
 		// console.log(e);
 		if (ev.key == "Shift") {
-			$$invalidate(43, shiftPressed = true);
+			$$invalidate(44, shiftPressed = true);
 		}
 
 		if (ev.key == "Alt") {
-			$$invalidate(42, altPressed = true);
+			$$invalidate(43, altPressed = true);
 		}
 	}
 
@@ -660,11 +661,11 @@ function instance($$self, $$props, $$invalidate) {
 		// dispatch("consoleLog", ev.type);
 		// console.log(e)
 		if (ev.key == "Shift") {
-			$$invalidate(43, shiftPressed = false);
+			$$invalidate(44, shiftPressed = false);
 		}
 
 		if (ev.key == "Alt") {
-			$$invalidate(42, altPressed = false);
+			$$invalidate(43, altPressed = false);
 		}
 
 		if (dragFocussed && !editing) {
@@ -705,8 +706,10 @@ function instance($$self, $$props, $$invalidate) {
 
 	async function startEditing() {
 		$$invalidate(6, editing = true);
-		preciseValue = parseFloat(visibleValue);
+
+		//preciseValue = parseFloat(visibleValue);
 		await tick();
+
 		editElement.focus();
 		editElement.select();
 	}
@@ -714,21 +717,31 @@ function instance($$self, $$props, $$invalidate) {
 	function stopEditing() {
 		$$invalidate(3, editFocussed = false);
 		$$invalidate(6, editing = false);
-		let checkValue = parseFloat(editElement.value);
 
-		if (!isNaN(checkValue)) {
-			preciseValue = parseFloat(visibleValue);
+		if (parse) {
+			preciseValue = parse(visibleValue);
 			updateValues(preciseValue);
-		}
-	} // Interaction variation: bring focus back to the drag element if the body was clicked:
-	// setTimeout(() => {
+		} else {
+			let checkValue = parseFloat(editElement.value);
 
-	//   if (document.activeElement === document.body || document.activeElement === editElement) {
-	//     dragElement.focus();
-	//   }
-	// }, 0);
-	// This doesn't work (maybe document.activeElement is updated even later), but would be more elegant svelte-like:
+			if (!isNaN(checkValue)) {
+				preciseValue = parseFloat(visibleValue);
+				updateValues(preciseValue);
+			}
+		}
+
+		// Bring focus back to the drag element if the body was clicked:
+		setTimeout(
+			() => {
+				if (document.activeElement === document.body || document.activeElement === editElement) {
+					dragElement.focus();
+				}
+			},
+			0
+		);
+	} // This doesn't work (maybe document.activeElement is updated even later), but would be more elegant svelte-like:
 	// await tick();
+
 	// console.log(document.activeElement);
 	// if (document.activeElement === document.body) {
 	//   dragElement.focus();
@@ -828,6 +841,7 @@ function instance($$self, $$props, $$invalidate) {
 		if ("editingStyle" in $$new_props) $$invalidate(39, editingStyle = $$new_props.editingStyle);
 		if ("cursor" in $$new_props) $$invalidate(40, cursor = $$new_props.cursor);
 		if ("format" in $$new_props) $$invalidate(41, format = $$new_props.format);
+		if ("parse" in $$new_props) $$invalidate(42, parse = $$new_props.parse);
 	};
 
 	$$self.$$.update = () => {
@@ -840,7 +854,7 @@ function instance($$self, $$props, $$invalidate) {
 			}
 		}
 
-		if ($$self.$$.dirty[0] & /*dragFocussed, editing*/ 68 | $$self.$$.dirty[1] & /*altPressed, shiftPressed*/ 6144) {
+		if ($$self.$$.dirty[0] & /*dragFocussed, editing*/ 68 | $$self.$$.dirty[1] & /*altPressed, shiftPressed*/ 12288) {
 			{
 				$$invalidate(5, stepFactor = 1);
 
@@ -854,14 +868,14 @@ function instance($$self, $$props, $$invalidate) {
 			}
 		}
 
-		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, cursor, defaultCursor*/ 8707) {
+		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, cursor, defaultCursor*/ 16899) {
 			{
 				// let cursorClass = horizontal
 				//   ? vertical
 				//     ? 'move-cursor'
 				//     : 'horizontal-cursor'
 				//   : 'vertical-cursor';
-				$$invalidate(44, defaultCursor = horizontal
+				$$invalidate(45, defaultCursor = horizontal
 				? vertical ? "move" : "ew-resize"
 				: "ns-resize");
 
@@ -873,7 +887,7 @@ function instance($$self, $$props, $$invalidate) {
 			}
 		}
 
-		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 9208) {
+		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 17400) {
 			{
 				$$invalidate(10, style = mainStyle ?? "");
 
@@ -941,6 +955,7 @@ function instance($$self, $$props, $$invalidate) {
 		editingStyle,
 		cursor,
 		format,
+		parse,
 		altPressed,
 		shiftPressed,
 		defaultCursor,
@@ -981,7 +996,8 @@ class NumberSpinner extends SvelteComponent {
 				draggingStyle: 38,
 				editingStyle: 39,
 				cursor: 40,
-				format: 41
+				format: 41,
+				parse: 42
 			},
 			[-1, -1, -1]
 		);
