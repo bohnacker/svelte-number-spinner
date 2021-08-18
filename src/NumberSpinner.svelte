@@ -161,14 +161,12 @@
       if (e.key == "Enter") {
         if (!editing) {
           startEditing();
-        } else {
-          stopEditing();
         }
       }
-      if (e.key == "Escape") {
-        if (editing) {
+      
+    } else if (editFocussed && editing) {
+      if (e.key == "Enter" || e.key == "Escape") {
           stopEditing();
-        }
       }
     }
   }
