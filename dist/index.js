@@ -368,7 +368,7 @@
     			attr(input1, "class", input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-14p4d2s"));
     			attr(input1, "type", "text");
 
-    			attr(input1, "inputmode", input1_inputmode_value = /*step*/ ctx[1] == Math.round(/*step*/ ctx[1]) && /*min*/ ctx[0] >= 0
+    			attr(input1, "inputmode", input1_inputmode_value = isInteger(/*step*/ ctx[1]) && isInteger(/*min*/ ctx[0]) && /*min*/ ctx[0] >= 0
     			? "numeric"
     			: "text");
 
@@ -380,11 +380,11 @@
     		},
     		m(target, anchor) {
     			insert(target, input0, anchor);
-    			/*input0_binding*/ ctx[46](input0);
+    			/*input0_binding*/ ctx[47](input0);
     			set_input_value(input0, /*visibleValue*/ ctx[7]);
     			insert(target, t, anchor);
     			insert(target, input1, anchor);
-    			/*input1_binding*/ ctx[48](input1);
+    			/*input1_binding*/ ctx[49](input1);
     			set_input_value(input1, /*visibleValue*/ ctx[7]);
 
     			if (!mounted) {
@@ -416,13 +416,13 @@
     					listen(input0, "dblclick", stop_propagation(dblclickHandler)),
     					listen(input0, "focus", /*dragFocusHandler*/ ctx[17]),
     					listen(input0, "blur", /*dragBlurHandler*/ ctx[18]),
-    					listen(input0, "input", /*input0_input_handler*/ ctx[47]),
+    					listen(input0, "input", /*input0_input_handler*/ ctx[48]),
     					listen(input1, "mouseup", stop_propagation(mouseup_handler)),
     					listen(input1, "touchend", stop_propagation(touchend_handler)),
     					listen(input1, "focus", /*editFocusHandler*/ ctx[19]),
     					listen(input1, "blur", /*editBlurHandler*/ ctx[20]),
     					listen(input1, "input", /*inputHandler*/ ctx[23]),
-    					listen(input1, "input", /*input1_input_handler*/ ctx[49])
+    					listen(input1, "input", /*input1_input_handler*/ ctx[50])
     				];
 
     				mounted = true;
@@ -479,7 +479,7 @@
     				attr(input1, "class", input1_class_value);
     			}
 
-    			if (dirty[0] & /*step, min*/ 3 && input1_inputmode_value !== (input1_inputmode_value = /*step*/ ctx[1] == Math.round(/*step*/ ctx[1]) && /*min*/ ctx[0] >= 0
+    			if (dirty[0] & /*step, min*/ 3 && input1_inputmode_value !== (input1_inputmode_value = isInteger(/*step*/ ctx[1]) && isInteger(/*min*/ ctx[0]) && /*min*/ ctx[0] >= 0
     			? "numeric"
     			: "text")) {
     				attr(input1, "inputmode", input1_inputmode_value);
@@ -513,10 +513,10 @@
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(input0);
-    			/*input0_binding*/ ctx[46](null);
+    			/*input0_binding*/ ctx[47](null);
     			if (detaching) detach(t);
     			if (detaching) detach(input1);
-    			/*input1_binding*/ ctx[48](null);
+    			/*input1_binding*/ ctx[49](null);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -527,6 +527,11 @@
     	
     } // dispatch("consoleLog", ev.type);
     // startEditing();
+
+    // Helpers ----------------------------------------------------------
+    function isInteger(num) {
+    	return num == Math.round(num);
+    }
 
     const mouseup_handler = ev => {
     	
@@ -543,6 +548,7 @@
     	let { min = options.min ?? -Number.MAX_VALUE } = $$props;
     	let { max = options.max ?? Number.MAX_VALUE } = $$props;
     	let { step = options.step ?? 1 } = $$props;
+    	let { keyStep = options.keyStep ?? 1 } = $$props;
     	let { precision = options.precision ?? step } = $$props;
     	let { decimals = options.decimals ?? 0 } = $$props;
     	let { speed = options.speed ?? 1 } = $$props;
@@ -655,11 +661,11 @@
     		// dispatch("consoleLog", ev.type);
     		// console.log(e);
     		if (ev.key == "Shift") {
-    			$$invalidate(44, shiftPressed = true);
+    			$$invalidate(45, shiftPressed = true);
     		}
 
     		if (ev.key == "Alt") {
-    			$$invalidate(43, altPressed = true);
+    			$$invalidate(44, altPressed = true);
     		}
     	}
 
@@ -667,16 +673,16 @@
     		// dispatch("consoleLog", ev.type);
     		// console.log(e)
     		if (ev.key == "Shift") {
-    			$$invalidate(44, shiftPressed = false);
+    			$$invalidate(45, shiftPressed = false);
     		}
 
     		if (ev.key == "Alt") {
-    			$$invalidate(43, altPressed = false);
+    			$$invalidate(44, altPressed = false);
     		}
 
     		if (dragFocussed && !editing) {
     			// increment should at least be step
-    			let increment = Math.max(step, step * Math.round(10 * speed));
+    			let increment = keyStep ?? Math.max(step, step * Math.round(10 * speed));
 
     			if (ev.key == "ArrowUp" || ev.key == "ArrowRight") {
     				addToValue(increment);
@@ -767,7 +773,7 @@
     	function updateValues(val) {
     		preciseValue = parseFloat(val);
     		preciseValue = keepInRange(preciseValue);
-    		$$invalidate(7, visibleValue = Math.round(preciseValue / step) * step);
+    		$$invalidate(7, visibleValue = Math.round((preciseValue - min) / step) * step + min);
 
     		if (format) {
     			$$invalidate(7, visibleValue = format(visibleValue));
@@ -797,8 +803,15 @@
     	}
 
     	function roundToPrecision(val) {
-    		val = Math.round(parseFloat(val) / precision) * precision;
+    		val = Math.round((parseFloat(val) - min) / precision) * precision + min;
+
+    		// number of decimals comes either from the precision ...
     		let dec = precision < 1 ? Math.ceil(-Math.log10(precision)) : 0;
+
+    		// or from the number of decimals of the min value
+    		let frac = min.toString().split(".")[1];
+
+    		if (frac) dec = Math.max(dec, frac.length);
     		return parseFloat(val.toFixed(dec));
     	}
 
@@ -833,21 +846,22 @@
     		if ("min" in $$new_props) $$invalidate(0, min = $$new_props.min);
     		if ("max" in $$new_props) $$invalidate(26, max = $$new_props.max);
     		if ("step" in $$new_props) $$invalidate(1, step = $$new_props.step);
-    		if ("precision" in $$new_props) $$invalidate(28, precision = $$new_props.precision);
-    		if ("decimals" in $$new_props) $$invalidate(29, decimals = $$new_props.decimals);
-    		if ("speed" in $$new_props) $$invalidate(30, speed = $$new_props.speed);
-    		if ("horizontal" in $$new_props) $$invalidate(31, horizontal = $$new_props.horizontal);
-    		if ("vertical" in $$new_props) $$invalidate(32, vertical = $$new_props.vertical);
-    		if ("circular" in $$new_props) $$invalidate(33, circular = $$new_props.circular);
-    		if ("mainStyle" in $$new_props) $$invalidate(34, mainStyle = $$new_props.mainStyle);
-    		if ("fastStyle" in $$new_props) $$invalidate(35, fastStyle = $$new_props.fastStyle);
-    		if ("slowStyle" in $$new_props) $$invalidate(36, slowStyle = $$new_props.slowStyle);
-    		if ("focusStyle" in $$new_props) $$invalidate(37, focusStyle = $$new_props.focusStyle);
-    		if ("draggingStyle" in $$new_props) $$invalidate(38, draggingStyle = $$new_props.draggingStyle);
-    		if ("editingStyle" in $$new_props) $$invalidate(39, editingStyle = $$new_props.editingStyle);
-    		if ("cursor" in $$new_props) $$invalidate(40, cursor = $$new_props.cursor);
-    		if ("format" in $$new_props) $$invalidate(41, format = $$new_props.format);
-    		if ("parse" in $$new_props) $$invalidate(42, parse = $$new_props.parse);
+    		if ("keyStep" in $$new_props) $$invalidate(28, keyStep = $$new_props.keyStep);
+    		if ("precision" in $$new_props) $$invalidate(29, precision = $$new_props.precision);
+    		if ("decimals" in $$new_props) $$invalidate(30, decimals = $$new_props.decimals);
+    		if ("speed" in $$new_props) $$invalidate(31, speed = $$new_props.speed);
+    		if ("horizontal" in $$new_props) $$invalidate(32, horizontal = $$new_props.horizontal);
+    		if ("vertical" in $$new_props) $$invalidate(33, vertical = $$new_props.vertical);
+    		if ("circular" in $$new_props) $$invalidate(34, circular = $$new_props.circular);
+    		if ("mainStyle" in $$new_props) $$invalidate(35, mainStyle = $$new_props.mainStyle);
+    		if ("fastStyle" in $$new_props) $$invalidate(36, fastStyle = $$new_props.fastStyle);
+    		if ("slowStyle" in $$new_props) $$invalidate(37, slowStyle = $$new_props.slowStyle);
+    		if ("focusStyle" in $$new_props) $$invalidate(38, focusStyle = $$new_props.focusStyle);
+    		if ("draggingStyle" in $$new_props) $$invalidate(39, draggingStyle = $$new_props.draggingStyle);
+    		if ("editingStyle" in $$new_props) $$invalidate(40, editingStyle = $$new_props.editingStyle);
+    		if ("cursor" in $$new_props) $$invalidate(41, cursor = $$new_props.cursor);
+    		if ("format" in $$new_props) $$invalidate(42, format = $$new_props.format);
+    		if ("parse" in $$new_props) $$invalidate(43, parse = $$new_props.parse);
     	};
 
     	$$self.$$.update = () => {
@@ -860,7 +874,7 @@
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*dragFocussed, editing*/ 68 | $$self.$$.dirty[1] & /*altPressed, shiftPressed*/ 12288) {
+    		if ($$self.$$.dirty[0] & /*dragFocussed, editing*/ 68 | $$self.$$.dirty[1] & /*altPressed, shiftPressed*/ 24576) {
     			{
     				$$invalidate(5, stepFactor = 1);
 
@@ -874,14 +888,14 @@
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, cursor, defaultCursor*/ 16899) {
+    		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, cursor, defaultCursor*/ 33798) {
     			{
     				// let cursorClass = horizontal
     				//   ? vertical
     				//     ? 'move-cursor'
     				//     : 'horizontal-cursor'
     				//   : 'vertical-cursor';
-    				$$invalidate(45, defaultCursor = horizontal
+    				$$invalidate(46, defaultCursor = horizontal
     				? vertical ? "move" : "ew-resize"
     				: "ns-resize");
 
@@ -893,7 +907,7 @@
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 17400) {
+    		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 34800) {
     			{
     				$$invalidate(10, style = mainStyle ?? "");
 
@@ -947,6 +961,7 @@
     		value,
     		max,
     		options,
+    		keyStep,
     		precision,
     		decimals,
     		speed,
@@ -989,21 +1004,22 @@
     				min: 0,
     				max: 26,
     				step: 1,
-    				precision: 28,
-    				decimals: 29,
-    				speed: 30,
-    				horizontal: 31,
-    				vertical: 32,
-    				circular: 33,
-    				mainStyle: 34,
-    				fastStyle: 35,
-    				slowStyle: 36,
-    				focusStyle: 37,
-    				draggingStyle: 38,
-    				editingStyle: 39,
-    				cursor: 40,
-    				format: 41,
-    				parse: 42
+    				keyStep: 28,
+    				precision: 29,
+    				decimals: 30,
+    				speed: 31,
+    				horizontal: 32,
+    				vertical: 33,
+    				circular: 34,
+    				mainStyle: 35,
+    				fastStyle: 36,
+    				slowStyle: 37,
+    				focusStyle: 38,
+    				draggingStyle: 39,
+    				editingStyle: 40,
+    				cursor: 41,
+    				format: 42,
+    				parse: 43
     			},
     			[-1, -1, -1]
     		);

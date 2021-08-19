@@ -10,6 +10,7 @@
   export let min = options.min ?? -Number.MAX_VALUE;
   export let max = options.max ?? Number.MAX_VALUE;
   export let step = options.step ?? 1;
+  export let keyStep = options.keyStep ?? 1;
   export let precision = options.precision ?? step;
   export let decimals = options.decimals ?? 0;
   export let speed = options.speed ?? 1;
@@ -164,7 +165,7 @@
 
     if (dragFocussed && !editing) {
       // increment should at least be step
-      let increment = Math.max(step, step * Math.round(10 * speed));
+      let increment = keyStep ?? Math.max(step, step * Math.round(10 * speed));
 
       if (ev.key == "ArrowUp" || ev.key == "ArrowRight") {
         addToValue(increment);
@@ -300,7 +301,7 @@
     preciseValue = parseFloat(val);
     preciseValue = keepInRange(preciseValue);
 
-    visibleValue = Math.round(preciseValue / step) * step;
+    visibleValue = Math.round((preciseValue - min) / step) * step + min;
     if (format) {
       visibleValue = format(visibleValue)
     } else {  
@@ -328,10 +329,22 @@
   }
 
   function roundToPrecision(val) {
-    val = Math.round(parseFloat(val) / precision) * precision;
+    val = Math.round((parseFloat(val) - min) / precision) * precision + min;
+    // number of decimals comes either from the precision ...
     let dec = precision < 1 ? Math.ceil(-Math.log10(precision)) : 0;
+    // or from the number of decimals of the min value
+    let frac = min.toString().split('.')[1];
+    if (frac) dec = Math.max(dec, frac.length);
+    
     return parseFloat(val.toFixed(dec));
   }
+
+  // Helpers ----------------------------------------------------------
+
+  function isInteger(num) {
+    return num == Math.round(num);
+  }
+
 </script>
 
 <!-- DOM --------------------------------------------------------------->
@@ -383,7 +396,7 @@
   type="text"
   bind:this={editElement}
   bind:value={visibleValue}
-  inputmode={step == Math.round(step) && min >= 0 ? "numeric" : "text"}
+  inputmode={isInteger(step) && isInteger(min) && min >= 0 ? "numeric" : "text"}
 />
 
 <!-- CSS --------------------------------------------------------------->
