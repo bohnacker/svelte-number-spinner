@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte';
   import { createEventDispatcher, tick } from "svelte";
   const dispatch = createEventDispatcher();
 
@@ -45,9 +46,14 @@
   let editing = false;
 
   let style;
-  let htmlNode = document.querySelector("html");
-  let htmlNodeOriginalCursor = htmlNode.style.cursor;
+  let htmlNode = null;
+  let htmlNodeOriginalCursor = null;
   let defaultCursor;
+
+  onMount(() => {
+    htmlNode = document.querySelector("html");
+    htmlNodeOriginalCursor = htmlNode.style.cursor;
+  });
 
   // update all values (preciseValue, visibleValue)
   updateValues(value);
@@ -225,12 +231,14 @@
 
     defaultCursor = horizontal ? (vertical ? "move" : "ew-resize") : "ns-resize";
 
-    if (dragging) {
-      htmlNode.style.cursor = cursor ?? defaultCursor;
-      // addClass(htmlNode, cursorClass);
-    } else {
-      htmlNode.style.cursor = htmlNodeOriginalCursor;
-      // removeClass(htmlNode, cursorClass);
+    if (htmlNode) {
+      if (dragging) {
+        htmlNode.style.cursor = cursor ?? defaultCursor;
+        // addClass(htmlNode, cursorClass);
+      } else {
+        htmlNode.style.cursor = htmlNodeOriginalCursor;
+        // removeClass(htmlNode, cursorClass);
+      }
     }
   }
 
