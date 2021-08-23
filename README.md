@@ -31,32 +31,38 @@ npm install --save svelte-number-spinner
 
 ## Props
 
-| Prop          | Type    | Default      | Description                                         |
-|---------------|---------|--------------|-----------------------------------------------------|
-| value         | Number  | 0            | Input value                                         |
-| min           | Number  | -MAX_VALUE   | Minimum value                                       |
-| max           | Number  | +MAX_VALUE   | Maximum value                                       |
-| step          | Number  | 1            | Step                                                |
-| precision     | Number  | = step       | Precision of value (should be a fraction of step)   |
-| speed         | Number  | 1            | Speed of value change on mouse drag or key press    |
-| keyStep       | Number  | = step * 10  | Step for keyboard interaction                       |
-| keyStepSlow   | Number  | = step       | Slow step for keyboard interaction                  |
-| keyStepFast   | Number  | = step * 100 | Fast step for keyboard interaction                  |
-| decimals      | Number  | 0            | Number of decimals                                  |
-| decimals      | Number  | 0            | Number of decimals                                  |
-| decimals      | Number  | 0            | Number of decimals                                  |
-| horizontal    | Boolean | true         | Change value by dragging horizontally               |
-| vertical      | Boolean | false        | Change value by dragging vertically                 |
-| circular      | Boolean | false        | Enable circular range (good for angles, hours, ...) |
-| cursor        | String  | undefined    | Individual cursor                                   |
-| class         | String  | undefined    | Custom component class name                         |
-| mainStyle     | String  | undefined    | Custom inline style for general appearance          |
-| focusStyle    | String  | undefined    | Custom inline style when focussed                   |
-| draggingStyle | String  | undefined    | Custom inline style when dragging                   |
-| editingStyle  | String  | undefined    | Custom inline style when editing                    |
-| fastStyle     | String  | undefined    | Custom inline style for fast mode                   |
-| slowStyle     | String  | undefined    | Custom inline style for slow mode                   |
-| options       | Object  | {}           | Set any of the above props through this object      |
+| Prop          | Type     | Default      | Description                                         |
+|---------------|----------|--------------|-----------------------------------------------------|
+| value         | Number   | 0            | Input value                                         |
+| min           | Number   | -MAX_VALUE   | Minimum value                                       |
+| max           | Number   | +MAX_VALUE   | Maximum value                                       |
+| step          | Number   | 1            | Step                                                |
+| precision     | Number   | = step       | Precision of value (should be a fraction of step)   |
+|---------------|----------|--------------|-----------------------------------------------------|
+| speed         | Number   | 1            | Speed of value change on mouse drag or key press    |
+| keyStep       | Number   | = step * 10  | Step for keyboard interaction                       |
+| keyStepSlow   | Number   | = step       | Slow step for keyboard interaction                  |
+| keyStepFast   | Number   | = step * 100 | Fast step for keyboard interaction                  |
+|---------------|----------|--------------|-----------------------------------------------------|
+| decimals      | Number   | 0            | Number of decimals                                  |
+| format        | Function | undefined    | Function to format value                            |
+| parse         | Function | undefined    | Function to parse formatted string back to value    |
+|---------------|----------|--------------|-----------------------------------------------------|
+| horizontal    | Boolean  | true         | Change value by dragging horizontally               |
+| vertical      | Boolean  | false        | Change value by dragging vertically                 |
+| circular      | Boolean  | false        | Enable circular range (good for angles, hours, ...) |
+|---------------|----------|--------------|-----------------------------------------------------|
+| cursor        | String   | undefined    | Individual cursor                                   |
+| class         | String   | undefined    | Custom component class name                         |
+| mainStyle     | String   | undefined    | Custom inline style for general appearance          |
+| focusStyle    | String   | undefined    | Custom inline style when focussed                   |
+| draggingStyle | String   | undefined    | Custom inline style when dragging                   |
+| editingStyle  | String   | undefined    | Custom inline style when editing                    |
+| fastStyle     | String   | undefined    | Custom inline style for fast mode                   |
+| slowStyle     | String   | undefined    | Custom inline style for slow mode                   |
+|---------------|----------|--------------|-----------------------------------------------------|
+| options       | Object   | {}           | Set any of the above props through this object      |
+|---------------|----------|--------------|-----------------------------------------------------|
 
 
 #### Prop `options`
