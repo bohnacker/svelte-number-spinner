@@ -586,7 +586,7 @@
     	let dragFocussed = false;
     	let editFocussed = false;
     	let dragging = false;
-    	let hasMoved, clickX, clickY;
+    	let wasActiveOnClick, hasMoved, clickX, clickY;
     	let stepFactor = 1;
     	let altPressed = false;
     	let shiftPressed = false;
@@ -612,6 +612,7 @@
 
     	function dragstartHandler(ev) {
     		dispatch("consoleLog", ev.type);
+    		wasActiveOnClick = document.activeElement === dragElement;
     		$$invalidate(4, dragging = true);
     		dragElement.focus();
     		hasMoved = 0;
@@ -652,7 +653,8 @@
     		dispatch("consoleLog", ev.type);
     		$$invalidate(4, dragging = false);
 
-    		if (hasMoved < 2) {
+    		// start editing only if element was already focussed on mousedown and not much dragging was done
+    		if (wasActiveOnClick && hasMoved < 2) {
     			startEditing();
     		}
     	}
