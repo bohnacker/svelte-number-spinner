@@ -18,7 +18,7 @@ npm install --save svelte-number-spinner
 
 ## Usage
 
-```html
+```svelte
 <script>
   import NumberSpinner from "svelte-number-spinner";
 
@@ -67,7 +67,7 @@ The props in the options object are applied when mounting the component. So, cha
 
 Example:
 
-```html
+```svelte
 <script>
   import NumberSpinner from "svelte-number-spinner";
 
@@ -101,7 +101,7 @@ With the number spinner component you can only control numbers. But you can form
 
 In this example the value e.g. 100 is formatted to "$ 100" using the function `addDollar(val)` for formatting and `removeDollar(str)` for parsing it back to a simple number. In fact it returns a string but parseFloat() is done in the number spinner component so you don't have to bother about that.
 
-```html
+```svelte
 <script>
   let value = 100;
 
@@ -119,7 +119,7 @@ In this example the value e.g. 100 is formatted to "$ 100" using the function `a
 
 I found that these two functions could also be used to implement non-linear ranges like exponential/logarithmic scales:
 
-```html
+```svelte
 <NumberSpinner bind:value={value} step={0.01} 
   format={val => Math.pow(10, val).toFixed(1)} 
   parse={val => Math.log10(val)}
@@ -182,7 +182,7 @@ If you want to replace just a few of the styles or add some more without removin
 
 For each of them you can give a style string like `"width:80px; padding-right:10px"`. In the example below only the font color for fast and slow mode are changed:
 
-```html
+```svelte
 <script>
   import NumberSpinner from "svelte-number-spinner";
 </script>
@@ -199,7 +199,7 @@ For each of them you can give a style string like `"width:80px; padding-right:10
 
 <br />
 
-```html
+```svelte
 <script>
   import NumberSpinner from "svelte-number-spinner";
 
