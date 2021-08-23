@@ -31,27 +31,32 @@ npm install --save svelte-number-spinner
 
 ## Props
 
-| Prop           | Type    | Default     | Description                                         |
-| -------------- | ------- | ----------- | --------------------------------------------------- |
-| value          | Number  | 0           | Input value                                         |
-| min            | Number  | -MAX_VALUE  | Minimum value                                       |
-| max            | Number  | +MAX_VALUE  | Maximum value                                       |
-| step           | Number  | 1           | Step                                                |
-| precision      | Number  | = step      | Precision of value (should be a fraction of step)   |
-| decimals       | Number  | 0           | Number of decimals                                  | 
-| speed          | Number  | 1           | Speed of value change on mouse drag or key press    |
-| horizontal     | Boolean | true        | Change value by dragging horizontally               |
-| vertical       | Boolean | false       | Change value by dragging vertically                 |
-| circular       | Boolean | false       | Enable circular range (good for angles, hours, ...) |
-| cursor         | String  | undefined   | Individual cursor                                   |
-| class          | String  | undefined   | Custom component class name                         |
-| mainStyle      | String  | undefined   | Custom inline style for general appearance          |
-| focusStyle     | String  | undefined   | Custom inline style when focussed                   |
-| draggingStyle  | String  | undefined   | Custom inline style when dragging                   |
-| editingStyle   | String  | undefined   | Custom inline style when editing                    |
-| fastStyle      | String  | undefined   | Custom inline style for fast mode                   |
-| slowStyle      | String  | undefined   | Custom inline style for slow mode                   |
-| options        | Object  | {}          | Set any of the above props through this object      |
+| Prop          | Type    | Default      | Description                                         |
+|---------------|---------|--------------|-----------------------------------------------------|
+| value         | Number  | 0            | Input value                                         |
+| min           | Number  | -MAX_VALUE   | Minimum value                                       |
+| max           | Number  | +MAX_VALUE   | Maximum value                                       |
+| step          | Number  | 1            | Step                                                |
+| precision     | Number  | = step       | Precision of value (should be a fraction of step)   |
+| speed         | Number  | 1            | Speed of value change on mouse drag or key press    |
+| keyStep       | Number  | = step * 10  | Step for keyboard interaction                       |
+| keyStepSlow   | Number  | = step       | Slow step for keyboard interaction                  |
+| keyStepFast   | Number  | = step * 100 | Fast step for keyboard interaction                  |
+| decimals      | Number  | 0            | Number of decimals                                  |
+| decimals      | Number  | 0            | Number of decimals                                  |
+| decimals      | Number  | 0            | Number of decimals                                  |
+| horizontal    | Boolean | true         | Change value by dragging horizontally               |
+| vertical      | Boolean | false        | Change value by dragging vertically                 |
+| circular      | Boolean | false        | Enable circular range (good for angles, hours, ...) |
+| cursor        | String  | undefined    | Individual cursor                                   |
+| class         | String  | undefined    | Custom component class name                         |
+| mainStyle     | String  | undefined    | Custom inline style for general appearance          |
+| focusStyle    | String  | undefined    | Custom inline style when focussed                   |
+| draggingStyle | String  | undefined    | Custom inline style when dragging                   |
+| editingStyle  | String  | undefined    | Custom inline style when editing                    |
+| fastStyle     | String  | undefined    | Custom inline style for fast mode                   |
+| slowStyle     | String  | undefined    | Custom inline style for slow mode                   |
+| options       | Object  | {}           | Set any of the above props through this object      |
 
 
 #### Prop `options`
@@ -75,6 +80,41 @@ Example:
 <NumberSpinner bind:value={value2} min=-30 max=30 {options} />
 ```
 
+## Steps and speed
+
+There are several props that give you control about how you can interact with the value of the number spinner. 
+
+By default, dragging the mouse 1 pixel will increase/decrease the value by step. This is usualy quite good. But if have small ranges compared to step (e.g. a range from 0 to 10 with step 1) it's a bit to sensitive to control. In this case set `speed` to a smaller number, e.g. `0.1`.
+
+With keyboard interaction pressing an arrow key increases/decreases the value by 10\*step. In slow mode (holding down *Alt*) default is one step per key stroke and in fast mode (*Alt + Shift*) it's 100\*step. You can change these steps with the props `keyStep`, `keyStepSlow` and `keyStepFast`. 
+
+
+## Formatting numbers
+
+Numbers are displayed as integer values by default. Internally they are handeled with the given precision. 
+
+Use the prop `decimals` to display floating point numbers.
+
+### Advanced formatting using `format` and `parse` 
+
+With the number spinner component you can only control numbers. But you can format this number in any possible way giving a callback function for the prop `format`. In most cases you should also give a reverse function that parses the string and converts it back to the correct number. This is necessary because in edit mode people will probably enter the number as they see it.
+
+In this example the value e.g. 100 is formatted to "$ 100" using the function `addDollar(val)` for formatting and `removeDollar(str)` for parsing it back to a simple number. In fact it returns a string but parseFloat() is done in the number spinner component so you don't have to bother about that.
+
+```html
+<script>
+  let value = 100;
+
+  function addDollar(val) {
+    return "$ " + val;
+  }
+  function removeDollar(str) {
+    return val.replace("$", "").trim();
+  }
+</script>
+
+<NumberSpinner bind:value={value} format={addDollar} parse={removeDollar}/>
+```
 
 ## Styling
 

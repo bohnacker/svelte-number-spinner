@@ -334,8 +334,8 @@
 
     function add_css() {
     	var style = element("style");
-    	style.id = "svelte-14p4d2s-style";
-    	style.textContent = ".default.svelte-14p4d2s{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:4em;height:1.6em;margin:0px;padding:0.25em;border:0.075em solid #0004;border-radius:0.15em;text-align:right;vertical-align:baseline;cursor:ew-resize}.default.svelte-14p4d2s:focus{border:0.075em solid #06f;outline:none}.default.fast.svelte-14p4d2s{border-top-width:0.15em;padding-top:0.175em}.default.slow.svelte-14p4d2s{border-bottom-width:0.15em;padding-bottom:0.175em}.default.dragging.svelte-14p4d2s{border-color:#04c}.default.editing.svelte-14p4d2s{cursor:initial}.drag.svelte-14p4d2s{user-select:none}.drag.svelte-14p4d2s::selection{background:#0000}.inactive.svelte-14p4d2s{display:none !important}";
+    	style.id = "svelte-xg45mw-style";
+    	style.textContent = ".default.svelte-xg45mw{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:4em;height:1.6em;margin:0px;padding:0.25em;border:0.075em solid #0004;border-radius:0.15em;text-align:right;vertical-align:baseline;cursor:ew-resize}.default.svelte-xg45mw:focus{border:0.075em solid #06f;outline:none}.default.fast.svelte-xg45mw{border-top-width:0.15em;padding-top:0.175em}.default.slow.svelte-xg45mw{border-bottom-width:0.15em;padding-bottom:0.175em}.default.dragging.svelte-xg45mw{border-color:#04c}.default.editing.svelte-xg45mw{cursor:initial}.drag.svelte-xg45mw{user-select:none}.drag.svelte-xg45mw::selection{background:#0000}.inactive.svelte-xg45mw{display:none !important}";
     	append(document_1.head, style);
     }
 
@@ -356,7 +356,7 @@
     			input1 = element("input");
     			attr(input0, "type", "text");
     			attr(input0, "style", /*style*/ ctx[10]);
-    			attr(input0, "class", input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-14p4d2s"));
+    			attr(input0, "class", input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-xg45mw"));
     			input0.readOnly = true;
     			attr(input0, "contenteditable", false);
     			attr(input0, "tabindex", "0");
@@ -368,7 +368,7 @@
     			toggle_class(input0, "focus", /*dragFocussed*/ ctx[2]);
     			toggle_class(input0, "inactive", /*editing*/ ctx[6]);
     			attr(input1, "style", /*style*/ ctx[10]);
-    			attr(input1, "class", input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-14p4d2s"));
+    			attr(input1, "class", input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-xg45mw"));
     			attr(input1, "type", "text");
 
     			attr(input1, "inputmode", input1_inputmode_value = isInteger(/*step*/ ctx[1]) && isInteger(/*min*/ ctx[0]) && /*min*/ ctx[0] >= 0
@@ -438,7 +438,7 @@
     				attr(input0, "style", /*style*/ ctx[10]);
     			}
 
-    			if (dirty[0] & /*$$props*/ 16777216 && input0_class_value !== (input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-14p4d2s"))) {
+    			if (dirty[0] & /*$$props*/ 16777216 && input0_class_value !== (input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-xg45mw"))) {
     				attr(input0, "class", input0_class_value);
     			}
 
@@ -478,7 +478,7 @@
     				attr(input1, "style", /*style*/ ctx[10]);
     			}
 
-    			if (dirty[0] & /*$$props*/ 16777216 && input1_class_value !== (input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-14p4d2s"))) {
+    			if (dirty[0] & /*$$props*/ 16777216 && input1_class_value !== (input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-xg45mw"))) {
     				attr(input1, "class", input1_class_value);
     			}
 
@@ -555,8 +555,6 @@
     	max = parseFloat(max);
     	let { step = options.step ?? 1 } = $$props;
     	step = parseFloat(step);
-    	let { decimals = options.decimals ?? 0 } = $$props;
-    	decimals = parseFloat(decimals);
     	let { precision = options.precision ?? step } = $$props;
     	precision = parseFloat(precision);
     	let { speed = options.speed ?? 1 } = $$props;
@@ -567,6 +565,10 @@
     	keyStepSlow = parseFloat(keyStepSlow);
     	let { keyStepFast = options.keyStepFast ?? step * 100 } = $$props;
     	keyStepFast = parseFloat(keyStepFast);
+    	let { decimals = options.decimals ?? 0 } = $$props;
+    	decimals = parseFloat(decimals);
+    	let { format = options.format ?? undefined } = $$props;
+    	let { parse = options.parse ?? undefined } = $$props;
     	let { horizontal = options.horizontal ?? true } = $$props;
     	let { vertical = options.vertical ?? false } = $$props;
     	let { circular = options.circular ?? false } = $$props;
@@ -577,8 +579,6 @@
     	let { draggingStyle = options.draggingStyle ?? undefined } = $$props;
     	let { editingStyle = options.editingStyle ?? undefined } = $$props;
     	let { cursor = options.cursor ?? undefined } = $$props;
-    	let { format = options.format ?? undefined } = $$props;
-    	let { parse = options.parse ?? undefined } = $$props;
     	let preciseValue;
     	let visibleValue;
     	let isTouchDevice = false;
@@ -824,13 +824,19 @@
     	}
 
     	function roundToPrecision(val) {
+    		let frac;
     		val = Math.round((parseFloat(val) - min) / precision) * precision + min;
 
-    		// number of decimals comes either from the precision ...
+    		// number of decimals comes either from the precision prop ...
     		let dec = precision < 1 ? Math.ceil(-Math.log10(precision)) : 0;
 
-    		// or from the number of decimals of the min value
-    		let frac = min.toString().split(".")[1];
+    		// ... or from the number of decimals of the step value
+    		frac = step.toString().split(".")[1];
+
+    		if (frac) dec = Math.max(dec, frac.length);
+
+    		// ... or from the number of decimals of the min value
+    		frac = min.toString().split(".")[1];
 
     		if (frac) dec = Math.max(dec, frac.length);
     		return parseFloat(val.toFixed(dec));
@@ -867,24 +873,24 @@
     		if ("min" in $$new_props) $$invalidate(0, min = $$new_props.min);
     		if ("max" in $$new_props) $$invalidate(26, max = $$new_props.max);
     		if ("step" in $$new_props) $$invalidate(1, step = $$new_props.step);
-    		if ("decimals" in $$new_props) $$invalidate(27, decimals = $$new_props.decimals);
-    		if ("precision" in $$new_props) $$invalidate(28, precision = $$new_props.precision);
-    		if ("speed" in $$new_props) $$invalidate(29, speed = $$new_props.speed);
-    		if ("keyStep" in $$new_props) $$invalidate(30, keyStep = $$new_props.keyStep);
-    		if ("keyStepSlow" in $$new_props) $$invalidate(31, keyStepSlow = $$new_props.keyStepSlow);
-    		if ("keyStepFast" in $$new_props) $$invalidate(32, keyStepFast = $$new_props.keyStepFast);
-    		if ("horizontal" in $$new_props) $$invalidate(34, horizontal = $$new_props.horizontal);
-    		if ("vertical" in $$new_props) $$invalidate(35, vertical = $$new_props.vertical);
-    		if ("circular" in $$new_props) $$invalidate(36, circular = $$new_props.circular);
-    		if ("mainStyle" in $$new_props) $$invalidate(37, mainStyle = $$new_props.mainStyle);
-    		if ("fastStyle" in $$new_props) $$invalidate(38, fastStyle = $$new_props.fastStyle);
-    		if ("slowStyle" in $$new_props) $$invalidate(39, slowStyle = $$new_props.slowStyle);
-    		if ("focusStyle" in $$new_props) $$invalidate(40, focusStyle = $$new_props.focusStyle);
-    		if ("draggingStyle" in $$new_props) $$invalidate(41, draggingStyle = $$new_props.draggingStyle);
-    		if ("editingStyle" in $$new_props) $$invalidate(42, editingStyle = $$new_props.editingStyle);
-    		if ("cursor" in $$new_props) $$invalidate(43, cursor = $$new_props.cursor);
-    		if ("format" in $$new_props) $$invalidate(44, format = $$new_props.format);
-    		if ("parse" in $$new_props) $$invalidate(45, parse = $$new_props.parse);
+    		if ("precision" in $$new_props) $$invalidate(27, precision = $$new_props.precision);
+    		if ("speed" in $$new_props) $$invalidate(28, speed = $$new_props.speed);
+    		if ("keyStep" in $$new_props) $$invalidate(29, keyStep = $$new_props.keyStep);
+    		if ("keyStepSlow" in $$new_props) $$invalidate(30, keyStepSlow = $$new_props.keyStepSlow);
+    		if ("keyStepFast" in $$new_props) $$invalidate(31, keyStepFast = $$new_props.keyStepFast);
+    		if ("decimals" in $$new_props) $$invalidate(32, decimals = $$new_props.decimals);
+    		if ("format" in $$new_props) $$invalidate(34, format = $$new_props.format);
+    		if ("parse" in $$new_props) $$invalidate(35, parse = $$new_props.parse);
+    		if ("horizontal" in $$new_props) $$invalidate(36, horizontal = $$new_props.horizontal);
+    		if ("vertical" in $$new_props) $$invalidate(37, vertical = $$new_props.vertical);
+    		if ("circular" in $$new_props) $$invalidate(38, circular = $$new_props.circular);
+    		if ("mainStyle" in $$new_props) $$invalidate(39, mainStyle = $$new_props.mainStyle);
+    		if ("fastStyle" in $$new_props) $$invalidate(40, fastStyle = $$new_props.fastStyle);
+    		if ("slowStyle" in $$new_props) $$invalidate(41, slowStyle = $$new_props.slowStyle);
+    		if ("focusStyle" in $$new_props) $$invalidate(42, focusStyle = $$new_props.focusStyle);
+    		if ("draggingStyle" in $$new_props) $$invalidate(43, draggingStyle = $$new_props.draggingStyle);
+    		if ("editingStyle" in $$new_props) $$invalidate(44, editingStyle = $$new_props.editingStyle);
+    		if ("cursor" in $$new_props) $$invalidate(45, cursor = $$new_props.cursor);
     	};
 
     	$$self.$$.update = () => {
@@ -911,7 +917,7 @@
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, htmlNode, cursor, defaultCursor, htmlNodeOriginalCursor*/ 921624) {
+    		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, htmlNode, cursor, defaultCursor, htmlNodeOriginalCursor*/ 933984) {
     			{
     				// let cursorClass = horizontal
     				//   ? vertical
@@ -932,7 +938,7 @@
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 532416) {
+    		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 556800) {
     			{
     				$$invalidate(10, style = mainStyle ?? "");
 
@@ -985,13 +991,15 @@
     		$$props,
     		value,
     		max,
-    		decimals,
     		precision,
     		speed,
     		keyStep,
     		keyStepSlow,
     		keyStepFast,
+    		decimals,
     		options,
+    		format,
+    		parse,
     		horizontal,
     		vertical,
     		circular,
@@ -1002,8 +1010,6 @@
     		draggingStyle,
     		editingStyle,
     		cursor,
-    		format,
-    		parse,
     		altPressed,
     		shiftPressed,
     		htmlNode,
@@ -1019,7 +1025,7 @@
     class NumberSpinner extends SvelteComponent {
     	constructor(options) {
     		super();
-    		if (!document_1.getElementById("svelte-14p4d2s-style")) add_css();
+    		if (!document_1.getElementById("svelte-xg45mw-style")) add_css();
 
     		init(
     			this,
@@ -1033,24 +1039,24 @@
     				min: 0,
     				max: 26,
     				step: 1,
-    				decimals: 27,
-    				precision: 28,
-    				speed: 29,
-    				keyStep: 30,
-    				keyStepSlow: 31,
-    				keyStepFast: 32,
-    				horizontal: 34,
-    				vertical: 35,
-    				circular: 36,
-    				mainStyle: 37,
-    				fastStyle: 38,
-    				slowStyle: 39,
-    				focusStyle: 40,
-    				draggingStyle: 41,
-    				editingStyle: 42,
-    				cursor: 43,
-    				format: 44,
-    				parse: 45
+    				precision: 27,
+    				speed: 28,
+    				keyStep: 29,
+    				keyStepSlow: 30,
+    				keyStepFast: 31,
+    				decimals: 32,
+    				format: 34,
+    				parse: 35,
+    				horizontal: 36,
+    				vertical: 37,
+    				circular: 38,
+    				mainStyle: 39,
+    				fastStyle: 40,
+    				slowStyle: 41,
+    				focusStyle: 42,
+    				draggingStyle: 43,
+    				editingStyle: 44,
+    				cursor: 45
     			},
     			[-1, -1, -1]
     		);

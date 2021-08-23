@@ -705,8 +705,8 @@ var app = (function () {
 
         function add_css() {
         	var style = element("style");
-        	style.id = "svelte-14p4d2s-style";
-        	style.textContent = ".default.svelte-14p4d2s{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:4em;height:1.6em;margin:0px;padding:0.25em;border:0.075em solid #0004;border-radius:0.15em;text-align:right;vertical-align:baseline;cursor:ew-resize}.default.svelte-14p4d2s:focus{border:0.075em solid #06f;outline:none}.default.fast.svelte-14p4d2s{border-top-width:0.15em;padding-top:0.175em}.default.slow.svelte-14p4d2s{border-bottom-width:0.15em;padding-bottom:0.175em}.default.dragging.svelte-14p4d2s{border-color:#04c}.default.editing.svelte-14p4d2s{cursor:initial}.drag.svelte-14p4d2s{user-select:none}.drag.svelte-14p4d2s::selection{background:#0000}.inactive.svelte-14p4d2s{display:none !important}";
+        	style.id = "svelte-xg45mw-style";
+        	style.textContent = ".default.svelte-xg45mw{display:inline-block;box-sizing:border-box;font-variant-numeric:tabular-nums;background-color:white;color:black;width:4em;height:1.6em;margin:0px;padding:0.25em;border:0.075em solid #0004;border-radius:0.15em;text-align:right;vertical-align:baseline;cursor:ew-resize}.default.svelte-xg45mw:focus{border:0.075em solid #06f;outline:none}.default.fast.svelte-xg45mw{border-top-width:0.15em;padding-top:0.175em}.default.slow.svelte-xg45mw{border-bottom-width:0.15em;padding-bottom:0.175em}.default.dragging.svelte-xg45mw{border-color:#04c}.default.editing.svelte-xg45mw{cursor:initial}.drag.svelte-xg45mw{user-select:none}.drag.svelte-xg45mw::selection{background:#0000}.inactive.svelte-xg45mw{display:none !important}";
         	append(document_1.head, style);
         }
 
@@ -727,7 +727,7 @@ var app = (function () {
         			input1 = element("input");
         			attr(input0, "type", "text");
         			attr(input0, "style", /*style*/ ctx[10]);
-        			attr(input0, "class", input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-14p4d2s"));
+        			attr(input0, "class", input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-xg45mw"));
         			input0.readOnly = true;
         			attr(input0, "contenteditable", false);
         			attr(input0, "tabindex", "0");
@@ -739,7 +739,7 @@ var app = (function () {
         			toggle_class(input0, "focus", /*dragFocussed*/ ctx[2]);
         			toggle_class(input0, "inactive", /*editing*/ ctx[6]);
         			attr(input1, "style", /*style*/ ctx[10]);
-        			attr(input1, "class", input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-14p4d2s"));
+        			attr(input1, "class", input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-xg45mw"));
         			attr(input1, "type", "text");
 
         			attr(input1, "inputmode", input1_inputmode_value = isInteger(/*step*/ ctx[1]) && isInteger(/*min*/ ctx[0]) && /*min*/ ctx[0] >= 0
@@ -809,7 +809,7 @@ var app = (function () {
         				attr(input0, "style", /*style*/ ctx[10]);
         			}
 
-        			if (dirty[0] & /*$$props*/ 16777216 && input0_class_value !== (input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-14p4d2s"))) {
+        			if (dirty[0] & /*$$props*/ 16777216 && input0_class_value !== (input0_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-xg45mw"))) {
         				attr(input0, "class", input0_class_value);
         			}
 
@@ -849,7 +849,7 @@ var app = (function () {
         				attr(input1, "style", /*style*/ ctx[10]);
         			}
 
-        			if (dirty[0] & /*$$props*/ 16777216 && input1_class_value !== (input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-14p4d2s"))) {
+        			if (dirty[0] & /*$$props*/ 16777216 && input1_class_value !== (input1_class_value = "" + (null_to_empty(/*$$props*/ ctx[24].class) + " svelte-xg45mw"))) {
         				attr(input1, "class", input1_class_value);
         			}
 
@@ -926,8 +926,6 @@ var app = (function () {
         	max = parseFloat(max);
         	let { step = options.step ?? 1 } = $$props;
         	step = parseFloat(step);
-        	let { decimals = options.decimals ?? 0 } = $$props;
-        	decimals = parseFloat(decimals);
         	let { precision = options.precision ?? step } = $$props;
         	precision = parseFloat(precision);
         	let { speed = options.speed ?? 1 } = $$props;
@@ -938,6 +936,10 @@ var app = (function () {
         	keyStepSlow = parseFloat(keyStepSlow);
         	let { keyStepFast = options.keyStepFast ?? step * 100 } = $$props;
         	keyStepFast = parseFloat(keyStepFast);
+        	let { decimals = options.decimals ?? 0 } = $$props;
+        	decimals = parseFloat(decimals);
+        	let { format = options.format ?? undefined } = $$props;
+        	let { parse = options.parse ?? undefined } = $$props;
         	let { horizontal = options.horizontal ?? true } = $$props;
         	let { vertical = options.vertical ?? false } = $$props;
         	let { circular = options.circular ?? false } = $$props;
@@ -948,8 +950,6 @@ var app = (function () {
         	let { draggingStyle = options.draggingStyle ?? undefined } = $$props;
         	let { editingStyle = options.editingStyle ?? undefined } = $$props;
         	let { cursor = options.cursor ?? undefined } = $$props;
-        	let { format = options.format ?? undefined } = $$props;
-        	let { parse = options.parse ?? undefined } = $$props;
         	let preciseValue;
         	let visibleValue;
         	let isTouchDevice = false;
@@ -1195,13 +1195,19 @@ var app = (function () {
         	}
 
         	function roundToPrecision(val) {
+        		let frac;
         		val = Math.round((parseFloat(val) - min) / precision) * precision + min;
 
-        		// number of decimals comes either from the precision ...
+        		// number of decimals comes either from the precision prop ...
         		let dec = precision < 1 ? Math.ceil(-Math.log10(precision)) : 0;
 
-        		// or from the number of decimals of the min value
-        		let frac = min.toString().split(".")[1];
+        		// ... or from the number of decimals of the step value
+        		frac = step.toString().split(".")[1];
+
+        		if (frac) dec = Math.max(dec, frac.length);
+
+        		// ... or from the number of decimals of the min value
+        		frac = min.toString().split(".")[1];
 
         		if (frac) dec = Math.max(dec, frac.length);
         		return parseFloat(val.toFixed(dec));
@@ -1238,24 +1244,24 @@ var app = (function () {
         		if ("min" in $$new_props) $$invalidate(0, min = $$new_props.min);
         		if ("max" in $$new_props) $$invalidate(26, max = $$new_props.max);
         		if ("step" in $$new_props) $$invalidate(1, step = $$new_props.step);
-        		if ("decimals" in $$new_props) $$invalidate(27, decimals = $$new_props.decimals);
-        		if ("precision" in $$new_props) $$invalidate(28, precision = $$new_props.precision);
-        		if ("speed" in $$new_props) $$invalidate(29, speed = $$new_props.speed);
-        		if ("keyStep" in $$new_props) $$invalidate(30, keyStep = $$new_props.keyStep);
-        		if ("keyStepSlow" in $$new_props) $$invalidate(31, keyStepSlow = $$new_props.keyStepSlow);
-        		if ("keyStepFast" in $$new_props) $$invalidate(32, keyStepFast = $$new_props.keyStepFast);
-        		if ("horizontal" in $$new_props) $$invalidate(34, horizontal = $$new_props.horizontal);
-        		if ("vertical" in $$new_props) $$invalidate(35, vertical = $$new_props.vertical);
-        		if ("circular" in $$new_props) $$invalidate(36, circular = $$new_props.circular);
-        		if ("mainStyle" in $$new_props) $$invalidate(37, mainStyle = $$new_props.mainStyle);
-        		if ("fastStyle" in $$new_props) $$invalidate(38, fastStyle = $$new_props.fastStyle);
-        		if ("slowStyle" in $$new_props) $$invalidate(39, slowStyle = $$new_props.slowStyle);
-        		if ("focusStyle" in $$new_props) $$invalidate(40, focusStyle = $$new_props.focusStyle);
-        		if ("draggingStyle" in $$new_props) $$invalidate(41, draggingStyle = $$new_props.draggingStyle);
-        		if ("editingStyle" in $$new_props) $$invalidate(42, editingStyle = $$new_props.editingStyle);
-        		if ("cursor" in $$new_props) $$invalidate(43, cursor = $$new_props.cursor);
-        		if ("format" in $$new_props) $$invalidate(44, format = $$new_props.format);
-        		if ("parse" in $$new_props) $$invalidate(45, parse = $$new_props.parse);
+        		if ("precision" in $$new_props) $$invalidate(27, precision = $$new_props.precision);
+        		if ("speed" in $$new_props) $$invalidate(28, speed = $$new_props.speed);
+        		if ("keyStep" in $$new_props) $$invalidate(29, keyStep = $$new_props.keyStep);
+        		if ("keyStepSlow" in $$new_props) $$invalidate(30, keyStepSlow = $$new_props.keyStepSlow);
+        		if ("keyStepFast" in $$new_props) $$invalidate(31, keyStepFast = $$new_props.keyStepFast);
+        		if ("decimals" in $$new_props) $$invalidate(32, decimals = $$new_props.decimals);
+        		if ("format" in $$new_props) $$invalidate(34, format = $$new_props.format);
+        		if ("parse" in $$new_props) $$invalidate(35, parse = $$new_props.parse);
+        		if ("horizontal" in $$new_props) $$invalidate(36, horizontal = $$new_props.horizontal);
+        		if ("vertical" in $$new_props) $$invalidate(37, vertical = $$new_props.vertical);
+        		if ("circular" in $$new_props) $$invalidate(38, circular = $$new_props.circular);
+        		if ("mainStyle" in $$new_props) $$invalidate(39, mainStyle = $$new_props.mainStyle);
+        		if ("fastStyle" in $$new_props) $$invalidate(40, fastStyle = $$new_props.fastStyle);
+        		if ("slowStyle" in $$new_props) $$invalidate(41, slowStyle = $$new_props.slowStyle);
+        		if ("focusStyle" in $$new_props) $$invalidate(42, focusStyle = $$new_props.focusStyle);
+        		if ("draggingStyle" in $$new_props) $$invalidate(43, draggingStyle = $$new_props.draggingStyle);
+        		if ("editingStyle" in $$new_props) $$invalidate(44, editingStyle = $$new_props.editingStyle);
+        		if ("cursor" in $$new_props) $$invalidate(45, cursor = $$new_props.cursor);
         	};
 
         	$$self.$$.update = () => {
@@ -1282,7 +1288,7 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, htmlNode, cursor, defaultCursor, htmlNodeOriginalCursor*/ 921624) {
+        		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, htmlNode, cursor, defaultCursor, htmlNodeOriginalCursor*/ 933984) {
         			{
         				// let cursorClass = horizontal
         				//   ? vertical
@@ -1303,7 +1309,7 @@ var app = (function () {
         			}
         		}
 
-        		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 532416) {
+        		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 556800) {
         			{
         				$$invalidate(10, style = mainStyle ?? "");
 
@@ -1356,13 +1362,15 @@ var app = (function () {
         		$$props,
         		value,
         		max,
-        		decimals,
         		precision,
         		speed,
         		keyStep,
         		keyStepSlow,
         		keyStepFast,
+        		decimals,
         		options,
+        		format,
+        		parse,
         		horizontal,
         		vertical,
         		circular,
@@ -1373,8 +1381,6 @@ var app = (function () {
         		draggingStyle,
         		editingStyle,
         		cursor,
-        		format,
-        		parse,
         		altPressed,
         		shiftPressed,
         		htmlNode,
@@ -1390,7 +1396,7 @@ var app = (function () {
         class NumberSpinner extends SvelteComponent {
         	constructor(options) {
         		super();
-        		if (!document_1.getElementById("svelte-14p4d2s-style")) add_css();
+        		if (!document_1.getElementById("svelte-xg45mw-style")) add_css();
 
         		init(
         			this,
@@ -1404,24 +1410,24 @@ var app = (function () {
         				min: 0,
         				max: 26,
         				step: 1,
-        				decimals: 27,
-        				precision: 28,
-        				speed: 29,
-        				keyStep: 30,
-        				keyStepSlow: 31,
-        				keyStepFast: 32,
-        				horizontal: 34,
-        				vertical: 35,
-        				circular: 36,
-        				mainStyle: 37,
-        				fastStyle: 38,
-        				slowStyle: 39,
-        				focusStyle: 40,
-        				draggingStyle: 41,
-        				editingStyle: 42,
-        				cursor: 43,
-        				format: 44,
-        				parse: 45
+        				precision: 27,
+        				speed: 28,
+        				keyStep: 29,
+        				keyStepSlow: 30,
+        				keyStepFast: 31,
+        				decimals: 32,
+        				format: 34,
+        				parse: 35,
+        				horizontal: 36,
+        				vertical: 37,
+        				circular: 38,
+        				mainStyle: 39,
+        				fastStyle: 40,
+        				slowStyle: 41,
+        				focusStyle: 42,
+        				draggingStyle: 43,
+        				editingStyle: 44,
+        				cursor: 45
         			},
         			[-1, -1, -1]
         		);
@@ -1578,12 +1584,25 @@ var app = (function () {
     	let updating_value_7;
     	let t69;
     	let hr9;
+    	let t70;
+    	let div31;
+    	let div29;
+    	let t71;
+    	let br12;
+    	let t72;
+    	let t73;
+    	let t74;
+    	let div30;
+    	let numberspinner9;
+    	let updating_value_8;
+    	let t75;
+    	let hr10;
     	let current;
     	let mounted;
     	let dispose;
 
     	function numberspinner0_value_binding(value) {
-    		/*numberspinner0_value_binding*/ ctx[12](value);
+    		/*numberspinner0_value_binding*/ ctx[13](value);
     	}
 
     	let numberspinner0_props = {};
@@ -1600,7 +1619,7 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner0, "value", numberspinner0_value_binding));
 
     	function numberspinner1_value_binding(value) {
-    		/*numberspinner1_value_binding*/ ctx[13](value);
+    		/*numberspinner1_value_binding*/ ctx[14](value);
     	}
 
     	let numberspinner1_props = {
@@ -1622,7 +1641,7 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner1, "value", numberspinner1_value_binding));
 
     	function numberspinner2_value_binding(value) {
-    		/*numberspinner2_value_binding*/ ctx[14](value);
+    		/*numberspinner2_value_binding*/ ctx[15](value);
     	}
 
     	let numberspinner2_props = {
@@ -1646,7 +1665,7 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner2, "value", numberspinner2_value_binding));
 
     	function numberspinner3_value_binding(value) {
-    		/*numberspinner3_value_binding*/ ctx[15](value);
+    		/*numberspinner3_value_binding*/ ctx[16](value);
     	}
 
     	let numberspinner3_props = {
@@ -1672,7 +1691,7 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner3, "value", numberspinner3_value_binding));
 
     	function numberspinner4_value_binding(value) {
-    		/*numberspinner4_value_binding*/ ctx[16](value);
+    		/*numberspinner4_value_binding*/ ctx[17](value);
     	}
 
     	let numberspinner4_props = {
@@ -1696,18 +1715,18 @@ var app = (function () {
 
     	numberspinner5 = new dist({
     			props: {
-    				value: /*value6*/ ctx[10],
+    				value: /*value6*/ ctx[11],
     				min: "-100",
     				max: "100"
     			},
     			$$inline: true
     		});
 
-    	numberspinner5.$on("change", /*change_handler*/ ctx[17]);
-    	numberspinner5.$on("input", /*input_handler*/ ctx[18]);
+    	numberspinner5.$on("change", /*change_handler*/ ctx[18]);
+    	numberspinner5.$on("input", /*input_handler*/ ctx[19]);
 
     	function numberspinner6_value_binding(value) {
-    		/*numberspinner6_value_binding*/ ctx[20](value);
+    		/*numberspinner6_value_binding*/ ctx[21](value);
     	}
 
     	let numberspinner6_props = { min: "0", max: "12", circular: true };
@@ -1724,10 +1743,10 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner6, "value", numberspinner6_value_binding));
 
     	function numberspinner7_value_binding(value) {
-    		/*numberspinner7_value_binding*/ ctx[22](value);
+    		/*numberspinner7_value_binding*/ ctx[23](value);
     	}
 
-    	let numberspinner7_props = { options: /*options*/ ctx[11] };
+    	let numberspinner7_props = { options: /*options*/ ctx[12] };
 
     	if (/*value8*/ ctx[8] !== void 0) {
     		numberspinner7_props.value = /*value8*/ ctx[8];
@@ -1741,19 +1760,10 @@ var app = (function () {
     	binding_callbacks.push(() => bind(numberspinner7, "value", numberspinner7_value_binding));
 
     	function numberspinner8_value_binding(value) {
-    		/*numberspinner8_value_binding*/ ctx[23](value);
+    		/*numberspinner8_value_binding*/ ctx[24](value);
     	}
 
-    	let numberspinner8_props = {
-    		min: 0,
-    		max: 1440,
-    		keyStep: 15,
-    		keyStepSlow: 1,
-    		keyStepFast: 60,
-    		circular: true,
-    		format: formatMinutesToTime,
-    		parse: parseTimeToMinutes
-    	};
+    	let numberspinner8_props = { format: addDollar, parse: removeDollar };
 
     	if (/*value9*/ ctx[9] !== void 0) {
     		numberspinner8_props.value = /*value9*/ ctx[9];
@@ -1765,6 +1775,32 @@ var app = (function () {
     		});
 
     	binding_callbacks.push(() => bind(numberspinner8, "value", numberspinner8_value_binding));
+
+    	function numberspinner9_value_binding(value) {
+    		/*numberspinner9_value_binding*/ ctx[25](value);
+    	}
+
+    	let numberspinner9_props = {
+    		min: 0,
+    		max: 1440,
+    		keyStep: 15,
+    		keyStepSlow: 1,
+    		keyStepFast: 60,
+    		circular: true,
+    		format: formatMinutesToTime,
+    		parse: parseTimeToMinutes
+    	};
+
+    	if (/*value10*/ ctx[10] !== void 0) {
+    		numberspinner9_props.value = /*value10*/ ctx[10];
+    	}
+
+    	numberspinner9 = new dist({
+    			props: numberspinner9_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(numberspinner9, "value", numberspinner9_value_binding));
 
     	const block = {
     		c: function create() {
@@ -1896,7 +1932,7 @@ var app = (function () {
     			t64 = space();
     			div28 = element("div");
     			div26 = element("div");
-    			t65 = text("Using a callback to format and parse the displayed value.");
+    			t65 = text("Using callbacks to format and parse the displayed value as a currency.");
     			br11 = element("br");
     			t66 = text("Current value is ");
     			t67 = text(/*value9*/ ctx[9]);
@@ -1905,122 +1941,144 @@ var app = (function () {
     			create_component(numberspinner8.$$.fragment);
     			t69 = space();
     			hr9 = element("hr");
+    			t70 = space();
+    			div31 = element("div");
+    			div29 = element("div");
+    			t71 = text("Using callbacks to format and parse the displayed value as time of day.");
+    			br12 = element("br");
+    			t72 = text("Current value is ");
+    			t73 = text(/*value10*/ ctx[10]);
+    			t74 = space();
+    			div30 = element("div");
+    			create_component(numberspinner9.$$.fragment);
+    			t75 = space();
+    			hr10 = element("hr");
     			attr_dev(h2, "class", "svelte-11zku27");
-    			add_location(h2, file, 35, 2, 1034);
+    			add_location(h2, file, 44, 2, 1365);
     			attr_dev(i0, "class", "svelte-11zku27");
-    			add_location(i0, file, 38, 85, 1165);
+    			add_location(i0, file, 47, 85, 1496);
     			attr_dev(i1, "class", "svelte-11zku27");
-    			add_location(i1, file, 39, 19, 1199);
+    			add_location(i1, file, 48, 19, 1530);
     			attr_dev(p, "class", "svelte-11zku27");
-    			add_location(p, file, 37, 2, 1076);
+    			add_location(p, file, 46, 2, 1407);
     			attr_dev(hr0, "class", "svelte-11zku27");
-    			add_location(hr0, file, 42, 2, 1276);
+    			add_location(hr0, file, 51, 2, 1607);
     			attr_dev(br0, "class", "svelte-11zku27");
-    			add_location(br0, file, 45, 63, 1367);
+    			add_location(br0, file, 54, 63, 1698);
     			attr_dev(div0, "class", "explanation svelte-11zku27");
-    			add_location(div0, file, 45, 4, 1308);
+    			add_location(div0, file, 54, 4, 1639);
     			attr_dev(div1, "class", "right svelte-11zku27");
-    			add_location(div1, file, 46, 4, 1409);
+    			add_location(div1, file, 55, 4, 1740);
     			attr_dev(div2, "class", "row svelte-11zku27");
-    			add_location(div2, file, 44, 2, 1286);
+    			add_location(div2, file, 53, 2, 1617);
     			attr_dev(hr1, "class", "svelte-11zku27");
-    			add_location(hr1, file, 51, 2, 1496);
+    			add_location(hr1, file, 60, 2, 1827);
     			attr_dev(br1, "class", "svelte-11zku27");
-    			add_location(br1, file, 56, 22, 1676);
+    			add_location(br1, file, 65, 22, 2007);
     			attr_dev(div3, "class", "explanation svelte-11zku27");
-    			add_location(div3, file, 54, 4, 1528);
+    			add_location(div3, file, 63, 4, 1859);
     			attr_dev(div4, "class", "right svelte-11zku27");
-    			add_location(div4, file, 58, 4, 1723);
+    			add_location(div4, file, 67, 4, 2054);
     			attr_dev(div5, "class", "row svelte-11zku27");
-    			add_location(div5, file, 53, 2, 1506);
+    			add_location(div5, file, 62, 2, 1837);
     			attr_dev(hr2, "class", "svelte-11zku27");
-    			add_location(hr2, file, 63, 2, 1860);
+    			add_location(hr2, file, 72, 2, 2191);
     			attr_dev(br2, "class", "svelte-11zku27");
-    			add_location(br2, file, 67, 50, 1968);
+    			add_location(br2, file, 76, 50, 2299);
     			attr_dev(div6, "class", "explanation svelte-11zku27");
-    			add_location(div6, file, 66, 4, 1892);
+    			add_location(div6, file, 75, 4, 2223);
     			attr_dev(div7, "class", "right svelte-11zku27");
-    			add_location(div7, file, 69, 4, 2015);
+    			add_location(div7, file, 78, 4, 2346);
     			attr_dev(div8, "class", "row svelte-11zku27");
-    			add_location(div8, file, 65, 2, 1870);
+    			add_location(div8, file, 74, 2, 2201);
     			attr_dev(hr3, "class", "svelte-11zku27");
-    			add_location(hr3, file, 82, 2, 2243);
+    			add_location(hr3, file, 91, 2, 2574);
     			attr_dev(br3, "class", "svelte-11zku27");
-    			add_location(br3, file, 85, 60, 2331);
+    			add_location(br3, file, 94, 60, 2662);
     			attr_dev(div9, "class", "explanation svelte-11zku27");
-    			add_location(div9, file, 85, 4, 2275);
+    			add_location(div9, file, 94, 4, 2606);
     			attr_dev(div10, "class", "right svelte-11zku27");
-    			add_location(div10, file, 86, 4, 2373);
+    			add_location(div10, file, 95, 4, 2704);
     			attr_dev(div11, "class", "row svelte-11zku27");
-    			add_location(div11, file, 84, 2, 2253);
+    			add_location(div11, file, 93, 2, 2584);
     			attr_dev(hr4, "class", "svelte-11zku27");
-    			add_location(hr4, file, 101, 2, 2800);
+    			add_location(hr4, file, 110, 2, 3131);
     			attr_dev(br4, "class", "svelte-11zku27");
-    			add_location(br4, file, 105, 44, 2902);
+    			add_location(br4, file, 114, 44, 3233);
     			attr_dev(div12, "class", "explanation svelte-11zku27");
-    			add_location(div12, file, 104, 4, 2832);
+    			add_location(div12, file, 113, 4, 3163);
     			attr_dev(div13, "class", "right svelte-11zku27");
-    			add_location(div13, file, 107, 4, 2949);
+    			add_location(div13, file, 116, 4, 3280);
     			attr_dev(div14, "class", "row svelte-11zku27");
-    			add_location(div14, file, 103, 2, 2810);
+    			add_location(div14, file, 112, 2, 3141);
     			attr_dev(hr5, "class", "svelte-11zku27");
-    			add_location(hr5, file, 119, 2, 3162);
+    			add_location(hr5, file, 128, 2, 3493);
     			attr_dev(br5, "class", "svelte-11zku27");
-    			add_location(br5, file, 123, 48, 3268);
+    			add_location(br5, file, 132, 48, 3599);
     			attr_dev(br6, "class", "svelte-11zku27");
-    			add_location(br6, file, 124, 42, 3317);
+    			add_location(br6, file, 133, 42, 3648);
     			attr_dev(div15, "class", "explanation svelte-11zku27");
-    			add_location(div15, file, 122, 4, 3194);
+    			add_location(div15, file, 131, 4, 3525);
     			attr_dev(div16, "class", "right svelte-11zku27");
-    			add_location(div16, file, 127, 4, 3384);
+    			add_location(div16, file, 136, 4, 3715);
     			attr_dev(div17, "class", "row svelte-11zku27");
-    			add_location(div17, file, 121, 2, 3172);
+    			add_location(div17, file, 130, 2, 3503);
     			attr_dev(hr6, "class", "svelte-11zku27");
-    			add_location(hr6, file, 142, 2, 3667);
+    			add_location(hr6, file, 151, 2, 3998);
     			attr_dev(br7, "class", "svelte-11zku27");
-    			add_location(br7, file, 146, 65, 3790);
+    			add_location(br7, file, 155, 65, 4121);
     			attr_dev(br8, "class", "svelte-11zku27");
-    			add_location(br8, file, 147, 31, 3828);
+    			add_location(br8, file, 156, 31, 4159);
     			attr_dev(div18, "class", "explanation svelte-11zku27");
-    			add_location(div18, file, 145, 4, 3699);
+    			add_location(div18, file, 154, 4, 4030);
     			attr_dev(button0, "class", "svelte-11zku27");
-    			add_location(button0, file, 150, 6, 3862);
+    			add_location(button0, file, 159, 6, 4193);
     			attr_dev(div19, "class", "svelte-11zku27");
-    			add_location(div19, file, 149, 4, 3850);
+    			add_location(div19, file, 158, 4, 4181);
     			attr_dev(div20, "class", "right small-margin svelte-11zku27");
-    			add_location(div20, file, 156, 4, 3960);
+    			add_location(div20, file, 165, 4, 4291);
     			attr_dev(button1, "class", "svelte-11zku27");
-    			add_location(button1, file, 160, 6, 4097);
+    			add_location(button1, file, 169, 6, 4428);
     			attr_dev(div21, "class", "svelte-11zku27");
-    			add_location(div21, file, 159, 4, 4085);
+    			add_location(div21, file, 168, 4, 4416);
     			attr_dev(div22, "class", "row svelte-11zku27");
-    			add_location(div22, file, 144, 2, 3677);
+    			add_location(div22, file, 153, 2, 4008);
     			attr_dev(hr7, "class", "svelte-11zku27");
-    			add_location(hr7, file, 168, 2, 4203);
+    			add_location(hr7, file, 177, 2, 4534);
     			attr_dev(br9, "class", "svelte-11zku27");
-    			add_location(br9, file, 172, 49, 4310);
+    			add_location(br9, file, 181, 49, 4641);
     			attr_dev(br10, "class", "svelte-11zku27");
-    			add_location(br10, file, 173, 96, 4413);
+    			add_location(br10, file, 182, 96, 4744);
     			attr_dev(div23, "class", "explanation svelte-11zku27");
-    			add_location(div23, file, 171, 4, 4235);
+    			add_location(div23, file, 180, 4, 4566);
     			attr_dev(div24, "class", "right svelte-11zku27");
-    			add_location(div24, file, 176, 4, 4467);
+    			add_location(div24, file, 185, 4, 4798);
     			attr_dev(div25, "class", "row svelte-11zku27");
-    			add_location(div25, file, 170, 2, 4213);
+    			add_location(div25, file, 179, 2, 4544);
     			attr_dev(hr8, "class", "svelte-11zku27");
-    			add_location(hr8, file, 181, 2, 4564);
+    			add_location(hr8, file, 190, 2, 4895);
     			attr_dev(br11, "class", "svelte-11zku27");
-    			add_location(br11, file, 185, 63, 4685);
+    			add_location(br11, file, 194, 76, 5029);
     			attr_dev(div26, "class", "explanation svelte-11zku27");
-    			add_location(div26, file, 184, 4, 4596);
+    			add_location(div26, file, 193, 4, 4927);
     			attr_dev(div27, "class", "right svelte-11zku27");
-    			add_location(div27, file, 187, 4, 4732);
+    			add_location(div27, file, 196, 4, 5076);
     			attr_dev(div28, "class", "row svelte-11zku27");
-    			add_location(div28, file, 183, 2, 4574);
+    			add_location(div28, file, 192, 2, 4905);
     			attr_dev(hr9, "class", "svelte-11zku27");
-    			add_location(hr9, file, 192, 2, 4955);
+    			add_location(hr9, file, 201, 2, 5202);
+    			attr_dev(br12, "class", "svelte-11zku27");
+    			add_location(br12, file, 205, 77, 5337);
+    			attr_dev(div29, "class", "explanation svelte-11zku27");
+    			add_location(div29, file, 204, 4, 5234);
+    			attr_dev(div30, "class", "right svelte-11zku27");
+    			add_location(div30, file, 207, 4, 5385);
+    			attr_dev(div31, "class", "row svelte-11zku27");
+    			add_location(div31, file, 203, 2, 5212);
+    			attr_dev(hr10, "class", "svelte-11zku27");
+    			add_location(hr10, file, 212, 2, 5609);
     			attr_dev(main, "class", "svelte-11zku27");
-    			add_location(main, file, 34, 0, 1025);
+    			add_location(main, file, 43, 0, 1356);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2158,12 +2216,24 @@ var app = (function () {
     			mount_component(numberspinner8, div27, null);
     			append_dev(main, t69);
     			append_dev(main, hr9);
+    			append_dev(main, t70);
+    			append_dev(main, div31);
+    			append_dev(div31, div29);
+    			append_dev(div29, t71);
+    			append_dev(div29, br12);
+    			append_dev(div29, t72);
+    			append_dev(div29, t73);
+    			append_dev(div31, t74);
+    			append_dev(div31, div30);
+    			mount_component(numberspinner9, div30, null);
+    			append_dev(main, t75);
+    			append_dev(main, hr10);
     			current = true;
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(button0, "click", /*click_handler*/ ctx[19], false, false, false),
-    					listen_dev(button1, "click", /*click_handler_1*/ ctx[21], false, false, false)
+    					listen_dev(button0, "click", /*click_handler*/ ctx[20], false, false, false),
+    					listen_dev(button1, "click", /*click_handler_1*/ ctx[22], false, false, false)
     				];
 
     				mounted = true;
@@ -2252,6 +2322,16 @@ var app = (function () {
     			}
 
     			numberspinner8.$set(numberspinner8_changes);
+    			if (!current || dirty & /*value10*/ 1024) set_data_dev(t73, /*value10*/ ctx[10]);
+    			const numberspinner9_changes = {};
+
+    			if (!updating_value_8 && dirty & /*value10*/ 1024) {
+    				updating_value_8 = true;
+    				numberspinner9_changes.value = /*value10*/ ctx[10];
+    				add_flush_callback(() => updating_value_8 = false);
+    			}
+
+    			numberspinner9.$set(numberspinner9_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -2264,6 +2344,7 @@ var app = (function () {
     			transition_in(numberspinner6.$$.fragment, local);
     			transition_in(numberspinner7.$$.fragment, local);
     			transition_in(numberspinner8.$$.fragment, local);
+    			transition_in(numberspinner9.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
@@ -2276,6 +2357,7 @@ var app = (function () {
     			transition_out(numberspinner6.$$.fragment, local);
     			transition_out(numberspinner7.$$.fragment, local);
     			transition_out(numberspinner8.$$.fragment, local);
+    			transition_out(numberspinner9.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
@@ -2289,6 +2371,7 @@ var app = (function () {
     			destroy_component(numberspinner6);
     			destroy_component(numberspinner7);
     			destroy_component(numberspinner8);
+    			destroy_component(numberspinner9);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -2305,12 +2388,23 @@ var app = (function () {
     	return block;
     }
 
+    function addDollar(val) {
+    	return "$ " + val;
+    }
+
+    function removeDollar(str) {
+    	return str.replace("$", "").trim();
+    }
+
+    // Callback functions for example 10 ---------------------
+    // Takes the actual value and returns a formatted time string
     function formatMinutesToTime(minutes) {
     	let hours = Math.floor(minutes / 60);
     	minutes = minutes % 60;
     	return hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0");
     }
 
+    // Parses a time string like "16:45" to a number in minutes (result will be 16*60 + 45 = 1005)
     function parseTimeToMinutes(timeString) {
     	let res = timeString.split(":");
     	let hours = parseInt(res[0]);
@@ -2344,7 +2438,8 @@ var app = (function () {
     		speed: 0.04
     	};
 
-    	let value9 = 12 * 60;
+    	let value9 = 100;
+    	let value10 = 12 * 60;
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
@@ -2407,6 +2502,11 @@ var app = (function () {
     		$$invalidate(9, value9);
     	}
 
+    	function numberspinner9_value_binding(value) {
+    		value10 = value;
+    		$$invalidate(10, value10);
+    	}
+
     	$$self.$capture_state = () => ({
     		NumberSpinner: dist,
     		value1,
@@ -2421,6 +2521,9 @@ var app = (function () {
     		value8,
     		options,
     		value9,
+    		value10,
+    		addDollar,
+    		removeDollar,
     		formatMinutesToTime,
     		parseTimeToMinutes
     	});
@@ -2431,13 +2534,14 @@ var app = (function () {
     		if ("value3" in $$props) $$invalidate(2, value3 = $$props.value3);
     		if ("value4" in $$props) $$invalidate(3, value4 = $$props.value4);
     		if ("value5" in $$props) $$invalidate(4, value5 = $$props.value5);
-    		if ("value6" in $$props) $$invalidate(10, value6 = $$props.value6);
+    		if ("value6" in $$props) $$invalidate(11, value6 = $$props.value6);
     		if ("value6input" in $$props) $$invalidate(5, value6input = $$props.value6input);
     		if ("value6change" in $$props) $$invalidate(6, value6change = $$props.value6change);
     		if ("value7" in $$props) $$invalidate(7, value7 = $$props.value7);
     		if ("value8" in $$props) $$invalidate(8, value8 = $$props.value8);
-    		if ("options" in $$props) $$invalidate(11, options = $$props.options);
+    		if ("options" in $$props) $$invalidate(12, options = $$props.options);
     		if ("value9" in $$props) $$invalidate(9, value9 = $$props.value9);
+    		if ("value10" in $$props) $$invalidate(10, value10 = $$props.value10);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -2455,6 +2559,7 @@ var app = (function () {
     		value7,
     		value8,
     		value9,
+    		value10,
     		value6,
     		options,
     		numberspinner0_value_binding,
@@ -2468,7 +2573,8 @@ var app = (function () {
     		numberspinner6_value_binding,
     		click_handler_1,
     		numberspinner7_value_binding,
-    		numberspinner8_value_binding
+    		numberspinner8_value_binding,
+    		numberspinner9_value_binding
     	];
     }
 

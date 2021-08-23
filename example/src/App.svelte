@@ -12,16 +12,25 @@
   let value7 = 0;
   let value8 = -2.5;
   let options = { min: -5.5, max: 5.5, step: 1, keyStep: 1, keyStepFast: 2, decimals: 1, speed: 0.04 };
-  let value9 = 12 * 60;
+  let value9 = 100;
+  let value10 = 12 * 60;
   
-  // Callback functions for example 9
+  // Callback functions for example 9 ---------------------
+  function addDollar(val) {
+    return "$ " + val;
+  }
+  function removeDollar(str) {
+    return str.replace("$", "").trim();
+  }
 
+  // Callback functions for example 10 ---------------------
   // Takes the actual value and returns a formatted time string
   function formatMinutesToTime(minutes) {
     let hours = Math.floor(minutes / 60);
     minutes = minutes % 60;
     return hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0");
   }
+  // Parses a time string like "16:45" to a number in minutes (result will be 16*60 + 45 = 1005)
   function parseTimeToMinutes(timeString) {
     let res = timeString.split(":");
     let hours = parseInt(res[0]);
@@ -183,14 +192,26 @@
 
   <div class="row">
     <div class="explanation">
-      Using a callback to format and parse the displayed value.<br />Current value is {value9}
+      Using callbacks to format and parse the displayed value as a currency.<br />Current value is {value9}
     </div>
     <div class="right">
-      <NumberSpinner bind:value={value9} min={0} max={1440} keyStep={15} keyStepSlow={1} keyStepFast={60} circular={true} format={formatMinutesToTime} parse={parseTimeToMinutes}/>
+      <NumberSpinner bind:value={value9} format={addDollar} parse={removeDollar}/>
     </div>
   </div>
 
   <hr />
+
+  <div class="row">
+    <div class="explanation">
+      Using callbacks to format and parse the displayed value as time of day.<br />Current value is {value10}
+    </div>
+    <div class="right">
+      <NumberSpinner bind:value={value10} min={0} max={1440} keyStep={15} keyStepSlow={1} keyStepFast={60} circular={true} format={formatMinutesToTime} parse={parseTimeToMinutes}/>
+    </div>
+  </div>
+
+  <hr />
+
 </main>
 
 <!-- ---------------------------------------------------------------- -->

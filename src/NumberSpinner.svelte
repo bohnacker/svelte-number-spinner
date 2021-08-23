@@ -14,8 +14,6 @@
   max = parseFloat(max);
   export let step = options.step ?? 1;
   step = parseFloat(step);
-  export let decimals = options.decimals ?? 0;
-  decimals = parseFloat(decimals);
   export let precision = options.precision ?? step;
   precision = parseFloat(precision);
 
@@ -28,10 +26,15 @@
   export let keyStepFast = options.keyStepFast ?? step * 100;
   keyStepFast = parseFloat(keyStepFast);
 
+  export let decimals = options.decimals ?? 0;
+  decimals = parseFloat(decimals);
+  export let format = options.format ?? undefined;
+  export let parse = options.parse ?? undefined;
+
   export let horizontal = options.horizontal ?? true;
   export let vertical = options.vertical ?? false;
   export let circular = options.circular ?? false;
-  
+
   export let mainStyle = options.mainStyle ?? undefined;
   export let fastStyle = options.fastStyle ?? undefined;
   export let slowStyle = options.slowStyle ?? undefined;
@@ -39,9 +42,6 @@
   export let draggingStyle = options.draggingStyle ?? undefined;
   export let editingStyle = options.editingStyle ?? undefined;
   export let cursor = options.cursor ?? undefined;
-  
-  export let format = options.format ?? undefined;
-  export let parse = options.parse ?? undefined;
 
   let preciseValue;
   let visibleValue;
@@ -285,7 +285,6 @@
     if (parse) {
       preciseValue = parse(visibleValue);
       updateValues(preciseValue);
-
     } else {
       let checkValue = parseFloat(editElement.value);
       if (!isNaN(checkValue)) {
@@ -327,8 +326,8 @@
 
     visibleValue = Math.round((preciseValue - min) / step) * step + min;
     if (format) {
-      visibleValue = format(visibleValue)
-    } else {  
+      visibleValue = format(visibleValue);
+    } else {
       visibleValue = visibleValue.toFixed(decimals);
     }
 
@@ -353,11 +352,17 @@
   }
 
   function roundToPrecision(val) {
+    let frac;
+
     val = Math.round((parseFloat(val) - min) / precision) * precision + min;
-    // number of decimals comes either from the precision ...
+
+    // number of decimals comes either from the precision prop ...
     let dec = precision < 1 ? Math.ceil(-Math.log10(precision)) : 0;
-    // or from the number of decimals of the min value
-    let frac = min.toString().split('.')[1];
+    // ... or from the number of decimals of the step value
+    frac = step.toString().split(".")[1];
+    if (frac) dec = Math.max(dec, frac.length);
+    // ... or from the number of decimals of the min value
+    frac = min.toString().split(".")[1];
     if (frac) dec = Math.max(dec, frac.length);
 
     return parseFloat(val.toFixed(dec));
@@ -368,7 +373,6 @@
   function isInteger(num) {
     return num == Math.round(num);
   }
-
 </script>
 
 <!-- DOM --------------------------------------------------------------->
@@ -393,7 +397,7 @@
   class={$$props.class}
   class:default={!$$props.class ? true : false}
   class:drag={true}
-  class:dragging={dragging}
+  class:dragging
   class:fast={stepFactor > 1 ? "fast" : ""}
   class:slow={stepFactor < 1 ? "slow" : ""}
   class:focus={dragFocussed}
@@ -414,7 +418,7 @@
   class={$$props.class}
   class:default={!$$props.class ? true : false}
   class:edit={true}
-  class:editing={editing}
+  class:editing
   class:focus={editFocussed}
   class:inactive={!editing}
   type="text"
@@ -464,7 +468,6 @@
   .default.editing {
     cursor: initial;
   }
-
 
   /* mandatory css styles, not customizable */
 
