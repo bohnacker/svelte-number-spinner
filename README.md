@@ -91,7 +91,7 @@ With keyboard interaction pressing an arrow key increases/decreases the value by
 
 ## Formatting numbers
 
-Numbers are displayed as integer values by default. Internally they are handeled with the given precision. 
+Numbers are displayed as integer values by default. Internally they are handled with the given precision. 
 
 Use the prop `decimals` to display floating point numbers.
 
