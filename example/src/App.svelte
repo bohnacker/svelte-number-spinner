@@ -14,6 +14,7 @@
   let options = { min: -5.5, max: 5.5, step: 1, keyStep: 1, keyStepFast: 2, decimals: 1, speed: 0.04 };
   let value9 = 100;
   let value10 = 12 * 60;
+  let value11 = 1;
   
   // Callback functions for example 9 ---------------------
   function addDollar(val) {
@@ -211,6 +212,21 @@
   </div>
 
   <hr />
+
+  <div class="row">
+    <div class="explanation">
+      Using format and parse to implement a exponential/logarithmic scale.<br />Current value is {value11}
+    </div>
+    <div class="right">
+      <NumberSpinner bind:value={value11} step={0.01} 
+        format={val => Math.pow(10, val).toFixed(1)} 
+        parse={val => Math.log10(val)}
+        />
+    </div>
+  </div>
+
+  <hr />
+
 
 </main>
 

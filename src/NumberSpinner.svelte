@@ -8,9 +8,9 @@
 
   export let value = options.value ?? 0;
   value = parseFloat(value);
-  export let min = options.min ?? -100000000000000;
+  export let min = options.min ?? -1e12;
   min = parseFloat(min);
-  export let max = options.max ?? 100000000000000;
+  export let max = options.max ?? 1e12;
   max = parseFloat(max);
   export let step = options.step ?? 1;
   step = parseFloat(step);

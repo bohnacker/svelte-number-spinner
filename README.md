@@ -34,11 +34,11 @@ npm install --save svelte-number-spinner
 | Prop          | Type     | Default      | Description                                         |
 |---------------|----------|--------------|-----------------------------------------------------|
 | value         | Number   | 0            | Input value                                         |
-| min           | Number   | -MAX_VALUE   | Minimum value                                       |
-| max           | Number   | +MAX_VALUE   | Maximum value                                       |
+| min           | Number   | -1e12        | Minimum value                                       |
+| max           | Number   | +1e12        | Maximum value                                       |
 | step          | Number   | 1            | Step                                                |
 | precision     | Number   | = step       | Precision of value (should be a fraction of step)   |
-| speed         | Number   | 1            | Speed of value change on mouse drag or key press    |
+| speed         | Number   | 1            | Speed of value change on mouse drag                 |
 | keyStep       | Number   | = step * 10  | Step for keyboard interaction                       |
 | keyStepSlow   | Number   | = step       | Slow step for keyboard interaction                  |
 | keyStepFast   | Number   | = step * 100 | Fast step for keyboard interaction                  |
@@ -114,6 +114,16 @@ In this example the value e.g. 100 is formatted to "$ 100" using the function `a
 </script>
 
 <NumberSpinner bind:value={value} format={addDollar} parse={removeDollar}/>
+```
+### Using format and parse to implement non-linear
+
+I found that these two functions could also be used to implement non-linear ranges like exponential/logarithmic scales:
+
+```html
+<NumberSpinner bind:value={value} step={0.01} 
+  format={val => Math.pow(10, val).toFixed(1)} 
+  parse={val => Math.log10(val)}
+  />
 ```
 
 ## Styling

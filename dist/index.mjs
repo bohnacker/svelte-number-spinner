@@ -543,9 +543,9 @@ function instance($$self, $$props, $$invalidate) {
 	let { options = {} } = $$props;
 	let { value = options.value ?? 0 } = $$props;
 	value = parseFloat(value);
-	let { min = options.min ?? -100000000000000 } = $$props;
+	let { min = options.min ?? -1000000000000 } = $$props;
 	min = parseFloat(min);
-	let { max = options.max ?? 100000000000000 } = $$props;
+	let { max = options.max ?? 1000000000000 } = $$props;
 	max = parseFloat(max);
 	let { step = options.step ?? 1 } = $$props;
 	step = parseFloat(step);
