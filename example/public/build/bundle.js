@@ -916,13 +916,13 @@ var app = (function () {
         	const dispatch = createEventDispatcher();
         	let { options = {} } = $$props;
         	let { value = options.value ?? 0 } = $$props;
-        	let { min = options.min ?? -Number.MAX_VALUE } = $$props;
-        	let { max = options.max ?? Number.MAX_VALUE } = $$props;
+        	let { min = options.min ?? -100000000000000 } = $$props;
+        	let { max = options.max ?? 100000000000000 } = $$props;
         	let { step = options.step ?? 1 } = $$props;
         	let { keyStep = options.keyStep ?? 1 } = $$props;
-        	let { precision = options.precision ?? step } = $$props;
         	let { decimals = options.decimals ?? 0 } = $$props;
         	let { speed = options.speed ?? 1 } = $$props;
+        	let { precision = options.precision ?? step } = $$props;
         	let { horizontal = options.horizontal ?? true } = $$props;
         	let { vertical = options.vertical ?? false } = $$props;
         	let { circular = options.circular ?? false } = $$props;
@@ -1218,9 +1218,9 @@ var app = (function () {
         		if ("max" in $$new_props) $$invalidate(26, max = $$new_props.max);
         		if ("step" in $$new_props) $$invalidate(1, step = $$new_props.step);
         		if ("keyStep" in $$new_props) $$invalidate(28, keyStep = $$new_props.keyStep);
-        		if ("precision" in $$new_props) $$invalidate(29, precision = $$new_props.precision);
-        		if ("decimals" in $$new_props) $$invalidate(30, decimals = $$new_props.decimals);
-        		if ("speed" in $$new_props) $$invalidate(31, speed = $$new_props.speed);
+        		if ("decimals" in $$new_props) $$invalidate(29, decimals = $$new_props.decimals);
+        		if ("speed" in $$new_props) $$invalidate(30, speed = $$new_props.speed);
+        		if ("precision" in $$new_props) $$invalidate(31, precision = $$new_props.precision);
         		if ("horizontal" in $$new_props) $$invalidate(32, horizontal = $$new_props.horizontal);
         		if ("vertical" in $$new_props) $$invalidate(33, vertical = $$new_props.vertical);
         		if ("circular" in $$new_props) $$invalidate(34, circular = $$new_props.circular);
@@ -1333,9 +1333,9 @@ var app = (function () {
         		max,
         		options,
         		keyStep,
-        		precision,
         		decimals,
         		speed,
+        		precision,
         		horizontal,
         		vertical,
         		circular,
@@ -1376,9 +1376,9 @@ var app = (function () {
         				max: 26,
         				step: 1,
         				keyStep: 28,
-        				precision: 29,
-        				decimals: 30,
-        				speed: 31,
+        				decimals: 29,
+        				speed: 30,
+        				precision: 31,
         				horizontal: 32,
         				vertical: 33,
         				circular: 34,
@@ -1523,25 +1523,29 @@ var app = (function () {
     	let t57;
     	let br9;
     	let t58;
+    	let t59_value = `{ min: -5.5, max: 5.5, step: 1, decimals: 1, speed: 0.04 }` + "";
     	let t59;
+    	let br10;
     	let t60;
+    	let t61;
+    	let t62;
     	let div24;
     	let numberspinner7;
     	let updating_value_6;
-    	let t61;
+    	let t63;
     	let hr8;
-    	let t62;
+    	let t64;
     	let div28;
     	let div26;
-    	let t63;
-    	let br10;
-    	let t64;
     	let t65;
+    	let br11;
     	let t66;
+    	let t67;
+    	let t68;
     	let div27;
     	let numberspinner8;
     	let updating_value_7;
-    	let t67;
+    	let t69;
     	let hr9;
     	let current;
     	let mounted;
@@ -1846,24 +1850,27 @@ var app = (function () {
     			div23 = element("div");
     			t57 = text("Giving some of the props by options object.");
     			br9 = element("br");
-    			t58 = text("Current value is ");
-    			t59 = text(/*value8*/ ctx[8]);
-    			t60 = space();
+    			t58 = space();
+    			t59 = text(t59_value);
+    			br10 = element("br");
+    			t60 = text("\n      Current value is ");
+    			t61 = text(/*value8*/ ctx[8]);
+    			t62 = space();
     			div24 = element("div");
     			create_component(numberspinner7.$$.fragment);
-    			t61 = space();
+    			t63 = space();
     			hr8 = element("hr");
-    			t62 = space();
+    			t64 = space();
     			div28 = element("div");
     			div26 = element("div");
-    			t63 = text("Using a callback to format and parse the displayed value.");
-    			br10 = element("br");
-    			t64 = text("Current value is ");
-    			t65 = text(/*value9*/ ctx[9]);
-    			t66 = space();
+    			t65 = text("Using a callback to format and parse the displayed value.");
+    			br11 = element("br");
+    			t66 = text("Current value is ");
+    			t67 = text(/*value9*/ ctx[9]);
+    			t68 = space();
     			div27 = element("div");
     			create_component(numberspinner8.$$.fragment);
-    			t67 = space();
+    			t69 = space();
     			hr9 = element("hr");
     			attr_dev(h2, "class", "svelte-11zku27");
     			add_location(h2, file, 35, 2, 1006);
@@ -1959,24 +1966,26 @@ var app = (function () {
     			add_location(hr7, file, 168, 2, 4175);
     			attr_dev(br9, "class", "svelte-11zku27");
     			add_location(br9, file, 172, 49, 4282);
+    			attr_dev(br10, "class", "svelte-11zku27");
+    			add_location(br10, file, 173, 68, 4357);
     			attr_dev(div23, "class", "explanation svelte-11zku27");
     			add_location(div23, file, 171, 4, 4207);
     			attr_dev(div24, "class", "right svelte-11zku27");
-    			add_location(div24, file, 174, 4, 4329);
+    			add_location(div24, file, 176, 4, 4411);
     			attr_dev(div25, "class", "row svelte-11zku27");
     			add_location(div25, file, 170, 2, 4185);
     			attr_dev(hr8, "class", "svelte-11zku27");
-    			add_location(hr8, file, 179, 2, 4426);
-    			attr_dev(br10, "class", "svelte-11zku27");
-    			add_location(br10, file, 183, 63, 4547);
+    			add_location(hr8, file, 181, 2, 4508);
+    			attr_dev(br11, "class", "svelte-11zku27");
+    			add_location(br11, file, 185, 63, 4629);
     			attr_dev(div26, "class", "explanation svelte-11zku27");
-    			add_location(div26, file, 182, 4, 4458);
+    			add_location(div26, file, 184, 4, 4540);
     			attr_dev(div27, "class", "right svelte-11zku27");
-    			add_location(div27, file, 185, 4, 4594);
+    			add_location(div27, file, 187, 4, 4676);
     			attr_dev(div28, "class", "row svelte-11zku27");
-    			add_location(div28, file, 181, 2, 4436);
+    			add_location(div28, file, 183, 2, 4518);
     			attr_dev(hr9, "class", "svelte-11zku27");
-    			add_location(hr9, file, 190, 2, 4776);
+    			add_location(hr9, file, 192, 2, 4858);
     			attr_dev(main, "class", "svelte-11zku27");
     			add_location(main, file, 34, 0, 997);
     		},
@@ -2096,22 +2105,25 @@ var app = (function () {
     			append_dev(div23, br9);
     			append_dev(div23, t58);
     			append_dev(div23, t59);
-    			append_dev(div25, t60);
+    			append_dev(div23, br10);
+    			append_dev(div23, t60);
+    			append_dev(div23, t61);
+    			append_dev(div25, t62);
     			append_dev(div25, div24);
     			mount_component(numberspinner7, div24, null);
-    			append_dev(main, t61);
+    			append_dev(main, t63);
     			append_dev(main, hr8);
-    			append_dev(main, t62);
+    			append_dev(main, t64);
     			append_dev(main, div28);
     			append_dev(div28, div26);
-    			append_dev(div26, t63);
-    			append_dev(div26, br10);
-    			append_dev(div26, t64);
     			append_dev(div26, t65);
-    			append_dev(div28, t66);
+    			append_dev(div26, br11);
+    			append_dev(div26, t66);
+    			append_dev(div26, t67);
+    			append_dev(div28, t68);
     			append_dev(div28, div27);
     			mount_component(numberspinner8, div27, null);
-    			append_dev(main, t67);
+    			append_dev(main, t69);
     			append_dev(main, hr9);
     			current = true;
 
@@ -2187,7 +2199,7 @@ var app = (function () {
     			}
 
     			numberspinner6.$set(numberspinner6_changes);
-    			if (!current || dirty & /*value8*/ 256) set_data_dev(t59, /*value8*/ ctx[8]);
+    			if (!current || dirty & /*value8*/ 256) set_data_dev(t61, /*value8*/ ctx[8]);
     			const numberspinner7_changes = {};
 
     			if (!updating_value_6 && dirty & /*value8*/ 256) {
@@ -2197,7 +2209,7 @@ var app = (function () {
     			}
 
     			numberspinner7.$set(numberspinner7_changes);
-    			if (!current || dirty & /*value9*/ 512) set_data_dev(t65, /*value9*/ ctx[9]);
+    			if (!current || dirty & /*value9*/ 512) set_data_dev(t67, /*value9*/ ctx[9]);
     			const numberspinner8_changes = {};
 
     			if (!updating_value_7 && dirty & /*value9*/ 512) {

@@ -545,13 +545,13 @@
     	const dispatch = createEventDispatcher();
     	let { options = {} } = $$props;
     	let { value = options.value ?? 0 } = $$props;
-    	let { min = options.min ?? -Number.MAX_VALUE } = $$props;
-    	let { max = options.max ?? Number.MAX_VALUE } = $$props;
+    	let { min = options.min ?? -100000000000000 } = $$props;
+    	let { max = options.max ?? 100000000000000 } = $$props;
     	let { step = options.step ?? 1 } = $$props;
     	let { keyStep = options.keyStep ?? 1 } = $$props;
-    	let { precision = options.precision ?? step } = $$props;
     	let { decimals = options.decimals ?? 0 } = $$props;
     	let { speed = options.speed ?? 1 } = $$props;
+    	let { precision = options.precision ?? step } = $$props;
     	let { horizontal = options.horizontal ?? true } = $$props;
     	let { vertical = options.vertical ?? false } = $$props;
     	let { circular = options.circular ?? false } = $$props;
@@ -847,9 +847,9 @@
     		if ("max" in $$new_props) $$invalidate(26, max = $$new_props.max);
     		if ("step" in $$new_props) $$invalidate(1, step = $$new_props.step);
     		if ("keyStep" in $$new_props) $$invalidate(28, keyStep = $$new_props.keyStep);
-    		if ("precision" in $$new_props) $$invalidate(29, precision = $$new_props.precision);
-    		if ("decimals" in $$new_props) $$invalidate(30, decimals = $$new_props.decimals);
-    		if ("speed" in $$new_props) $$invalidate(31, speed = $$new_props.speed);
+    		if ("decimals" in $$new_props) $$invalidate(29, decimals = $$new_props.decimals);
+    		if ("speed" in $$new_props) $$invalidate(30, speed = $$new_props.speed);
+    		if ("precision" in $$new_props) $$invalidate(31, precision = $$new_props.precision);
     		if ("horizontal" in $$new_props) $$invalidate(32, horizontal = $$new_props.horizontal);
     		if ("vertical" in $$new_props) $$invalidate(33, vertical = $$new_props.vertical);
     		if ("circular" in $$new_props) $$invalidate(34, circular = $$new_props.circular);
@@ -962,9 +962,9 @@
     		max,
     		options,
     		keyStep,
-    		precision,
     		decimals,
     		speed,
+    		precision,
     		horizontal,
     		vertical,
     		circular,
@@ -1005,9 +1005,9 @@
     				max: 26,
     				step: 1,
     				keyStep: 28,
-    				precision: 29,
-    				decimals: 30,
-    				speed: 31,
+    				decimals: 29,
+    				speed: 30,
+    				precision: 31,
     				horizontal: 32,
     				vertical: 33,
     				circular: 34,

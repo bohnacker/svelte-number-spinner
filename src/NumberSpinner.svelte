@@ -7,16 +7,18 @@
   export let options = {};
 
   export let value = options.value ?? 0;
-  export let min = options.min ?? -Number.MAX_VALUE;
-  export let max = options.max ?? Number.MAX_VALUE;
+  export let min = options.min ?? -100000000000000;
+  export let max = options.max ?? 100000000000000;
   export let step = options.step ?? 1;
   export let keyStep = options.keyStep ?? 1;
-  export let precision = options.precision ?? step;
   export let decimals = options.decimals ?? 0;
   export let speed = options.speed ?? 1;
+  export let precision = options.precision ?? step;
+  
   export let horizontal = options.horizontal ?? true;
   export let vertical = options.vertical ?? false;
   export let circular = options.circular ?? false;
+  
   export let mainStyle = options.mainStyle ?? undefined;
   export let fastStyle = options.fastStyle ?? undefined;
   export let slowStyle = options.slowStyle ?? undefined;
@@ -24,6 +26,7 @@
   export let draggingStyle = options.draggingStyle ?? undefined;
   export let editingStyle = options.editingStyle ?? undefined;
   export let cursor = options.cursor ?? undefined;
+  
   export let format = options.format ?? undefined;
   export let parse = options.parse ?? undefined;
 
@@ -335,7 +338,7 @@
     // or from the number of decimals of the min value
     let frac = min.toString().split('.')[1];
     if (frac) dec = Math.max(dec, frac.length);
-    
+
     return parseFloat(val.toFixed(dec));
   }
 

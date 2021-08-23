@@ -170,7 +170,9 @@
 
   <div class="row">
     <div class="explanation">
-      Giving some of the props by options object.<br />Current value is {value8}
+      Giving some of the props by options object.<br />
+      {`{ min: -5.5, max: 5.5, step: 1, decimals: 1, speed: 0.04 }`}<br />
+      Current value is {value8}
     </div>
     <div class="right">
       <NumberSpinner bind:value={value8} {options} />
