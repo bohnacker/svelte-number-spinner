@@ -106,6 +106,9 @@
             throw new Error('Function called outside component initialization');
         return current_component;
     }
+    function onMount(fn) {
+        get_current_component().$$.on_mount.push(fn);
+    }
     function createEventDispatcher() {
         const component = get_current_component();
         return (type, detail) => {
@@ -380,11 +383,11 @@
     		},
     		m(target, anchor) {
     			insert(target, input0, anchor);
-    			/*input0_binding*/ ctx[47](input0);
+    			/*input0_binding*/ ctx[51](input0);
     			set_input_value(input0, /*visibleValue*/ ctx[7]);
     			insert(target, t, anchor);
     			insert(target, input1, anchor);
-    			/*input1_binding*/ ctx[49](input1);
+    			/*input1_binding*/ ctx[53](input1);
     			set_input_value(input1, /*visibleValue*/ ctx[7]);
 
     			if (!mounted) {
@@ -416,13 +419,13 @@
     					listen(input0, "dblclick", stop_propagation(dblclickHandler)),
     					listen(input0, "focus", /*dragFocusHandler*/ ctx[17]),
     					listen(input0, "blur", /*dragBlurHandler*/ ctx[18]),
-    					listen(input0, "input", /*input0_input_handler*/ ctx[48]),
+    					listen(input0, "input", /*input0_input_handler*/ ctx[52]),
     					listen(input1, "mouseup", stop_propagation(mouseup_handler)),
     					listen(input1, "touchend", stop_propagation(touchend_handler)),
     					listen(input1, "focus", /*editFocusHandler*/ ctx[19]),
     					listen(input1, "blur", /*editBlurHandler*/ ctx[20]),
     					listen(input1, "input", /*inputHandler*/ ctx[23]),
-    					listen(input1, "input", /*input1_input_handler*/ ctx[50])
+    					listen(input1, "input", /*input1_input_handler*/ ctx[54])
     				];
 
     				mounted = true;
@@ -513,10 +516,10 @@
     		o: noop,
     		d(detaching) {
     			if (detaching) detach(input0);
-    			/*input0_binding*/ ctx[47](null);
+    			/*input0_binding*/ ctx[51](null);
     			if (detaching) detach(t);
     			if (detaching) detach(input1);
-    			/*input1_binding*/ ctx[49](null);
+    			/*input1_binding*/ ctx[53](null);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -545,13 +548,25 @@
     	const dispatch = createEventDispatcher();
     	let { options = {} } = $$props;
     	let { value = options.value ?? 0 } = $$props;
+    	value = parseFloat(value);
     	let { min = options.min ?? -100000000000000 } = $$props;
+    	min = parseFloat(min);
     	let { max = options.max ?? 100000000000000 } = $$props;
+    	max = parseFloat(max);
     	let { step = options.step ?? 1 } = $$props;
-    	let { keyStep = options.keyStep ?? 1 } = $$props;
+    	step = parseFloat(step);
     	let { decimals = options.decimals ?? 0 } = $$props;
-    	let { speed = options.speed ?? 1 } = $$props;
+    	decimals = parseFloat(decimals);
     	let { precision = options.precision ?? step } = $$props;
+    	precision = parseFloat(precision);
+    	let { speed = options.speed ?? 1 } = $$props;
+    	speed = parseFloat(speed);
+    	let { keyStep = options.keyStep ?? step * 10 } = $$props;
+    	keyStep = parseFloat(keyStep);
+    	let { keyStepSlow = options.keyStepSlow ?? step } = $$props;
+    	keyStepSlow = parseFloat(keyStepSlow);
+    	let { keyStepFast = options.keyStepFast ?? step * 100 } = $$props;
+    	keyStepFast = parseFloat(keyStepFast);
     	let { horizontal = options.horizontal ?? true } = $$props;
     	let { vertical = options.vertical ?? false } = $$props;
     	let { circular = options.circular ?? false } = $$props;
@@ -577,9 +592,14 @@
     	let shiftPressed = false;
     	let editing = false;
     	let style;
-    	let htmlNode = document.querySelector("html");
-    	let htmlNodeOriginalCursor = htmlNode.style.cursor;
+    	let htmlNode = null;
+    	let htmlNodeOriginalCursor = null;
     	let defaultCursor;
+
+    	onMount(() => {
+    		$$invalidate(48, htmlNode = document.querySelector("html"));
+    		$$invalidate(49, htmlNodeOriginalCursor = htmlNode.style.cursor);
+    	});
 
     	// update all values (preciseValue, visibleValue)
     	updateValues(value);
@@ -617,7 +637,7 @@
     		let distX = horizontal ? actX - clickX : 0;
     		let distY = vertical ? -(actY - clickY) : 0;
     		let stepNum = Math.abs(distX) > Math.abs(distY) ? distX : distY;
-    		stepValue(stepNum);
+    		stepValue(stepNum * stepFactor);
     		clickX = actX;
     		clickY = actY;
     		hasMoved++;
@@ -661,11 +681,11 @@
     		// dispatch("consoleLog", ev.type);
     		// console.log(e);
     		if (ev.key == "Shift") {
-    			$$invalidate(45, shiftPressed = true);
+    			$$invalidate(47, shiftPressed = true);
     		}
 
     		if (ev.key == "Alt") {
-    			$$invalidate(44, altPressed = true);
+    			$$invalidate(46, altPressed = true);
     		}
     	}
 
@@ -673,16 +693,17 @@
     		// dispatch("consoleLog", ev.type);
     		// console.log(e)
     		if (ev.key == "Shift") {
-    			$$invalidate(45, shiftPressed = false);
+    			$$invalidate(47, shiftPressed = false);
     		}
 
     		if (ev.key == "Alt") {
-    			$$invalidate(44, altPressed = false);
+    			$$invalidate(46, altPressed = false);
     		}
 
     		if (dragFocussed && !editing) {
-    			// increment should at least be step
-    			let increment = keyStep ?? Math.max(step, step * Math.round(10 * speed));
+    			let increment = keyStep;
+    			if (stepFactor < 1) increment = keyStepSlow;
+    			if (stepFactor > 1) increment = keyStepFast;
 
     			if (ev.key == "ArrowUp" || ev.key == "ArrowRight") {
     				addToValue(increment);
@@ -760,13 +781,13 @@
     	// }
     	function stepValue(numSteps) {
     		preciseValue = preciseValue ?? parseFloat(visibleValue);
-    		preciseValue += numSteps * step * stepFactor * speed;
+    		preciseValue += numSteps * step * speed;
     		updateValues(preciseValue);
     	}
 
     	function addToValue(increment) {
     		preciseValue = preciseValue ?? parseFloat(visibleValue);
-    		preciseValue += increment * stepFactor;
+    		preciseValue += increment;
     		updateValues(preciseValue);
     	}
 
@@ -841,27 +862,29 @@
 
     	$$self.$$set = $$new_props => {
     		$$invalidate(24, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
-    		if ("options" in $$new_props) $$invalidate(27, options = $$new_props.options);
+    		if ("options" in $$new_props) $$invalidate(33, options = $$new_props.options);
     		if ("value" in $$new_props) $$invalidate(25, value = $$new_props.value);
     		if ("min" in $$new_props) $$invalidate(0, min = $$new_props.min);
     		if ("max" in $$new_props) $$invalidate(26, max = $$new_props.max);
     		if ("step" in $$new_props) $$invalidate(1, step = $$new_props.step);
-    		if ("keyStep" in $$new_props) $$invalidate(28, keyStep = $$new_props.keyStep);
-    		if ("decimals" in $$new_props) $$invalidate(29, decimals = $$new_props.decimals);
-    		if ("speed" in $$new_props) $$invalidate(30, speed = $$new_props.speed);
-    		if ("precision" in $$new_props) $$invalidate(31, precision = $$new_props.precision);
-    		if ("horizontal" in $$new_props) $$invalidate(32, horizontal = $$new_props.horizontal);
-    		if ("vertical" in $$new_props) $$invalidate(33, vertical = $$new_props.vertical);
-    		if ("circular" in $$new_props) $$invalidate(34, circular = $$new_props.circular);
-    		if ("mainStyle" in $$new_props) $$invalidate(35, mainStyle = $$new_props.mainStyle);
-    		if ("fastStyle" in $$new_props) $$invalidate(36, fastStyle = $$new_props.fastStyle);
-    		if ("slowStyle" in $$new_props) $$invalidate(37, slowStyle = $$new_props.slowStyle);
-    		if ("focusStyle" in $$new_props) $$invalidate(38, focusStyle = $$new_props.focusStyle);
-    		if ("draggingStyle" in $$new_props) $$invalidate(39, draggingStyle = $$new_props.draggingStyle);
-    		if ("editingStyle" in $$new_props) $$invalidate(40, editingStyle = $$new_props.editingStyle);
-    		if ("cursor" in $$new_props) $$invalidate(41, cursor = $$new_props.cursor);
-    		if ("format" in $$new_props) $$invalidate(42, format = $$new_props.format);
-    		if ("parse" in $$new_props) $$invalidate(43, parse = $$new_props.parse);
+    		if ("decimals" in $$new_props) $$invalidate(27, decimals = $$new_props.decimals);
+    		if ("precision" in $$new_props) $$invalidate(28, precision = $$new_props.precision);
+    		if ("speed" in $$new_props) $$invalidate(29, speed = $$new_props.speed);
+    		if ("keyStep" in $$new_props) $$invalidate(30, keyStep = $$new_props.keyStep);
+    		if ("keyStepSlow" in $$new_props) $$invalidate(31, keyStepSlow = $$new_props.keyStepSlow);
+    		if ("keyStepFast" in $$new_props) $$invalidate(32, keyStepFast = $$new_props.keyStepFast);
+    		if ("horizontal" in $$new_props) $$invalidate(34, horizontal = $$new_props.horizontal);
+    		if ("vertical" in $$new_props) $$invalidate(35, vertical = $$new_props.vertical);
+    		if ("circular" in $$new_props) $$invalidate(36, circular = $$new_props.circular);
+    		if ("mainStyle" in $$new_props) $$invalidate(37, mainStyle = $$new_props.mainStyle);
+    		if ("fastStyle" in $$new_props) $$invalidate(38, fastStyle = $$new_props.fastStyle);
+    		if ("slowStyle" in $$new_props) $$invalidate(39, slowStyle = $$new_props.slowStyle);
+    		if ("focusStyle" in $$new_props) $$invalidate(40, focusStyle = $$new_props.focusStyle);
+    		if ("draggingStyle" in $$new_props) $$invalidate(41, draggingStyle = $$new_props.draggingStyle);
+    		if ("editingStyle" in $$new_props) $$invalidate(42, editingStyle = $$new_props.editingStyle);
+    		if ("cursor" in $$new_props) $$invalidate(43, cursor = $$new_props.cursor);
+    		if ("format" in $$new_props) $$invalidate(44, format = $$new_props.format);
+    		if ("parse" in $$new_props) $$invalidate(45, parse = $$new_props.parse);
     	};
 
     	$$self.$$.update = () => {
@@ -874,7 +897,7 @@
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*dragFocussed, editing*/ 68 | $$self.$$.dirty[1] & /*altPressed, shiftPressed*/ 24576) {
+    		if ($$self.$$.dirty[0] & /*dragFocussed, editing*/ 68 | $$self.$$.dirty[1] & /*altPressed, shiftPressed*/ 98304) {
     			{
     				$$invalidate(5, stepFactor = 1);
 
@@ -888,26 +911,28 @@
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, cursor, defaultCursor*/ 33798) {
+    		if ($$self.$$.dirty[0] & /*dragging*/ 16 | $$self.$$.dirty[1] & /*horizontal, vertical, htmlNode, cursor, defaultCursor, htmlNodeOriginalCursor*/ 921624) {
     			{
     				// let cursorClass = horizontal
     				//   ? vertical
     				//     ? 'move-cursor'
     				//     : 'horizontal-cursor'
     				//   : 'vertical-cursor';
-    				$$invalidate(46, defaultCursor = horizontal
+    				$$invalidate(50, defaultCursor = horizontal
     				? vertical ? "move" : "ew-resize"
     				: "ns-resize");
 
-    				if (dragging) {
-    					htmlNode.style.cursor = cursor ?? defaultCursor;
-    				} else {
-    					htmlNode.style.cursor = htmlNodeOriginalCursor; // addClass(htmlNode, cursorClass);
-    				} // removeClass(htmlNode, cursorClass);
+    				if (htmlNode) {
+    					if (dragging) {
+    						$$invalidate(48, htmlNode.style.cursor = cursor ?? defaultCursor, htmlNode);
+    					} else {
+    						$$invalidate(48, htmlNode.style.cursor = htmlNodeOriginalCursor, htmlNode); // addClass(htmlNode, cursorClass);
+    					} // removeClass(htmlNode, cursorClass);
+    				}
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 34800) {
+    		if ($$self.$$.dirty[0] & /*style, dragFocussed, editFocussed, editing, stepFactor, dragging*/ 1148 | $$self.$$.dirty[1] & /*mainStyle, focusStyle, fastStyle, slowStyle, draggingStyle, editingStyle, cursor, defaultCursor*/ 532416) {
     			{
     				$$invalidate(10, style = mainStyle ?? "");
 
@@ -960,11 +985,13 @@
     		$$props,
     		value,
     		max,
-    		options,
-    		keyStep,
     		decimals,
-    		speed,
     		precision,
+    		speed,
+    		keyStep,
+    		keyStepSlow,
+    		keyStepFast,
+    		options,
     		horizontal,
     		vertical,
     		circular,
@@ -979,6 +1006,8 @@
     		parse,
     		altPressed,
     		shiftPressed,
+    		htmlNode,
+    		htmlNodeOriginalCursor,
     		defaultCursor,
     		input0_binding,
     		input0_input_handler,
@@ -999,27 +1028,29 @@
     			create_fragment,
     			safe_not_equal,
     			{
-    				options: 27,
+    				options: 33,
     				value: 25,
     				min: 0,
     				max: 26,
     				step: 1,
-    				keyStep: 28,
-    				decimals: 29,
-    				speed: 30,
-    				precision: 31,
-    				horizontal: 32,
-    				vertical: 33,
-    				circular: 34,
-    				mainStyle: 35,
-    				fastStyle: 36,
-    				slowStyle: 37,
-    				focusStyle: 38,
-    				draggingStyle: 39,
-    				editingStyle: 40,
-    				cursor: 41,
-    				format: 42,
-    				parse: 43
+    				decimals: 27,
+    				precision: 28,
+    				speed: 29,
+    				keyStep: 30,
+    				keyStepSlow: 31,
+    				keyStepFast: 32,
+    				horizontal: 34,
+    				vertical: 35,
+    				circular: 36,
+    				mainStyle: 37,
+    				fastStyle: 38,
+    				slowStyle: 39,
+    				focusStyle: 40,
+    				draggingStyle: 41,
+    				editingStyle: 42,
+    				cursor: 43,
+    				format: 44,
+    				parse: 45
     			},
     			[-1, -1, -1]
     		);

@@ -11,7 +11,7 @@
   let value6change = value6;
   let value7 = 0;
   let value8 = -2.5;
-  let options = { min: -5.5, max: 5.5, step: 1, decimals: 1, speed: 0.04 };
+  let options = { min: -5.5, max: 5.5, step: 1, keyStep: 1, keyStepFast: 2, decimals: 1, speed: 0.04 };
   let value9 = 12 * 60;
   
   // Callback functions for example 9
@@ -171,7 +171,7 @@
   <div class="row">
     <div class="explanation">
       Giving some of the props by options object.<br />
-      {`{ min: -5.5, max: 5.5, step: 1, decimals: 1, speed: 0.04 }`}<br />
+      {`{ min: -5.5, max: 5.5, step: 1, keyStep: 1, keyStepFast: 2, decimals: 1, speed: 0.04 }`}<br />
       Current value is {value8}
     </div>
     <div class="right">
@@ -186,7 +186,7 @@
       Using a callback to format and parse the displayed value.<br />Current value is {value9}
     </div>
     <div class="right">
-      <NumberSpinner bind:value={value9} min=0 max=1440 keyStep=15 circular=true format={formatMinutesToTime} parse={parseTimeToMinutes}/>
+      <NumberSpinner bind:value={value9} min={0} max={1440} keyStep={15} keyStepSlow={1} keyStepFast={60} circular={true} format={formatMinutesToTime} parse={parseTimeToMinutes}/>
     </div>
   </div>
 

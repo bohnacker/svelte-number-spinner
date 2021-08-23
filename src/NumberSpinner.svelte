@@ -1,6 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
-  import { createEventDispatcher, tick } from "svelte";
+  import { onMount, createEventDispatcher, tick } from "svelte";
   const dispatch = createEventDispatcher();
 
   // set any of the props with properties of this options object
@@ -8,14 +7,27 @@
   export let options = {};
 
   export let value = options.value ?? 0;
+  value = parseFloat(value);
   export let min = options.min ?? -100000000000000;
+  min = parseFloat(min);
   export let max = options.max ?? 100000000000000;
+  max = parseFloat(max);
   export let step = options.step ?? 1;
-  export let keyStep = options.keyStep ?? 1;
+  step = parseFloat(step);
   export let decimals = options.decimals ?? 0;
-  export let speed = options.speed ?? 1;
+  decimals = parseFloat(decimals);
   export let precision = options.precision ?? step;
-  
+  precision = parseFloat(precision);
+
+  export let speed = options.speed ?? 1;
+  speed = parseFloat(speed);
+  export let keyStep = options.keyStep ?? step * 10;
+  keyStep = parseFloat(keyStep);
+  export let keyStepSlow = options.keyStepSlow ?? step;
+  keyStepSlow = parseFloat(keyStepSlow);
+  export let keyStepFast = options.keyStepFast ?? step * 100;
+  keyStepFast = parseFloat(keyStepFast);
+
   export let horizontal = options.horizontal ?? true;
   export let vertical = options.vertical ?? false;
   export let circular = options.circular ?? false;
@@ -99,7 +111,7 @@
 
     let stepNum = Math.abs(distX) > Math.abs(distY) ? distX : distY;
 
-    stepValue(stepNum);
+    stepValue(stepNum * stepFactor);
 
     clickX = actX;
     clickY = actY;
@@ -173,8 +185,9 @@
     }
 
     if (dragFocussed && !editing) {
-      // increment should at least be step
-      let increment = keyStep ?? Math.max(step, step * Math.round(10 * speed));
+      let increment = keyStep;
+      if (stepFactor < 1) increment = keyStepSlow;
+      if (stepFactor > 1) increment = keyStepFast;
 
       if (ev.key == "ArrowUp" || ev.key == "ArrowRight") {
         addToValue(increment);
@@ -298,13 +311,13 @@
 
   function stepValue(numSteps) {
     preciseValue = preciseValue ?? parseFloat(visibleValue);
-    preciseValue += numSteps * step * stepFactor * speed;
+    preciseValue += numSteps * step * speed;
     updateValues(preciseValue);
   }
 
   function addToValue(increment) {
     preciseValue = preciseValue ?? parseFloat(visibleValue);
-    preciseValue += increment * stepFactor;
+    preciseValue += increment;
     updateValues(preciseValue);
   }
 
