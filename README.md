@@ -109,7 +109,7 @@ In this example the value e.g. 100 is formatted to "$ 100" using the function `a
     return "$ " + val;
   }
   function removeDollar(str) {
-    return val.replace("$", "").trim();
+    return str.replace("$", "").trim();
   }
 </script>
 
