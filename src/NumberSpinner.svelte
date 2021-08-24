@@ -74,13 +74,13 @@
   updateValues(value);
 
   function touchstartHandler(ev) {
-    dispatch("consoleLog", ev.type);
+    // dispatch("consoleLog", ev.type);
 
     isTouchDevice = true;
     dragstartHandler(ev);
   }
   function dragstartHandler(ev) {
-    dispatch("consoleLog", ev.type);
+    // dispatch("consoleLog", ev.type);
 
     wasActiveOnClick = document.activeElement === dragElement;
 
@@ -122,17 +122,17 @@
   }
 
   function dblclickHandler(ev) {
-    // dispatch("consoleLog", ev.type);
+    // // dispatch("consoleLog", ev.type);
     // startEditing();
   }
 
   function touchendHandler(ev) {
-    dispatch("consoleLog", ev.type);
+    // dispatch("consoleLog", ev.type);
 
     mouseupHandler(ev);
   }
   function mouseupHandler(ev) {
-    dispatch("consoleLog", ev.type);
+    // dispatch("consoleLog", ev.type);
 
     dragging = false;
 
@@ -143,28 +143,28 @@
   }
 
   function dragFocusHandler(ev) {
-    dispatch("consoleLog", ev.type);
+    // dispatch("consoleLog", ev.type);
 
     dragFocussed = true;
   }
   function dragBlurHandler(ev) {
-    dispatch("consoleLog", ev.type);
+    // dispatch("consoleLog", ev.type);
 
     dragFocussed = false;
   }
   function editFocusHandler(ev) {
-    dispatch("consoleLog", ev.type);
+    // dispatch("consoleLog", ev.type);
 
     editFocussed = true;
   }
   async function editBlurHandler(ev) {
-    dispatch("consoleLog", ev.type);
+    // dispatch("consoleLog", ev.type);
 
     stopEditing();
   }
 
   function keydownHandler(ev) {
-    // dispatch("consoleLog", ev.type);
+    // // dispatch("consoleLog", ev.type);
     // console.log(e);
 
     if (ev.key == "Shift") {
@@ -176,7 +176,7 @@
   }
 
   function keyupHandler(ev) {
-    // dispatch("consoleLog", ev.type);
+    // // dispatch("consoleLog", ev.type);
     // console.log(e)
 
     if (ev.key == "Shift") {
@@ -209,7 +209,7 @@
   }
 
   function inputHandler(ev) {
-    // dispatch("consoleLog", ev.type);
+    // // dispatch("consoleLog", ev.type);
     // console.log(e);
 
     let checkValue = parseFloat(editElement.value);
@@ -295,20 +295,6 @@
         updateValues(preciseValue);
       }
     }
-
-    // Bring focus back to the drag element if the body was clicked:
-    setTimeout(() => {
-      if (document.activeElement === document.body || document.activeElement === editElement) {
-        dragElement.focus();
-      }
-    }, 0);
-
-    // This doesn't work (maybe document.activeElement is updated even later), but would be more elegant svelte-like:
-    // await tick();
-    // console.log(document.activeElement);
-    // if (document.activeElement === document.body) {
-    //   dragElement.focus();
-    // }
   }
 
   function stepValue(numSteps) {
