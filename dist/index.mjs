@@ -117,6 +117,15 @@ function createEventDispatcher() {
         }
     };
 }
+// TODO figure out if we still want to support
+// shorthand events, or if we want to implement
+// a real bubbling mechanism
+function bubble(component, event) {
+    const callbacks = component.$$.callbacks[event.type];
+    if (callbacks) {
+        callbacks.slice().forEach(fn => fn(event));
+    }
+}
 
 const dirty_components = [];
 const binding_callbacks = [];
@@ -377,11 +386,11 @@ function create_fragment(ctx) {
 		},
 		m(target, anchor) {
 			insert(target, input0, anchor);
-			/*input0_binding*/ ctx[51](input0);
+			/*input0_binding*/ ctx[57](input0);
 			set_input_value(input0, /*visibleValue*/ ctx[7]);
 			insert(target, t, anchor);
 			insert(target, input1, anchor);
-			/*input1_binding*/ ctx[53](input1);
+			/*input1_binding*/ ctx[59](input1);
 			set_input_value(input1, /*visibleValue*/ ctx[7]);
 
 			if (!mounted) {
@@ -413,13 +422,19 @@ function create_fragment(ctx) {
 					listen(input0, "dblclick", stop_propagation(dblclickHandler)),
 					listen(input0, "focus", /*dragFocusHandler*/ ctx[17]),
 					listen(input0, "blur", /*dragBlurHandler*/ ctx[18]),
-					listen(input0, "input", /*input0_input_handler*/ ctx[52]),
+					listen(input0, "keydown", /*keydown_handler*/ ctx[54]),
+					listen(input0, "keypress", /*keypress_handler*/ ctx[55]),
+					listen(input0, "keyup", /*keyup_handler*/ ctx[56]),
+					listen(input0, "input", /*input0_input_handler*/ ctx[58]),
 					listen(input1, "mouseup", stop_propagation(mouseup_handler)),
 					listen(input1, "touchend", stop_propagation(touchend_handler)),
 					listen(input1, "focus", /*editFocusHandler*/ ctx[19]),
 					listen(input1, "blur", /*editBlurHandler*/ ctx[20]),
 					listen(input1, "input", /*inputHandler*/ ctx[23]),
-					listen(input1, "input", /*input1_input_handler*/ ctx[54])
+					listen(input1, "keydown", /*keydown_handler_1*/ ctx[51]),
+					listen(input1, "keypress", /*keypress_handler_1*/ ctx[52]),
+					listen(input1, "keyup", /*keyup_handler_1*/ ctx[53]),
+					listen(input1, "input", /*input1_input_handler*/ ctx[60])
 				];
 
 				mounted = true;
@@ -510,10 +525,10 @@ function create_fragment(ctx) {
 		o: noop,
 		d(detaching) {
 			if (detaching) detach(input0);
-			/*input0_binding*/ ctx[51](null);
+			/*input0_binding*/ ctx[57](null);
 			if (detaching) detach(t);
 			if (detaching) detach(input1);
-			/*input1_binding*/ ctx[53](null);
+			/*input1_binding*/ ctx[59](null);
 			mounted = false;
 			run_all(dispose);
 		}
@@ -522,7 +537,7 @@ function create_fragment(ctx) {
 
 function dblclickHandler(ev) {
 	
-} // // dispatch("consoleLog", ev.type);
+} // dispatch("consoleLog", ev.type);
 // startEditing();
 
 // Helpers ----------------------------------------------------------
@@ -599,16 +614,14 @@ function instance($$self, $$props, $$invalidate) {
 	updateValues(value);
 
 	function touchstartHandler(ev) {
-		// dispatch("consoleLog", ev.type);
+		dispatch("consoleLog", ev.type);
 		isTouchDevice = true;
-
 		dragstartHandler(ev);
 	}
 
 	function dragstartHandler(ev) {
-		// dispatch("consoleLog", ev.type);
+		dispatch("consoleLog", ev.type);
 		wasActiveOnClick = document.activeElement === dragElement;
-
 		$$invalidate(4, dragging = true);
 		dragElement.focus();
 		hasMoved = 0;
@@ -641,12 +654,12 @@ function instance($$self, $$props, $$invalidate) {
 	}
 
 	function touchendHandler(ev) {
-		// dispatch("consoleLog", ev.type);
-		mouseupHandler();
+		dispatch("consoleLog", ev.type);
+		mouseupHandler(ev);
 	}
 
 	function mouseupHandler(ev) {
-		// dispatch("consoleLog", ev.type);
+		dispatch("consoleLog", ev.type);
 		$$invalidate(4, dragging = false);
 
 		// start editing only if element was already focussed on mousedown and not much dragging was done
@@ -656,28 +669,30 @@ function instance($$self, $$props, $$invalidate) {
 	}
 
 	function dragFocusHandler(ev) {
-		// dispatch("consoleLog", ev.type);
+		dispatch("consoleLog", ev.type);
 		$$invalidate(2, dragFocussed = true);
 	}
 
 	function dragBlurHandler(ev) {
-		// dispatch("consoleLog", ev.type);
+		dispatch("consoleLog", ev.type);
 		$$invalidate(2, dragFocussed = false);
 	}
 
 	function editFocusHandler(ev) {
-		// dispatch("consoleLog", ev.type);
+		dispatch("consoleLog", ev.type);
 		$$invalidate(3, editFocussed = true);
 	}
 
 	async function editBlurHandler(ev) {
-		// dispatch("consoleLog", ev.type);
+		dispatch("consoleLog", ev.type);
 		stopEditing();
 	}
 
 	function keydownHandler(ev) {
-		// // dispatch("consoleLog", ev.type);
-		// console.log(e);
+		if (ev.target == dragElement || ev.target == editElement) {
+			dispatch("consoleLog", ev.type);
+		} // console.log(ev);
+
 		if (ev.key == "Shift") {
 			$$invalidate(47, shiftPressed = true);
 		}
@@ -688,8 +703,10 @@ function instance($$self, $$props, $$invalidate) {
 	}
 
 	function keyupHandler(ev) {
-		// // dispatch("consoleLog", ev.type);
-		// console.log(e)
+		if (ev.target == dragElement || ev.target == editElement) {
+			dispatch("consoleLog", ev.type);
+		} // console.log(ev);
+
 		if (ev.key == "Shift") {
 			$$invalidate(47, shiftPressed = false);
 		}
@@ -722,7 +739,7 @@ function instance($$self, $$props, $$invalidate) {
 	}
 
 	function inputHandler(ev) {
-		// // dispatch("consoleLog", ev.type);
+		// dispatch("consoleLog", ev.type);
 		// console.log(e);
 		let checkValue = parseFloat(editElement.value);
 
@@ -743,6 +760,7 @@ function instance($$self, $$props, $$invalidate) {
 
 		editElement.focus();
 		editElement.select();
+		dispatch("editstart");
 	}
 
 	function stopEditing() {
@@ -760,6 +778,8 @@ function instance($$self, $$props, $$invalidate) {
 				updateValues(preciseValue);
 			}
 		}
+
+		dispatch("editend");
 	}
 
 	function stepValue(numSteps) {
@@ -823,6 +843,30 @@ function instance($$self, $$props, $$invalidate) {
 
 		if (frac) dec = Math.max(dec, frac.length);
 		return parseFloat(val.toFixed(dec));
+	}
+
+	function keydown_handler_1(event) {
+		bubble($$self, event);
+	}
+
+	function keypress_handler_1(event) {
+		bubble($$self, event);
+	}
+
+	function keyup_handler_1(event) {
+		bubble($$self, event);
+	}
+
+	function keydown_handler(event) {
+		bubble($$self, event);
+	}
+
+	function keypress_handler(event) {
+		bubble($$self, event);
+	}
+
+	function keyup_handler(event) {
+		bubble($$self, event);
 	}
 
 	function input0_binding($$value) {
@@ -998,6 +1042,12 @@ function instance($$self, $$props, $$invalidate) {
 		htmlNode,
 		htmlNodeOriginalCursor,
 		defaultCursor,
+		keydown_handler_1,
+		keypress_handler_1,
+		keyup_handler_1,
+		keydown_handler,
+		keypress_handler,
+		keyup_handler,
 		input0_binding,
 		input0_input_handler,
 		input1_binding,

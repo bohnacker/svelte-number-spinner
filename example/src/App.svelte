@@ -9,6 +9,8 @@
   let value6 = 50;
   let value6input = value6;
   let value6change = value6;
+  let value6editmode = false;
+  let value6lastkey = "";
   let value7 = 0;
   let value8 = -2.5;
   let options = { min: -5.5, max: 5.5, step: 1, keyStep: 1, keyStepFast: 2, decimals: 1, speed: 0.04 };
@@ -133,7 +135,8 @@
     <div class="explanation">
       Get value through input and change events.<br />
       Current input value is {value6input}<br />
-      Current change value is {value6change}
+      Current change value is {value6change}<br />
+      Edit mode is {value6editmode}. Last key pressed: {value6lastkey}
     </div>
     <div class="right">
       <NumberSpinner
@@ -146,7 +149,10 @@
         on:input={(ev) => {
           value6input = ev.detail;
         }}
-      />
+        on:keyup={(ev) => {value6lastkey = ev.key; console.log(ev)}}
+        on:editstart={(ev) => {value6editmode = true}}
+        on:editend={(ev) => {value6editmode = false}}
+        />
     </div>
   </div>
 

@@ -74,13 +74,13 @@
   updateValues(value);
 
   function touchstartHandler(ev) {
-    // dispatch("consoleLog", ev.type);
+    dispatch("consoleLog", ev.type);
 
     isTouchDevice = true;
     dragstartHandler(ev);
   }
   function dragstartHandler(ev) {
-    // dispatch("consoleLog", ev.type);
+    dispatch("consoleLog", ev.type);
 
     wasActiveOnClick = document.activeElement === dragElement;
 
@@ -122,17 +122,17 @@
   }
 
   function dblclickHandler(ev) {
-    // // dispatch("consoleLog", ev.type);
+    // dispatch("consoleLog", ev.type);
     // startEditing();
   }
 
   function touchendHandler(ev) {
-    // dispatch("consoleLog", ev.type);
+    dispatch("consoleLog", ev.type);
 
     mouseupHandler(ev);
   }
   function mouseupHandler(ev) {
-    // dispatch("consoleLog", ev.type);
+    dispatch("consoleLog", ev.type);
 
     dragging = false;
 
@@ -143,29 +143,31 @@
   }
 
   function dragFocusHandler(ev) {
-    // dispatch("consoleLog", ev.type);
+    dispatch("consoleLog", ev.type);
 
     dragFocussed = true;
   }
   function dragBlurHandler(ev) {
-    // dispatch("consoleLog", ev.type);
+    dispatch("consoleLog", ev.type);
 
     dragFocussed = false;
   }
   function editFocusHandler(ev) {
-    // dispatch("consoleLog", ev.type);
+    dispatch("consoleLog", ev.type);
 
     editFocussed = true;
   }
   async function editBlurHandler(ev) {
-    // dispatch("consoleLog", ev.type);
+    dispatch("consoleLog", ev.type);
 
     stopEditing();
   }
 
   function keydownHandler(ev) {
-    // // dispatch("consoleLog", ev.type);
-    // console.log(e);
+    if (ev.target == dragElement || ev.target == editElement) {
+      dispatch("consoleLog", ev.type);
+      // console.log(ev);
+    }
 
     if (ev.key == "Shift") {
       shiftPressed = true;
@@ -176,8 +178,10 @@
   }
 
   function keyupHandler(ev) {
-    // // dispatch("consoleLog", ev.type);
-    // console.log(e)
+    if (ev.target == dragElement || ev.target == editElement) {
+      dispatch("consoleLog", ev.type);
+      // console.log(ev);
+    }
 
     if (ev.key == "Shift") {
       shiftPressed = false;
@@ -209,7 +213,7 @@
   }
 
   function inputHandler(ev) {
-    // // dispatch("consoleLog", ev.type);
+    // dispatch("consoleLog", ev.type);
     // console.log(e);
 
     let checkValue = parseFloat(editElement.value);
@@ -279,6 +283,8 @@
 
     editElement.focus();
     editElement.select();
+
+    dispatch("editstart");
   }
 
   function stopEditing() {
@@ -295,6 +301,8 @@
         updateValues(preciseValue);
       }
     }
+
+    dispatch("editend");
   }
 
   function stepValue(numSteps) {
@@ -382,6 +390,9 @@
   on:dblclick|stopPropagation={dblclickHandler}
   on:focus={dragFocusHandler}
   on:blur={dragBlurHandler}
+  on:keydown
+  on:keypress
+  on:keyup
   {style}
   class={$$props.class}
   class:default={!$$props.class ? true : false}
@@ -403,6 +414,9 @@
   on:focus={editFocusHandler}
   on:blur={editBlurHandler}
   on:input={inputHandler}
+  on:keydown
+  on:keypress
+  on:keyup
   {style}
   class={$$props.class}
   class:default={!$$props.class ? true : false}
