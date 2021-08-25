@@ -1,5 +1,7 @@
 # svelte-number-spinner
 
+![Number Spinner](NumberSpinner.gif)
+
 A number spinner component for Svelte. It's a simple input field with a number that can be controlled using the mouse or keyboard. Pressing *Alt* or *Alt+Shift* makes steps smaller or bigger. Clicking on the input field without dragging the mouse or pressing *Enter* starts the normal input mode.
 
 #### New since version 0.6.0
