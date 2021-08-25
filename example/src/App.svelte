@@ -150,7 +150,7 @@
           value6input = ev.detail;
         }}
         on:keyup={(ev) => {value6lastkey = ev.key; console.log(ev)}}
-        on:editstart={(ev) => {value6editmode = true}}
+        on:editstart={(ev) => {value6editmode = true; console.log(ev)}}
         on:editend={(ev) => {value6editmode = false}}
         />
     </div>
