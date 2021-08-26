@@ -683,7 +683,7 @@ function instance($$self, $$props, $$invalidate) {
 		$$invalidate(3, editFocussed = true);
 	}
 
-	async function editBlurHandler(ev) {
+	function editBlurHandler(ev) {
 		dispatch("consoleLog", ev.type);
 		stopEditing();
 	}
@@ -777,6 +777,16 @@ function instance($$self, $$props, $$invalidate) {
 				preciseValue = parseFloat(visibleValue);
 				updateValues(preciseValue);
 			}
+		}
+
+		// Bring focus back to the drag element if editElement was focussed:
+		if (document.activeElement === editElement) {
+			setTimeout(
+				() => {
+					dragElement.focus();
+				},
+				0
+			);
 		}
 
 		dispatch("editend");
