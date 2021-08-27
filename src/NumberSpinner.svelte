@@ -288,28 +288,30 @@
   }
 
   function stopEditing() {
-    editFocussed = false;
-    editing = false;
+    if (editing) {
+      editFocussed = false;
+      editing = false;
 
-    if (parse) {
-      preciseValue = parse(visibleValue);
-      updateValues(preciseValue);
-    } else {
-      let checkValue = parseFloat(editElement.value);
-      if (!isNaN(checkValue)) {
-        preciseValue = parseFloat(visibleValue);
+      if (parse) {
+        preciseValue = parse(visibleValue);
         updateValues(preciseValue);
+      } else {
+        let checkValue = parseFloat(editElement.value);
+        if (!isNaN(checkValue)) {
+          preciseValue = parseFloat(visibleValue);
+          updateValues(preciseValue);
+        }
       }
-    }
 
-    // Bring focus back to the drag element if editElement was focussed:
-    if (document.activeElement === editElement) {
-      setTimeout(() => {
-        dragElement.focus();
-      }, 0);
-    }
+      // Bring focus back to the drag element if editElement was focussed:
+      if (document.activeElement === editElement) {
+        setTimeout(() => {
+          dragElement.focus();
+        }, 0);
+      }
 
-    dispatch("editend");
+      dispatch("editend");
+    }
   }
 
   function stepValue(numSteps) {
