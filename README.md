@@ -198,6 +198,8 @@ For each of them you can give a style string like `"width:80px; padding-right:10
 |------------|---------------------|-------------------------------------------------------------------------------------|
 | input      | (ev) => {ev.detail} | Fires when value changes. ev.detail gives the actual value                          |
 | change     | (ev) => {ev.detail} | Fires when value changes, won't fire while typing. ev.detail gives the actual value |
+| dragstart  | (ev) => {}          | Fires when dragging starts                                                          |
+| dragend    | (ev) => {}          | Fires when dragging ends                                                            |
 | editstart  | (ev) => {}          | Fires when edit mode is started                                                     |
 | editend    | (ev) => {}          | Fires when edit mode is ended                                                       |
 | keydown    | (ev) => {}          | Original keydown event                                                              |

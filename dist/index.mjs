@@ -624,7 +624,7 @@ function instance($$self, $$props, $$invalidate) {
 		wasActiveOnClick = document.activeElement === dragElement;
 		$$invalidate(4, dragging = true);
 		dragElement.focus();
-		hasMoved = 0;
+		hasMoved = false;
 		clickX = isTouchDevice ? ev.touches[0].clientX : ev.clientX;
 		clickY = isTouchDevice ? ev.touches[0].clientY : ev.clientY;
 		$$invalidate(4, dragging = true);
@@ -647,11 +647,17 @@ function instance($$self, $$props, $$invalidate) {
 		let distX = horizontal ? actX - clickX : 0;
 		let distY = vertical ? -(actY - clickY) : 0;
 		let stepNum = Math.abs(distX) > Math.abs(distY) ? distX : distY;
+
+		// fire dragstart before value changes
+		if (stepNum != 0 && !hasMoved) {
+			hasMoved = true;
+			dispatch("dragstart");
+		}
+
 		stepValue(stepNum * stepFactor);
 		clickX = actX;
 		clickY = actY;
-		hasMoved++;
-	}
+	} // hasMoved++;
 
 	function touchendHandler(ev) {
 		dispatch("consoleLog", ev.type);
@@ -660,10 +666,15 @@ function instance($$self, $$props, $$invalidate) {
 
 	function mouseupHandler(ev) {
 		dispatch("consoleLog", ev.type);
+
+		if (dragging && hasMoved) {
+			dispatch("dragend");
+		}
+
 		$$invalidate(4, dragging = false);
 
-		// start editing only if element was already focussed on mousedown and not much dragging was done
-		if (wasActiveOnClick && hasMoved < 2) {
+		// start editing only if element was already focussed on mousedown and no dragging was done
+		if (wasActiveOnClick && !hasMoved) {
 			startEditing();
 		}
 	}

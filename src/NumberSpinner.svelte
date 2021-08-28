@@ -87,7 +87,7 @@
     dragging = true;
     dragElement.focus();
 
-    hasMoved = 0;
+    hasMoved = false;
     clickX = isTouchDevice ? ev.touches[0].clientX : ev.clientX;
     clickY = isTouchDevice ? ev.touches[0].clientY : ev.clientY;
     dragging = true;
@@ -113,12 +113,18 @@
 
     let stepNum = Math.abs(distX) > Math.abs(distY) ? distX : distY;
 
+    // fire dragstart before value changes
+    if (stepNum != 0 && !hasMoved) {
+      hasMoved = true;
+      dispatch("dragstart");
+    }
+
     stepValue(stepNum * stepFactor);
 
     clickX = actX;
     clickY = actY;
 
-    hasMoved++;
+    // hasMoved++;
   }
 
   function dblclickHandler(ev) {
@@ -134,10 +140,14 @@
   function mouseupHandler(ev) {
     dispatch("consoleLog", ev.type);
 
+    if (dragging && hasMoved) {
+      dispatch("dragend");
+    }
+
     dragging = false;
 
-    // start editing only if element was already focussed on mousedown and not much dragging was done
-    if (wasActiveOnClick && hasMoved < 2) {
+    // start editing only if element was already focussed on mousedown and no dragging was done
+    if (wasActiveOnClick && !hasMoved) {
       startEditing();
     }
   }

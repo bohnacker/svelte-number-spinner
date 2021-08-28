@@ -35,6 +35,12 @@
       on:keyup={(ev) => {
         logs = [{ timestamp: Date.now(), msg: "keyup key: " + ev.key }, ...logs];
       }}
+      on:dragstart={(ev) => {
+        logs = [{ timestamp: Date.now(), msg: "dragstart " + value1 }, ...logs];
+      }}
+      on:dragend={(ev) => {
+        logs = [{ timestamp: Date.now(), msg: "dragend " + value1 }, ...logs];
+      }}
       on:editstart={(ev) => {
         logs = [{ timestamp: Date.now(), msg: "editstart" }, ...logs];
       }}
