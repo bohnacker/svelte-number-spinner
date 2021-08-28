@@ -51,6 +51,7 @@
   let dragElement, editElement;
   let dragFocussed = false;
   let editFocussed = false;
+  let focussed = false;
 
   let dragging = false;
   let wasActiveOnClick, hasMoved, clickX, clickY;
@@ -156,20 +157,25 @@
     dispatch("consoleLog", ev.type);
 
     dragFocussed = true;
+    updateFocussed();
   }
   function dragBlurHandler(ev) {
     dispatch("consoleLog", ev.type);
 
     dragFocussed = false;
+    updateFocussed();
   }
   function editFocusHandler(ev) {
     dispatch("consoleLog", ev.type);
 
     editFocussed = true;
+    updateFocussed();
   }
   function editBlurHandler(ev) {
     dispatch("consoleLog", ev.type);
 
+    editFocussed = false;
+    updateFocussed();
     stopEditing();
   }
 
@@ -238,6 +244,27 @@
 
   // updaters --------------------------------
 
+  // this will init focussed variable
+  $: if (dragElement && editElement) {
+    updateFocussed();
+  }
+  async function updateFocussed() {
+    await tick();
+    if (document.activeElement == dragElement || document.activeElement == editElement) {
+      if (!focussed) {
+        focussed = true;
+        dispatch('focus');
+        console.log("Focus");
+      }
+    } else {
+      if (focussed) {
+        focussed = false;
+        dispatch('blur');
+        console.log("Blur");
+      }
+    }
+  }
+
   $: {
     if (!editing && !dragging) {
       updateValues(value);
@@ -299,7 +326,6 @@
 
   function stopEditing() {
     if (editing) {
-      editFocussed = false;
       editing = false;
 
       if (parse) {

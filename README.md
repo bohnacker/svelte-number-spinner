@@ -202,6 +202,8 @@ For each of them you can give a style string like `"width:80px; padding-right:10
 | dragend    | (ev) => {}          | Fires when dragging ends                                                            |
 | editstart  | (ev) => {}          | Fires when edit mode is started                                                     |
 | editend    | (ev) => {}          | Fires when edit mode is ended                                                       |
+| focus      | (ev) => {}          | Fires when the number spinner gets the focus                                        |
+| blur       | (ev) => {}          | Fires when the number spinner loses the focus                                       |
 | keydown    | (ev) => {}          | Original keydown event                                                              |
 | keypress   | (ev) => {}          | Original keypress event                                                             |
 | keyup      | (ev) => {}          | Original keyup event                                                                |
