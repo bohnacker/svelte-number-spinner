@@ -254,13 +254,13 @@
       if (!focussed) {
         focussed = true;
         dispatch('focus');
-        console.log("Focus");
+        // console.log("Focus");
       }
     } else {
       if (focussed) {
         focussed = false;
         dispatch('blur');
-        console.log("Blur");
+        // console.log("Blur");
       }
     }
   }
