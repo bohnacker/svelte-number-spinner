@@ -706,6 +706,11 @@ function instance($$self, $$props, $$invalidate) {
 	}
 
 	function keydownHandler(ev) {
+		// prevent submitting if the number spinner is inside a form element
+		if (ev.key == "Enter") {
+			ev.preventDefault();
+		}
+
 		if (ev.target == dragElement || ev.target == editElement) {
 			dispatch("consoleLog", ev.type);
 		} // console.log(ev);

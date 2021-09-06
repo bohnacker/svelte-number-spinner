@@ -17,6 +17,7 @@
   let value9 = 100;
   let value10 = 12 * 60;
   let value11 = 1;
+  let value12 = 100;
   
   // Callback functions for example 9 ---------------------
   function addDollar(val) {
@@ -233,6 +234,21 @@
 
   <hr />
 
+  <div class="row">
+    <div class="explanation">
+      Hitting enter should not submit the form.<br />Current value is {value12}
+    </div>
+    <div class="right">
+      <form>
+        <div>
+          <NumberSpinner bind:value={value12} />    
+        </div>
+        <div>
+          <button on:click|preventDefault={() => alert('Form was submitted')}>Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
 </main>
 
