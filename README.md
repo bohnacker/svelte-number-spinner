@@ -15,7 +15,7 @@ Mobile devices with touch are now also supported which needed some major rework.
 ## Installation
 
 ```bash
-npm install --save svelte-number-spinner
+npm install svelte-number-spinner
 ```
 
 ## Usage
