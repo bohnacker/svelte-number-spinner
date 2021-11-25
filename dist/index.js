@@ -615,6 +615,10 @@
     	onMount(() => {
     		$$invalidate(48, htmlNode = document.querySelector("html"));
     		$$invalidate(49, htmlNodeOriginalCursor = htmlNode.style.cursor);
+
+    		return () => {
+    			$$invalidate(48, htmlNode.style.cursor = htmlNodeOriginalCursor, htmlNode);
+    		};
     	});
 
     	// update all values (preciseValue, visibleValue)

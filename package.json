@@ -30,7 +30,7 @@
     "src",
     "dist"
   ],
-  "version": "0.7.8",
+  "version": "0.7.9",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bohnacker/svelte-number-spinner.git"
