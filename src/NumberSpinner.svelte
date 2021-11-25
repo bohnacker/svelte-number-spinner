@@ -69,6 +69,10 @@
   onMount(() => {
     htmlNode = document.querySelector("html");
     htmlNodeOriginalCursor = htmlNode.style.cursor;
+
+    return () => {
+      htmlNode.style.cursor = htmlNodeOriginalCursor;
+    }
   });
 
   // update all values (preciseValue, visibleValue)
