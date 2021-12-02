@@ -717,7 +717,7 @@
 
     	function keydownHandler(ev) {
     		// prevent submitting if the number spinner is inside a form element
-    		if (ev.key == "Enter") {
+    		if (ev.key == "Enter" && (ev.target == dragElement || ev.target == editElement)) {
     			ev.preventDefault();
     		}
 
