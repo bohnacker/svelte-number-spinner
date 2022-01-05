@@ -590,6 +590,7 @@ function instance($$self, $$props, $$invalidate) {
 	let { cursor = options.cursor ?? undefined } = $$props;
 	let preciseValue;
 	let visibleValue;
+	let tmpValue;
 	let isTouchDevice = false;
 	let dragElement, editElement;
 	let dragFocussed = false;
@@ -717,7 +718,14 @@ function instance($$self, $$props, $$invalidate) {
 
 		if (ev.target == dragElement || ev.target == editElement) {
 			dispatch("consoleLog", ev.type);
-		} // console.log(ev);
+
+			// console.log(ev);
+			// necessary for fast typing when starting edit mode
+			// otherwise typed keys while tick() in startEditing() would get lost
+			if (ev.key.length == 1) {
+				tmpValue = tmpValue ? tmpValue + ev.key : ev.key;
+			}
+		}
 
 		if (ev.key == "Shift") {
 			$$invalidate(47, shiftPressed = true);
@@ -760,7 +768,7 @@ function instance($$self, $$props, $$invalidate) {
 
 			// also start editing when pressing any non-control keys
 			if (ev.key.length == 1) {
-				startEditing(ev.key);
+				startEditing();
 			}
 		} else if (editFocussed && editing) {
 			if (ev.key == "Enter" || ev.key == "Escape") {
@@ -799,7 +807,7 @@ function instance($$self, $$props, $$invalidate) {
 		}
 	}
 
-	async function startEditing(inputChar) {
+	async function startEditing() {
 		$$invalidate(8, editing = true);
 
 		//preciseValue = parseFloat(visibleValue);
@@ -807,8 +815,8 @@ function instance($$self, $$props, $$invalidate) {
 
 		editElement.focus();
 
-		if (inputChar) {
-			$$invalidate(9, visibleValue = inputChar);
+		if (tmpValue) {
+			$$invalidate(9, visibleValue = tmpValue);
 		} else {
 			editElement.select();
 		}
@@ -819,6 +827,7 @@ function instance($$self, $$props, $$invalidate) {
 	function stopEditing() {
 		if (editing) {
 			$$invalidate(8, editing = false);
+			tmpValue = undefined;
 
 			if (parse) {
 				preciseValue = parse(visibleValue);
