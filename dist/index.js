@@ -763,6 +763,11 @@
     			if (ev.key == "Enter") {
     				startEditing();
     			}
+
+    			// also start editing when pressing any non-control keys
+    			if (ev.key.length == 1) {
+    				startEditing(ev.key);
+    			}
     		} else if (editFocussed && editing) {
     			if (ev.key == "Enter" || ev.key == "Escape") {
     				stopEditing();
@@ -800,14 +805,20 @@
     		}
     	}
 
-    	async function startEditing() {
+    	async function startEditing(inputChar) {
     		$$invalidate(8, editing = true);
 
     		//preciseValue = parseFloat(visibleValue);
     		await tick();
 
     		editElement.focus();
-    		editElement.select();
+
+    		if (inputChar) {
+    			$$invalidate(9, visibleValue = inputChar);
+    		} else {
+    			editElement.select();
+    		}
+
     		dispatch("editstart");
     	}
 

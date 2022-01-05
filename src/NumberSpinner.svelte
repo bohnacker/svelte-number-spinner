@@ -230,6 +230,12 @@
       if (ev.key == "Enter") {
         startEditing();
       }
+      // also start editing when pressing any non-control keys
+      if (ev.key.length == 1) {
+        startEditing(ev.key);
+      }
+      
+
     } else if (editFocussed && editing) {
       if (ev.key == "Enter" || ev.key == "Escape") {
         stopEditing();
@@ -321,14 +327,21 @@
     style += !editing ? ";cursor:" + (cursor ?? defaultCursor) : "";
   }
 
-  async function startEditing() {
+  async function startEditing(inputChar) {
     editing = true;
     //preciseValue = parseFloat(visibleValue);
 
     await tick();
 
     editElement.focus();
-    editElement.select();
+    
+    if (inputChar) {
+      visibleValue = inputChar;
+    } else {
+      editElement.select();
+    }
+
+
 
     dispatch("editstart");
   }
