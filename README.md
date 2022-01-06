@@ -9,8 +9,9 @@ Mobile devices with touch are now also supported which needed some major rework.
 
 ## Demo
 
-[Number spinner demo on svelte.dev/repl](https://svelte.dev/repl/a73eaa408b804beb9f7a3457926f9829?version=3.31.2)
+[Simple example using number spinners for choosing a color](https://svelte.dev/repl/48e956986ed54c28888095d5c463f554?version=3.44.3)
 
+[Number spinner demo showing all options](https://svelte.dev/repl/a73eaa408b804beb9f7a3457926f9829?version=3.31.2)
 
 ## Installation
 
