@@ -45,6 +45,7 @@
 
   let preciseValue;
   let visibleValue;
+  let tmpValue;
 
   let isTouchDevice = false;
 
@@ -192,6 +193,12 @@
     if (ev.target == dragElement || ev.target == editElement) {
       dispatch("consoleLog", ev.type);
       // console.log(ev);
+
+      // necessary for fast typing when starting edit mode
+      // otherwise typed keys while tick() in startEditing() would get lost
+      if (ev.key.length == 1) {
+        tmpValue = tmpValue ? tmpValue + ev.key : ev.key;
+      }
     }
 
     if (ev.key == "Shift") {
@@ -230,6 +237,12 @@
       if (ev.key == "Enter") {
         startEditing();
       }
+      // also start editing when pressing any non-control keys
+      if (ev.key.length == 1) {
+        startEditing();
+      }
+      
+
     } else if (editFocussed && editing) {
       if (ev.key == "Enter" || ev.key == "Escape") {
         stopEditing();
@@ -328,7 +341,12 @@
     await tick();
 
     editElement.focus();
-    editElement.select();
+    
+    if (tmpValue) {
+      visibleValue = tmpValue;
+    } else {
+      editElement.select();
+    }
 
     dispatch("editstart");
   }
@@ -336,6 +354,7 @@
   function stopEditing() {
     if (editing) {
       editing = false;
+      tmpValue = undefined;
 
       if (parse) {
         preciseValue = parse(visibleValue);
